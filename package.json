@@ -1,0 +1,21 @@
+{
+  "name": "ai-pm-starter",
+  "version": "1.0.0",
+  "description": "AI 子彈筆記起始包 — 用 Claude Code 管好人生專案",
+  "type": "module",
+  "scripts": {
+    "cal:auth": "node Skills/sync-calendar/scripts/auth-setup.js",
+    "cal:sync": "claude --headless --prompt '使用 sync-calendar 同步本月行事曆與 Google Calendar'",
+    "skills:sync": "cp -r Skills/* .claude/skills/ && echo '✅ synced Skills/ -> .claude/skills/'"
+  },
+  "keywords": [
+    "bullet-journal",
+    "personal-project-management",
+    "claude-code",
+    "planner"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  }
+}

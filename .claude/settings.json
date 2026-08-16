@@ -1,0 +1,58 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(sudo:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(shutdown:*)",
+      "Bash(reboot:*)",
+      "Bash(dd:*)",
+      "Bash(mkfs:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ],
+    "ask": [
+      "Bash(git:*)"
+    ],
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(pwd:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(bash Skills/manage-planner/scripts/today.sh)",
+      "mcp__gcal__gcal_list_events",
+      "mcp__gcal__gcal_check_token"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./Skills/purge-file/scripts/sandbox-guard.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "mcpServers": {
+    "gcal": {
+      "command": "node",
+      "args": ["./Skills/sync-calendar/scripts/gcal-server.js"]
+    }
+  }
+}

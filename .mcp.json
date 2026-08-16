@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "gcal": {
+      "command": "node",
+      "args": ["./Skills/sync-calendar/scripts/gcal-server.js"]
+    }
+  }
+}

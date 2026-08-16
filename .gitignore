@@ -1,0 +1,38 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Node modules
+node_modules/
+
+# Runtime data (purge logs, quarantine)
+data/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+TEMP/
+
+# Ingest staging area — keep the folder + README, ignore staged content
+99_TEMP/*
+!99_TEMP/README.md
+
+# Claude Code worktrees
+.claude/worktrees/
