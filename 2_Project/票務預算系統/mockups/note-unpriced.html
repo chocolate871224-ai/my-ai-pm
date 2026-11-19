@@ -1,0 +1,111 @@
+<title>註記座位歸類</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: before/after for (1) the dashboard counts and (2) the sheet legend + seat cells, when unpriced seats get a not-for-sale category */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876; --accent:#5B3FD0; --pop:#DDE96A; --bad:#C23B28;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body)}
+.wrap{max-width:1000px;margin:0 auto;padding-block:26px 44px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+h2{font-size:17px;margin:6px 0 0}
+.lead{color:var(--muted);margin:4px 0 0;max-width:72ch}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:15px;margin:0;display:flex;align-items:center;gap:8px}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--accent);color:#fff;font-size:11.5px;font-weight:700;line-height:1}
+.tag.off{background:var(--muted)}
+.kp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.k{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:grid;grid-template-rows:18px 26px 16px;row-gap:2px}
+.k .t{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;line-height:1}
+.k .t i{width:11px;height:11px;border-radius:3px;flex:none}
+.k .v{font:800 22px/1 var(--font-num);display:flex;align-items:center}
+.k .s{font-size:11.5px;color:var(--muted);line-height:1;display:flex;align-items:center}
+.k.hl{outline:2px solid var(--accent);outline-offset:-1px}
+.strike{text-decoration:line-through;color:var(--muted);font-weight:600;font-size:15px;margin-right:6px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{border:1px solid var(--line);padding:0 8px;height:28px;text-align:left;vertical-align:middle;white-space:nowrap}
+th{background:var(--surface2);font-weight:600;color:var(--muted)}
+td.n{text-align:right;font-family:var(--font-num)}
+td .sw{display:inline-block;width:28px;height:14px;border-radius:3px;vertical-align:middle;border:1px solid rgba(0,0,0,.08)}
+tr.new td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.cells{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}
+.cells span{aspect-ratio:1;border:1px solid #e3e3e3}
+.cap{font-size:12px;color:var(--muted);margin:-4px 0 0}
+.note{font-size:13.5px;color:var(--muted);margin:0}
+ul{margin:0;padding-left:18px}li{margin:3px 0}
+.ask{background:var(--surface2);border-radius:18px;padding:14px 18px}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Seat notes・示意 v2</div>
+    <h1>已分類的座位，不再算「未設定票價」，試算表也一起更新</h1>
+    <p class="lead">媒體高台（218區 20 席）、貴賓高台（209區 20 席）原本是白色、沒票價的格子。你標了分類、設成不售，但系統只看格子顏色，所以這 40 席還被算在「未設定票價」裡，試算表上也還是白色。</p>
+  </header>
+
+  <h2>1. 系統畫面</h2>
+  <div class="grid">
+    <div class="card">
+      <h3><span class="tag off">現在</span>鎖位與不售</h3>
+      <div class="kp">
+        <div class="k"><span class="t"><i style="background:#D9C8FF"></i>未設定票價</span><span class="v">72</span><span class="s">試算表沒有統計公式</span></div>
+        <div class="k"><span class="t"><i style="background:#666"></i>視線不良</span><span class="v">2,767</span><span class="s">試算表沒有統計公式</span></div>
+      </div>
+      <p class="note">媒體高台、貴賓高台只出現在下面的「座位註記」小標籤裡，上面的統計看不到。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag">改成</span>鎖位與不售</h3>
+      <div class="kp">
+        <div class="k hl"><span class="t"><i style="background:#D9C8FF"></i>未設定票價</span><span class="v"><span class="strike">72</span>32</span><span class="s">扣掉已分類的 40 席</span></div>
+        <div class="k"><span class="t"><i style="background:#666"></i>視線不良</span><span class="v">2,767</span><span class="s">試算表有統計公式</span></div>
+      </div>
+      <p class="note">只把已分類的 40 席從「未設定票價」扣掉（72 → 32），上面不另外多開卡片。媒體高台、貴賓高台照舊留在下面「座位註記」自己的分類裡。座位規劃頁的「未設定票價」也會變成 32。</p>
+    </div>
+  </div>
+
+  <h2>2. 試算表「票價座位」分頁</h2>
+  <div class="grid">
+    <div class="card">
+      <h3><span class="tag off">現在</span>格子白色、圖例沒有這兩類</h3>
+      <div class="cells" id="c1"></div>
+      <p class="cap">209區那排：白色格子，只有儲存格備註寫「貴賓高台」</p>
+      <table><thead><tr><th>圖例</th><th>名稱</th><th>座位數</th><th>票價</th></tr></thead>
+        <tbody><tr><td><span class="sw" style="background:#0000d4"></span></td><td>場館工作席</td><td class="n">24</td><td>—</td></tr>
+        <tr><td><span class="sw" style="background:#333"></span></td><td>視線不良</td><td class="n">2,767</td><td>—</td></tr></tbody></table>
+    </div>
+    <div class="card">
+      <h3><span class="tag">改成</span>格子塗分類顏色，圖例不動</h3>
+      <div class="cells" id="c2"></div>
+      <p class="cap">同一排：塗成貴賓高台的黃色，備註保留</p>
+      <table><thead><tr><th>圖例</th><th>名稱</th><th>座位數</th><th>票價</th></tr></thead>
+        <tbody><tr><td><span class="sw" style="background:#0000d4"></span></td><td>場館工作席</td><td class="n">24</td><td>—</td></tr>
+        <tr><td><span class="sw" style="background:#333"></span></td><td>視線不良</td><td class="n">2,767</td><td>—</td></tr>
+</tbody></table>
+    </div>
+  </div>
+
+  <ul class="note">
+    <li><b>什麼時候同步</b>：在座位規劃按「儲存到試算表」時一起做。白色座位標了分類 → 試算表格子塗成分類顏色，看試算表就知道這幾格是什麼；圖例不加列、不進總票房。系統讀回來時，依備註認出它是哪個分類，不會變成「圖例沒有的顏色」。</li>
+    <li><b>拿掉分類</b>：格子改回白色，又算回「未設定票價」。分類改顏色時，試算表的格子跟著改。</li>
+    <li><b>只動白色座位</b>：已經有票價的座位標了分類（例如待確認），格子顏色不動，票價照算，避免票房算錯。</li>
+    <li>「票券銷售及鎖位」分頁的同一批座位也一起塗，兩個分頁保持一致。</li>
+  </ul>
+
+  <div class="ask">這樣同步可以嗎？確認後我就改系統，並把現在的 40 席同步到試算表。</div>
+</div>
+
+<script>
+(function(){
+  function draw(id,yellow){const el=document.getElementById(id);
+    for(let r=0;r<3;r++)for(let c=0;c<10;c++){const s=document.createElement('span');
+      s.style.background=r===1?(yellow?'#eab308':'#ffffff'):'#4A86E8';el.appendChild(s);}}
+  draw('c1',false);draw('c2',true);
+})();
+</script>

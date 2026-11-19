@@ -1,0 +1,14 @@
+{
+  "name": "ticket-seat",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "python3 -I tools/build.py",
+    "test": "node tests/test_sales.cjs src/Code.gs",
+    "push": "python3 -I tools/build.py && node tests/test_sales.cjs src/Code.gs && clasp push --force",
+    "deploy": "node tools/deploy.cjs"
+  },
+  "devDependencies": {
+    "@google/clasp": "2.4.2"
+  }
+}

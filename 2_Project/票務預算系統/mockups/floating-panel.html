@@ -1,0 +1,99 @@
+<title>浮動票價面板</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: the seat map fills the whole content area; the price panel floats on top as a draggable window */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876;
+  --accent:#5B3FD0; --accent-soft:#F6F3FF; --pop:#DDE96A;
+  --p1:#E06666; --p2:#EA9999; --p3:#6D9EEB; --p4:#76F7F7; --p5:#F6B26B; --p6:#B45EF0; --gray:#666666;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:4px 0 0;max-width:68ch}
+.stage{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:22px;height:620px;overflow:hidden;touch-action:none}
+.tools{position:absolute;left:16px;top:16px;display:flex;gap:6px;z-index:2}
+.tools span{background:var(--surface2);border-radius:12px;padding:6px 12px;font-size:13px;font-weight:700}
+.map{position:absolute;inset:60px 24px 24px;display:grid;grid-template-columns:repeat(40,1fr);gap:3px;align-content:center}
+.map u{display:block;aspect-ratio:1;border-radius:2px}
+.lbl{position:absolute;background:var(--fg);color:var(--bg);font:800 12px var(--font-num);border-radius:999px;padding:2px 9px;z-index:1}
+.panel{position:absolute;right:24px;top:70px;width:300px;max-width:calc(100% - 32px);background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 40px -18px rgba(40,30,80,.45);z-index:5;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:grab;user-select:none;border-radius:18px 18px 0 0;background:var(--surface2)}
+.bar:active{cursor:grabbing}
+.grip{display:grid;grid-template-columns:repeat(2,4px);gap:3px}
+.grip i{width:4px;height:4px;border-radius:50%;background:var(--muted)}
+.bar b{font-size:14px;flex:1}
+.bar button{border:0;background:var(--surface);border-radius:10px;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--fg)}
+.body{padding:12px;display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto}
+.panel.min .body{display:none}
+.panel.min .bar{border-bottom:0;border-radius:18px}
+.sel{background:var(--accent-soft);border-radius:12px;padding:8px 10px;font-size:13px}
+.row{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:7px 10px;font-size:13px;cursor:pointer}
+.row i{width:14px;height:14px;border-radius:4px;flex:none}
+.row b{font:800 14px var(--font-num)}
+.row span.n{margin-left:auto;font:700 12px var(--font-num);color:var(--muted)}
+.save{border:0;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;padding:10px;font-size:14px}
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:13.5px}
+.note b{display:block;margin-bottom:2px}
+.ask{background:var(--surface2);border-radius:18px;padding:14px 18px}
+@media (max-width:760px){.notes{grid-template-columns:1fr}.stage{height:520px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Seating Plan・示意（可以實際拖拖看）</div>
+    <h1>座位圖放滿整個版面，票價面板變成可移動的小視窗</h1>
+    <p class="lead">拖曳小視窗上方的灰色標題列可以移到任何位置；按「–」縮成一條，只留標題；位置會記住，下次打開還在同一個地方。</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="tools"><span>框選</span><span>平移</span><span>＋ － 全場</span><span>復原</span></div>
+    <div class="map" id="map" aria-label="座位圖示意"></div>
+    <span class="lbl" style="left:8%;top:14%">207區</span><span class="lbl" style="left:40%;top:14%">特1區</span><span class="lbl" style="left:8%;top:38%">208區</span><span class="lbl" style="left:8%;top:62%">209區</span>
+
+    <div class="panel" id="panel">
+      <div class="bar" id="bar"><span class="grip"><i></i><i></i><i></i><i></i><i></i><i></i></span><b>票價分佈・已選 24 席</b><button type="button" id="minBtn" aria-label="縮小">–</button></div>
+      <div class="body">
+        <div class="sel">208區 第3–5排・原本 $4,880</div>
+        <div class="row"><i style="background:#fff;box-shadow:inset 0 0 0 1.5px #CFC8DA"></i>未設定票價<span class="n">528</span></div>
+        <div class="row"><i style="background:var(--p1)"></i><b>$5,680</b><span class="n">720</span></div>
+        <div class="row"><i style="background:var(--p2)"></i><b>$5,280</b><span class="n">960</span></div>
+        <div class="row"><i style="background:var(--p3)"></i><b>$4,880</b><span class="n">2,652</span></div>
+        <div class="row"><i style="background:var(--p4)"></i><b>$4,680</b><span class="n">1,049</span></div>
+        <div class="row"><i style="background:var(--p5)"></i><b>$3,880</b><span class="n">2,636</span></div>
+        <div class="row"><i style="background:var(--p6)"></i><b>$3,280</b><span class="n">349</span></div>
+        <div class="row" style="color:var(--muted)">鎖位・不售、座位註記、快速選取 ⌄</div>
+        <button class="save" type="button">儲存到試算表（24 席）</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><b>座位圖變大</b>原本右邊整欄讓出來，座位圖橫跨整個內容區，放大縮小都更好操作。</div>
+    <div class="note"><b>面板內容不變</b>選取資訊、票價、鎖位、註記、快速選取、儲存，全部都在小視窗裡，可以捲動。</div>
+    <div class="note"><b>手機版照舊</b>手機螢幕太小，維持現在下方面板的做法。銷售模式也用同一個小視窗。</div>
+  </div>
+
+  <div class="ask">確認這樣可以，我就照這個改。</div>
+</div>
+
+<script>
+(function(){
+  const cols=['p3','p3','p3','p5','p5','gray','p1','p1','p2','p2','p3','p4'];
+  const map=document.getElementById('map');let h='';
+  for(let r=0;r<22;r++)for(let c=0;c<40;c++){const k=(c<10)?(r<8?'gray':r<15?'p3':'p5'):(c<14?'none':(c<26?(r<10?'p1':r<13?'none':'p4'):(c<30?'none':(r<11?'p3':'p6'))));h+=k==='none'?'<u></u>':`<u style="background:var(--${k})"></u>`;}
+  map.innerHTML=h;
+  const panel=document.getElementById('panel'),bar=document.getElementById('bar'),stage=document.getElementById('stage');
+  let sx,sy,ox,oy,drag=false;
+  bar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag=true;bar.setPointerCapture(e.pointerId);const r=panel.getBoundingClientRect(),s=stage.getBoundingClientRect();sx=e.clientX;sy=e.clientY;ox=r.left-s.left;oy=r.top-s.top;panel.style.right='auto';panel.style.left=ox+'px';panel.style.top=oy+'px';});
+  bar.addEventListener('pointermove',e=>{if(!drag)return;const s=stage.getBoundingClientRect();let x=ox+e.clientX-sx,y=oy+e.clientY-sy;x=Math.max(8,Math.min(s.width-panel.offsetWidth-8,x));y=Math.max(8,Math.min(s.height-48,y));panel.style.left=x+'px';panel.style.top=y+'px';});
+  bar.addEventListener('pointerup',()=>{drag=false;});
+  document.getElementById('minBtn').addEventListener('click',e=>{panel.classList.toggle('min');e.currentTarget.textContent=panel.classList.contains('min')?'+':'–';});
+})();
+</script>

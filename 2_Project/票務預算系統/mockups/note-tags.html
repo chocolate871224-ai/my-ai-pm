@@ -1,0 +1,116 @@
+<title>座位註記分類</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: part 1 compares how 撤位 seats are drawn; part 2 is the tag editor as it would open from the seat panel */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876;
+  --accent:#5B3FD0; --accent-soft:#F6F3FF; --pop:#DDE96A; --bad:#C23B28;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body)}
+.wrap{max-width:1000px;margin:0 auto;padding-block:26px 44px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+h2{font-size:17px;margin:0 0 4px}
+.lead{color:var(--muted);margin:4px 0 0;max-width:68ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two .card{display:flex;flex-direction:column;gap:8px}
+.two h3{margin:0;font-size:15px}
+.two p{margin:0;font-size:13px;color:var(--muted)}
+canvas{width:100%;height:auto;aspect-ratio:2/1;border-radius:12px;border:1px solid var(--line);background:#fff;display:block}
+/* editor */
+.ed{max-width:640px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 50px -24px rgba(40,30,80,.45);overflow:hidden}
+.ed .hd{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.ed .hd b{flex:1;font-size:16px}
+.ed .hd small{color:var(--muted);font-size:12.5px}
+.rows{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.r{display:grid;grid-template-columns:34px minmax(0,1fr) auto auto 34px;gap:8px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:8px 10px}
+.r.new{border:2px dashed var(--accent)}
+.sw{width:30px;height:30px;border-radius:9px;border:0;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.r input{min-width:0;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:7px 10px;font:600 14px var(--font-body);color:var(--fg)}
+.seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px}
+.seg span{padding:5px 9px;border-radius:8px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.seg span.on{background:var(--surface);color:var(--fg);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.del{width:30px;height:30px;border-radius:9px;border:0;background:transparent;color:var(--muted);font-size:18px;cursor:pointer}
+.cnt{grid-column:2/-1;font-size:12px;color:var(--muted);margin-top:-2px}
+.cnt.warn{color:var(--bad)}
+.add{margin:2px 14px 12px;border:1.5px dashed var(--line);border-radius:14px;padding:10px;text-align:center;color:var(--accent);font-weight:700;font-size:14px}
+.ft{display:flex;gap:8px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--line)}
+.ft span{flex:1;font-size:12.5px;color:var(--muted);align-self:center}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font:700 13.5px var(--font-body);color:var(--fg)}
+.btn.p{background:var(--accent);border-color:var(--accent);color:#fff}
+.entry{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13.5px}
+.tagb{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:600}
+.tagb i{width:10px;height:10px;border-radius:3px}
+.link{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+ul{margin:0;padding-left:18px}
+li{margin:3px 0}
+.ask{background:var(--surface2);border-radius:18px;padding:14px 18px}
+@media (max-width:720px){.two{grid-template-columns:1fr}.r{grid-template-columns:34px minmax(0,1fr) 34px}.r .seg{grid-column:2/-1}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Seating Plan・示意</div>
+    <h1>撤位改成打叉，註記分類可以改名和新增</h1>
+  </header>
+
+  <section>
+    <h2>1. 撤位的顯示方式</h2>
+    <div class="two">
+      <div class="card"><h3>現在</h3><canvas data-v="now" width="480" height="240"></canvas><p>蓋一層白霧，放很大才看得到叉，縮小時像是淡掉的座位。</p></div>
+      <div class="card"><h3>改成</h3><canvas data-v="x" width="480" height="240"></canvas><p>座位底色拿掉，直接畫一個深色叉叉，任何縮放都看得到「這裡沒有座位」。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. 管理註記分類</h2>
+    <div class="card entry" style="margin-bottom:12px">
+      <span>座位面板的「座位註記」：</span>
+      <span class="tagb"><i style="background:#64748b"></i>撤位</span><span class="tagb"><i style="background:#d97706"></i>貴賓保留</span><span class="tagb"><i style="background:#16a34a"></i>公關／贊助保留</span><span class="tagb"><i style="background:#2563eb"></i>待確認</span>
+      <span class="link">管理分類 ›</span>
+    </div>
+
+    <div class="ed" role="dialog" aria-label="管理註記分類（示意）">
+      <div class="hd"><b>管理註記分類</b><small>所有裝置共用</small></div>
+      <div class="rows">
+        <div class="r"><button class="sw" style="background:#64748b" aria-label="換顏色"></button><input value="撤位" aria-label="名稱"><div class="seg"><span>可售</span><span class="on">不售</span></div><div class="seg"><span class="on">叉叉</span><span>角標</span><span>淡化</span></div><button class="del" aria-label="刪除">×</button><div class="cnt">目前 120 席</div></div>
+        <div class="r"><button class="sw" style="background:#d97706" aria-label="換顏色"></button><input value="主辦貴賓保留" aria-label="名稱"><div class="seg"><span>可售</span><span class="on">不售</span></div><div class="seg"><span>叉叉</span><span class="on">角標</span><span>淡化</span></div><button class="del" aria-label="刪除">×</button><div class="cnt warn">原本叫「貴賓保留」，儲存後已標記的 48 席會一起改名</div></div>
+        <div class="r"><button class="sw" style="background:#16a34a" aria-label="換顏色"></button><input value="公關／贊助保留" aria-label="名稱"><div class="seg"><span>可售</span><span class="on">不售</span></div><div class="seg"><span>叉叉</span><span class="on">角標</span><span>淡化</span></div><button class="del" aria-label="刪除">×</button><div class="cnt">目前 0 席</div></div>
+        <div class="r"><button class="sw" style="background:#2563eb" aria-label="換顏色"></button><input value="待確認" aria-label="名稱"><div class="seg"><span class="on">可售</span><span>不售</span></div><div class="seg"><span>叉叉</span><span class="on">角標</span><span>淡化</span></div><button class="del" aria-label="刪除">×</button><div class="cnt">目前 12 席</div></div>
+        <div class="r new"><button class="sw" style="background:#db2777" aria-label="換顏色"></button><input value="攝影機位" aria-label="名稱"><div class="seg"><span>可售</span><span class="on">不售</span></div><div class="seg"><span class="on">叉叉</span><span>角標</span><span>淡化</span></div><button class="del" aria-label="刪除">×</button><div class="cnt">新分類</div></div>
+      </div>
+      <div class="add">＋ 新增分類</div>
+      <div class="ft"><span>還有座位在用的分類不能直接刪，要先改標成別的分類或清除。</span><button class="btn" type="button">取消</button><button class="btn p" type="button">儲存</button></div>
+    </div>
+  </section>
+
+  <div class="card">
+    <h2>規則</h2>
+    <ul>
+      <li>每個分類可以設：顏色、名稱、可售／不售、在座位圖上的顯示方式（叉叉、角標、淡化）。</li>
+      <li><b>改名</b>：已經標記的座位會一起改成新名稱（試算表「座位註記」分頁和座位格子上的備註都會更新）。</li>
+      <li><b>不售</b>的分類不算可售張數和票房，試算表的座位數公式也會跟著扣掉。</li>
+      <li>分類存在試算表裡，所有人、所有裝置看到的都一樣。</li>
+    </ul>
+  </div>
+
+  <div class="ask">撤位打叉、和這個管理分類的做法可以嗎？確認後我就改。</div>
+</div>
+
+<script>
+(function(){
+  const C=20,R=10;
+  document.querySelectorAll('canvas').forEach(cv=>{const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cell=Math.min((W-20)/C,(H-20)/R),g=cell*.12,w=cell-g,ox=(W-cell*C)/2,oy=(H-cell*R)/2,v=cv.dataset.v;
+    for(let r=0;r<R;r++)for(let c=0;c<C;c++){const x=ox+c*cell,y=oy+r*cell,cut=r>=6&&c>=4&&c<16;
+      ctx.fillStyle=c<10?'#6D9EEB':'#F6B26B';
+      if(!cut){ctx.fillRect(x,y,w,w);continue;}
+      if(v==='now'){ctx.fillRect(x,y,w,w);ctx.fillStyle='rgba(255,255,255,.55)';ctx.fillRect(x,y,w,w);}
+      else{ctx.strokeStyle='#3A3645';ctx.lineWidth=Math.max(1.4,cell*.13);ctx.lineCap='round';const p=w*.2;ctx.beginPath();ctx.moveTo(x+p,y+p);ctx.lineTo(x+w-p,y+w-p);ctx.moveTo(x+w-p,y+p);ctx.lineTo(x+p,y+w-p);ctx.stroke();}}
+  });
+})();
+</script>

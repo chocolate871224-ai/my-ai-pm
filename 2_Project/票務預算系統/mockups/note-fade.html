@@ -1,0 +1,96 @@
+<title>註記淡化修正</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: before/after seat grids for noted seats (now: faded + corner flag; new: whole seat in the category colour), light and dark, plus the style picker */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876; --accent:#5B3FD0; --accent-soft:#F6F3FF;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body)}
+.wrap{max-width:980px;margin:0 auto;padding-block:26px 44px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:4px 0 0;max-width:70ch}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.card h2{font-size:15px;margin:0;display:flex;align-items:center;gap:8px}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--accent);color:#fff;font-size:11.5px;font-weight:700;line-height:1}
+.tag.off{background:var(--muted)}
+.maps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.map{border-radius:14px;padding:12px;display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+.map.l{background:#FFFFFF;border:1px solid var(--line)}
+.map.d{background:#24212C}
+.cap{font-size:12px;color:var(--muted);text-align:center;margin-top:-4px}
+.s{aspect-ratio:1;border-radius:2px;position:relative;overflow:hidden}
+.s.f::after{content:"";position:absolute;left:0;top:0;width:45%;height:45%;background:var(--tc);clip-path:polygon(0 0,100% 0,0 100%)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13px;font-weight:700;line-height:1}
+.chip i{width:12px;height:12px;border-radius:3px;flex:none}
+.chip i.tri{clip-path:polygon(0 0,100% 0,0 100%)}
+.chip b{font:600 12px var(--font-num);color:var(--muted)}
+.picker{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.seg{display:inline-flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px}
+.seg span{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1}
+.seg span.on{background:var(--surface);color:var(--accent);box-shadow:0 1px 3px rgba(20,10,50,.15)}
+.seg span.new{outline:2px dashed var(--accent);outline-offset:-2px}
+.note{font-size:13.5px;color:var(--muted);margin:0}
+ul{margin:0;padding-left:18px}li{margin:3px 0}
+.ask{background:var(--surface2);border-radius:18px;padding:14px 18px}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Seat notes・示意 v2</div>
+    <h1>註記後座位整格換成分類的顏色</h1>
+    <p class="lead">你新增分類、設定顏色，就是要座位圖上那些座位直接變成那個顏色。現在只有淡化或畫角標，原本票價的顏色還在，所以看起來沒有更新。下面以媒體高台（紅）、貴賓高台（黃）為例。</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2><span class="tag off">現在</span>原本票價色＋淡化＋角標</h2>
+      <div class="maps"><div class="map l" id="nowL"></div><div class="map d" id="nowD"></div></div>
+      <div class="maps"><div class="cap">白底</div><div class="cap">深色</div></div>
+      <div class="chips"><span class="chip"><i class="tri" style="background:#e11d48"></i>媒體高台<b>20</b></span><span class="chip"><i class="tri" style="background:#eab308"></i>貴賓高台<b>20</b></span></div>
+      <p class="note">座位還是藍色（票價色），只多了一點紅、黃。</p>
+    </div>
+    <div class="card">
+      <h2><span class="tag">改成</span>整格換成分類顏色</h2>
+      <div class="maps"><div class="map l" id="newL"></div><div class="map d" id="newD"></div></div>
+      <div class="maps"><div class="cap">白底</div><div class="cap">深色</div></div>
+      <div class="chips"><span class="chip"><i style="background:#e11d48"></i>媒體高台<b>20</b></span><span class="chip"><i style="background:#eab308"></i>貴賓高台<b>20</b></span></div>
+      <p class="note">那兩排直接變紅、變黃，跟你在「管理分類」設的顏色一樣。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>「管理分類」的顯示方式</h2>
+    <div class="picker">顯示方式 <span class="seg"><span>叉叉</span><span>角標</span><span class="on new">換色</span></span></div>
+    <ul class="note">
+      <li>「淡化」改成<b>「換色」</b>：整格塗成分類顏色。現在設成淡化的分類（媒體高台、貴賓高台）會自動變成換色，你不用重設。</li>
+      <li>之後新增分類，預設就是「換色」。</li>
+      <li>「叉叉」「角標」保留，例如撤位還是打叉。</li>
+      <li>只改系統畫面。試算表上的格子顏色不動，因為格子顏色代表票價，改了會讓票價張數算錯；點座位時面板仍會顯示它原本的票價。</li>
+    </ul>
+  </div>
+
+  <div class="ask">這樣改可以嗎？確認後我就改正式系統。</div>
+</div>
+
+<script>
+(function(){
+  // 8x4 seats: first two rows are noted (red: media, yellow: vip), the rest are a normal blue price tier
+  const base='#4A86E8',notes=[['#e11d48',0],['#eab308',1]];
+  const mix=(c,bg,a)=>{const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const x=p(c),y=p(bg);return 'rgb('+x.map((v,i)=>Math.round(v*(1-a)+y[i]*a)).join(',')+')';};
+  function fill(id,mode){const el=document.getElementById(id);
+    for(let r=0;r<4;r++)for(let c=0;c<8;c++){const d=document.createElement('div');d.className='s';const n=notes.find(x=>x[1]===r);
+      if(!n){d.style.background=base;}
+      else if(mode==='now'){d.style.background=mix(base,'#FFFFFF',.6);d.classList.add('f');d.style.setProperty('--tc',n[0]);}
+      else{d.style.background=n[0];}
+      el.appendChild(d);}}
+  fill('nowL','now');fill('nowD','now');fill('newL','new');fill('newD','new');
+})();
+</script>

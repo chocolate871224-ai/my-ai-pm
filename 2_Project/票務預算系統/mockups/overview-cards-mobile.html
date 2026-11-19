@@ -1,0 +1,133 @@
+<title>總覽手機排版</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: three phone frames side by side (now / B / C) showing the overview cards at 375px */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876;
+  --accent:#5B3FD0; --pop:#DDE96A; --hero-ink:#3B3A1C; --bad:#C23B28;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body)}
+.wrap{max-width:1240px;margin:0 auto;padding-block:26px 44px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:4px 0 0;max-width:72ch}
+.phones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+.col h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.col p{font-size:13px;color:var(--muted);margin:0 0 10px;min-height:42px}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--accent);color:#fff;font-size:11.5px;font-weight:700;line-height:1}
+.tag.off{background:var(--muted)}
+.phone{width:100%;max-width:375px;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-radius:28px;padding:18px 16px;box-shadow:0 18px 40px -28px rgba(20,10,50,.45)}
+.ph-h{font-size:22px;font-weight:900;margin:0 0 12px}
+
+/* shared bits */
+.ic{width:15px;height:15px;flex:none;color:var(--accent)}
+.hero .ic{color:#17151C}
+.t{color:var(--fg);font-weight:500;letter-spacing:.02em}
+.hero .t{color:#17151C}
+.c{display:inline-flex;align-items:center;height:18px;padding:0 7px;border-radius:999px;background:var(--surface2);color:var(--muted);font-size:11px;line-height:1;flex:none;white-space:nowrap}
+.hero .c{background:rgba(23,21,28,.10);color:var(--hero-ink)}
+.v{font:800 22px/1 var(--font-num);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.bad{color:var(--bad)}
+.ok{display:inline-flex;align-items:center;gap:5px}
+.ok i{font-style:normal;width:15px;height:15px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;font-weight:800;line-height:1;background:#17151C;color:var(--pop);flex:none}
+
+/* NOW: 2x2, truncated */
+.now{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.now .kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 10px;display:grid;grid-template-rows:22px 30px 18px;row-gap:3px;justify-items:center;min-width:0}
+.now .kpi>*{display:flex;align-items:center;justify-content:center;gap:5px;max-width:100%;min-width:0;overflow:hidden;white-space:nowrap}
+.now .k{font-size:12.5px}
+.now .k .t{overflow:hidden;text-overflow:ellipsis}
+.now .s{font-size:12px;color:var(--muted)}
+.now .s span{overflow:hidden;text-overflow:ellipsis}
+.now .hero,.b .hero,.cl .hero{background:var(--pop);border-color:transparent}
+.cut{outline:2px dashed var(--bad);outline-offset:2px;border-radius:4px}
+
+/* B: 2x2, condition chip on its own line, sub wraps */
+.b{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.b .kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 10px;display:grid;grid-template-rows:20px 20px 30px 32px;row-gap:3px;justify-items:center;text-align:center;min-width:0}
+.b .kpi>*{display:flex;align-items:center;justify-content:center;gap:5px;max-width:100%}
+.b .k{font-size:12.5px}
+.b .s{font-size:12px;line-height:1.35;color:var(--muted)}
+.b .hero .s{color:var(--hero-ink)}
+
+/* C: one column, label left / number right */
+.cl{display:flex;flex-direction:column;gap:8px}
+.cl .kpi{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:22px 18px;column-gap:12px;row-gap:4px;align-items:center}
+.cl .k{display:flex;align-items:center;gap:6px;font-size:13px;min-width:0}
+.cl .s{grid-column:1;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:21px}
+.cl .hero .s{color:var(--hero-ink)}
+.cl .v{grid-column:2;grid-row:1/3;font-size:23px;text-align:right}
+
+.notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:13.5px}
+.note b{display:block;margin-bottom:2px}
+.ask{background:var(--surface2);border-radius:18px;padding:14px 18px}
+@media (max-width:1000px){.phones{grid-template-columns:1fr}.col p{min-height:0}.notes{grid-template-columns:1fr}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M15 9.3c-.5-1-1.6-1.6-3-1.6-1.7 0-3 .9-3 2.1 0 2.9 6 1.6 6 4.4 0 1.2-1.3 2.1-3 2.1-1.4 0-2.6-.6-3.1-1.6M12 6v1.7M12 16.3V18"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4z"/><path d="M14 7v2M14 11v2M14 15v2"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.4"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Overview・手機排版示意</div>
+    <h1>同一個網址，手機上換成適合的排版</h1>
+    <p class="lead">正式網站本來就是同一個網址，依螢幕寬度自動換排版（手機會有底部選單）。但我用手機尺寸檢查剛上線的四個框，發現主題被截斷成「預估…」「預…」，說明行也被切掉。下面是兩種手機版改法。</p>
+  </header>
+
+  <div class="phones">
+    <div class="col">
+      <h2><span class="tag off">現在</span>手機上的樣子</h2>
+      <p>兩欄太窄，主題和條件標籤擠在一行，字被截斷（紅框）。</p>
+      <div class="phone"><div class="ph-h">票房總覽</div>
+        <div class="now">
+          <div class="kpi hero"><span class="k"><svg class="ic"><use href="#i-cash"/></svg><span class="t cut">預估…</span><span class="c">全數售出</span></span><span class="v">$41,319,180</span><span class="s"><span class="ok"><i>✓</i>與試算表一致</span></span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-ticket"/></svg><span class="t">可售張數</span></span><span class="v">9,843</span><span class="s"><span class="cut">座位格 12,706・鎖位 2…</span></span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-tag"/></svg><span class="t">平均票價</span></span><span class="v">$4,198</span><span class="s"><span>總票房 ÷ 可售張數</span></span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-trend"/></svg><span class="t cut">預…</span><span class="c">售票率 70%</span></span><span class="v bad">-$2,065,352</span><span class="s"><span>看預算明細 ›</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h2><span class="tag">B</span>維持兩欄，標籤換行</h2>
+      <p>條件標籤放到主題下一行，說明可以兩行。四格一樣高，但框變高、沒有標籤的格子會空一行。</p>
+      <div class="phone"><div class="ph-h">票房總覽</div>
+        <div class="b">
+          <div class="kpi hero"><span class="k"><svg class="ic"><use href="#i-cash"/></svg><span class="t">預估總票房</span></span><span><span class="c">全數售出</span></span><span class="v">$41,319,180</span><span class="s"><span class="ok"><i>✓</i>與試算表一致</span></span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-ticket"/></svg><span class="t">可售張數</span></span><span></span><span class="v">9,843</span><span class="s">座位格 12,706<br>鎖位 2,791</span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-tag"/></svg><span class="t">平均票價</span></span><span></span><span class="v">$4,198</span><span class="s">總票房 ÷ 可售張數</span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-trend"/></svg><span class="t">預計盈虧</span></span><span><span class="c">售票率 70%</span></span><span class="v bad">-$2,065,352</span><span class="s">看預算明細 ›</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h2><span class="tag">C</span>一欄清單：左邊主題、右邊數字（推薦）</h2>
+      <p>手機上最好讀的方式。每列一個指標，主題和條件不再擠，數字靠右對齊方便上下比較，總高度跟現在差不多。</p>
+      <div class="phone"><div class="ph-h">票房總覽</div>
+        <div class="cl">
+          <div class="kpi hero"><span class="k"><svg class="ic"><use href="#i-cash"/></svg><span class="t">預估總票房</span><span class="c">全數售出</span></span><span class="v">$41,319,180</span><span class="s"><span class="ok"><i>✓</i>與試算表一致</span></span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-ticket"/></svg><span class="t">可售張數</span></span><span class="v">9,843</span><span class="s">座位格 12,706・鎖位 2,791</span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-tag"/></svg><span class="t">平均票價</span></span><span class="v">$4,198</span><span class="s">總票房 ÷ 可售張數</span></div>
+          <div class="kpi"><span class="k"><svg class="ic"><use href="#i-trend"/></svg><span class="t">預計盈虧</span><span class="c">售票率 70%</span></span><span class="v bad">-$2,065,352</span><span class="s">看預算明細 ›</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><b>只改手機寬度</b>電腦版維持昨天上線的四格置中，不受影響。平板（中等寬度）維持兩欄兩排。</div>
+    <div class="note"><b>字級、配色、圖示都不變</b>只改排列方式，不放大、不加粗。</div>
+  </div>
+
+  <div class="ask">手機版用 B 還是 C？我推薦 C。確認後就改正式系統。</div>
+</div>

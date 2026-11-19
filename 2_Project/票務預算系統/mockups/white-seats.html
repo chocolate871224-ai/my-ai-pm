@@ -1,0 +1,92 @@
+<title>白色座位可選取</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: seat-map snippet left, the app's control panel right; stacks on phones */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876;
+  --accent:#5B3FD0; --accent-soft:#F6F3FF; --pop:#DDE96A;
+  --p1:#4A86E8; --p2:#F6B26B; --p3:#7EE8F5;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-soft:#2F2948;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.65 var(--font-body)}
+.wrap{max-width:1000px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+h2{font-size:16px;margin:0 0 10px}
+p{margin:0}
+.lead{color:var(--muted);max-width:64ch;margin-top:6px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+.stage{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;min-width:0}
+.map{display:grid;grid-template-columns:repeat(14,1fr);gap:3px;max-width:460px}
+.map u{display:block;aspect-ratio:1;border-radius:3px;max-width:100%;position:relative}
+.a{background:var(--p1)}.b{background:var(--p2)}.c{background:var(--p3)}
+.w{background:#fff;box-shadow:inset 0 0 0 1.5px #CFC8DA}
+.gap{background:transparent}
+.sel{outline:2px solid var(--accent);outline-offset:1px}
+.lbl{font:700 11px var(--font-num);color:var(--muted);display:flex;align-items:center;justify-content:center}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+.panel{display:flex;flex-direction:column;gap:10px}
+.selcard{background:var(--accent-soft);border-radius:14px;padding:10px 12px;font-size:13.5px}
+.selcard b{display:block}
+.row{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:9px 12px;font-size:13.5px}
+.row i{width:14px;height:14px;border-radius:4px;flex:none}
+.row .p{font:800 14px var(--font-num)}
+.row .n{margin-left:auto;font:700 12px var(--font-num);color:var(--muted)}
+.row.new{border:2px solid var(--accent)}
+.tag{font-size:11px;font-weight:700;background:var(--pop);color:#17151C;border-radius:999px;padding:1px 8px}
+ul{margin:0;padding-left:18px}
+li{margin:3px 0}
+.ask{background:var(--surface2);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+@media (max-width:760px){.stage{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Seating Plan・示意</div>
+    <h1>白色和沒有底色的座位也能選</h1>
+    <p class="lead">系統用高雄巨蛋的座位表判斷哪些格子是座位。是座位、但底色是白色或沒有底色的格子，會顯示成白底細框的「未設定票價」，可以框選、點兩下選整區，再套上票價。</p>
+  </header>
+
+  <div class="stage">
+    <div class="card">
+      <h2>座位圖（212 區局部）</h2>
+      <div class="map" aria-label="座位圖示意">
+        <span class="lbl">1</span><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="gap"></u>
+        <span class="lbl">2</span><u class="a"></u><u class="a"></u><u class="w sel"></u><u class="w sel"></u><u class="w sel"></u><u class="w sel"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="a"></u><u class="gap"></u>
+        <span class="lbl">3</span><u class="b"></u><u class="b"></u><u class="w sel"></u><u class="w sel"></u><u class="w sel"></u><u class="w sel"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="w"></u><u class="w"></u><u class="b"></u><u class="gap"></u>
+        <span class="lbl">4</span><u class="b"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="b"></u><u class="w"></u><u class="w"></u><u class="b"></u><u class="gap"></u>
+        <span class="lbl">5</span><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="c"></u><u class="gap"></u>
+      </div>
+      <div class="legend"><span><i class="w" style="display:inline-block"></i>未設定票價（白色或沒有底色）</span><span><i style="outline:2px solid var(--accent)"></i>已選取</span><span>左邊數字＝排號，仍然不能選</span></div>
+    </div>
+
+    <div class="card panel">
+      <div class="selcard"><b>已選 8 席</b>212區 第2–3排・未設定票價 8</div>
+      <h2 style="margin:4px 0 0">票價分佈</h2>
+      <div class="row new"><i class="w"></i><span>未設定票價</span><span class="tag">新</span><span class="n">36</span></div>
+      <div class="row"><i class="a"></i><span class="p">$4,880</span><span class="n">2,652</span></div>
+      <div class="row"><i class="b"></i><span class="p">$3,880</span><span class="n">2,636</span></div>
+      <div class="row"><i class="c"></i><span class="p">$4,680</span><span class="n">1,049</span></div>
+      <p style="font-size:12.5px;color:var(--muted)">選好後點票價就會套上顏色；點「未設定票價」可以把座位改回白色。</p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>會跟著改的地方</h2>
+    <ul>
+      <li>「未設定票價」不算可售張數，也不算票房，和鎖位一樣另外列出張數。</li>
+      <li>票房總覽多一行提醒：還有 N 席沒設定票價。</li>
+      <li>銷售頁面不能把白色座位標成已售，要先套票價。</li>
+      <li>只有高雄巨蛋的座位圖知道哪些白格是座位；其他場館的分頁照舊。</li>
+    </ul>
+  </section>
+
+  <section class="ask">
+    <h2 style="margin:0">這樣可以嗎？</h2>
+    <p>確認後我就改程式，先用測試試算表部署試用。</p>
+  </section>
+</div>

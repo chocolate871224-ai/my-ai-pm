@@ -1,0 +1,94 @@
+<title>淺色票區標示</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: tier picker on top, two side-by-side canvases (static glow / breathing glow) drawn like the real seat map */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876;
+  --accent:#5B3FD0; --pop:#DDE96A;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-body)}
+.wrap{max-width:1000px;margin:0 auto;padding-block:26px 44px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:4px 0 0;max-width:68ch}
+.pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pick span{font-size:13px;color:var(--muted);margin-right:4px}
+.pick button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font:700 13.5px var(--font-body);color:var(--fg);cursor:pointer;min-height:40px}
+.pick button i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.pick button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;min-width:0;display:flex;flex-direction:column;gap:8px}
+.card h2{font-size:15.5px;margin:0;display:flex;align-items:center;gap:8px}
+.card h2 .k{font:800 12px var(--font-num);background:var(--fg);color:var(--bg);border-radius:8px;padding:1px 7px}
+.card p{margin:0;font-size:13px;color:var(--muted)}
+canvas{width:100%;height:auto;aspect-ratio:12/5;border-radius:14px;display:block}
+.how{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 18px;font-size:14px}
+.how b{display:block;margin-bottom:2px}
+.ask{background:var(--surface2);border-radius:18px;padding:14px 18px}
+@media (max-width:720px){.grid{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Seating Plan・示意</div>
+    <h1>原色呼吸發光：白底和深色底比較</h1>
+    <p class="lead">游標移到哪個票價，被標出的座位就用它自己的票價顏色慢慢呼吸發光。左邊維持原本的白底，右邊換成深色底襯。點下面的按鈕切換票價，看不同顏色的效果。</p>
+  </header>
+
+  <div class="pick" role="group" aria-label="切換要標出的票價">
+    <span>游標停在：</span>
+    <button type="button" data-t="white" aria-pressed="true"><i style="background:#fff;box-shadow:inset 0 0 0 1.5px #CFC8DA"></i>未設定票價</button>
+    <button type="button" data-t="l1" aria-pressed="false"><i style="background:#D9EAD3"></i>$2,280</button>
+    <button type="button" data-t="l3" aria-pressed="false"><i style="background:#F4D9E4"></i>$1,680</button>
+    <button type="button" data-t="blue" aria-pressed="false"><i style="background:#6D9EEB"></i>$4,880</button>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h2><span class="k">G1</span>原本的白底＋原色呼吸發光</h2><canvas data-s="light" width="600" height="250"></canvas><p>背景維持白色，其他座位淡化。淺色座位的光暈會用同色系加深一點，白底上才看得到。</p></div>
+    <div class="card"><h2><span class="k">G2</span>深色底襯＋原色呼吸發光</h2><canvas data-s="dark" width="600" height="250"></canvas><p>背景轉深、其他座位變暗灰，被標出的座位最亮。</p></div>
+  </div>
+
+  <div class="how"><b>D／G 的「呼吸」是怎麼閃的？</b>不是一閃一閃的開關燈，而是光暈的範圍和亮度慢慢變大變亮、再慢慢收回去，大約 2 秒一輪，游標移開就停。電腦有開「減少動態效果」的話，會自動改成不動的 F。</div>
+
+  <div class="ask">兩個都是 G（會呼吸）。選 G1 白底還是 G2 深色底？確認後我就改正式系統。</div>
+</div>
+
+<script>
+(function(){
+  const COL={blue:'#6D9EEB',orange:'#F6B26B',l1:'#D9EAD3',l2:'#DDE7F5',l3:'#F4D9E4',white:'#FFFFFF'};
+  const pick=(r,c)=>{if(c<8)return r<4?'blue':'orange';if(c<10)return null;if(c<17)return r<3?'white':r<7?'l1':'l3';if(c<19)return null;return r<4?'blue':(r<7?'l1':'white');};
+  const R=10,C=24;let T='white';
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  // light seat colours need a stronger glow to read on the dark backdrop
+  const deepen=h=>{const n=parseInt(h.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const m=(r+g+b)/3;
+    if(Math.max(r,g,b)-Math.min(r,g,b)<12)return '#9A92B0'; // white / grey: soft lilac-grey halo
+    const k=2.6;r=Math.round(m+(r-m)*k-70);g=Math.round(m+(g-m)*k-70);b=Math.round(m+(b-m)*k-70);
+    const c=v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0');return '#'+c(r)+c(g)+c(b);};
+  const lum=h=>{const n=parseInt(h.slice(1),16);return ((n>>16)*.299+((n>>8)&255)*.587+(n&255)*.114)/255;};
+  function draw(cv,style,t){
+    const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cell=Math.min((W-24)/C,(H-24)/R),gap=cell*.12,w=cell-gap,ox=(W-cell*C)/2,oy=(H-cell*R)/2;
+    const dark=style==='dark';
+    ctx.fillStyle=dark?'#24212C':'#FFFFFF';ctx.fillRect(0,0,W,H);
+    const on=[];
+    for(let r=0;r<R;r++)for(let c=0;c<C;c++){const k=pick(r,c);if(!k)continue;const x=ox+c*cell,y=oy+r*cell;
+      if(k===T){on.push([x,y]);continue;}
+      if(dark){ctx.fillStyle='#4A4655';}else{ctx.globalAlpha=.16;ctx.fillStyle=COL[k];}
+      ctx.fillRect(x,y,w,w);ctx.globalAlpha=1;}
+    const col=COL[T];
+    // on white, a light colour's own glow disappears, so the halo uses the same hue made deeper
+    const halo=!dark&&lum(col)>.8?deepen(col):col;
+    const a=reduce?1:.5+.5*Math.sin(t/330);
+    ctx.save();ctx.shadowColor=halo;ctx.shadowBlur=cell*(0.6+0.9*a);ctx.globalAlpha=0.5+0.5*a;ctx.fillStyle=halo;
+    for(const [x,y] of on)ctx.fillRect(x-1,y-1,w+2,w+2);ctx.restore();
+    for(const [x,y] of on){ctx.fillStyle=col;ctx.fillRect(x,y,w,w);}
+  }
+  const cvs=[...document.querySelectorAll('canvas')];
+  const loop=t=>{cvs.forEach(cv=>draw(cv,cv.dataset.s,t));requestAnimationFrame(loop);};
+  requestAnimationFrame(loop);
+  document.querySelectorAll('.pick button').forEach(b=>b.addEventListener('click',()=>{T=b.dataset.t;document.querySelectorAll('.pick button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}));
+})();
+</script>

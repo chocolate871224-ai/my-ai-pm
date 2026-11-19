@@ -1,0 +1,47 @@
+<title>Apps Script 程式碼複製</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+:root{--bg:#F3F1F8;--card:#fff;--fg:#1F1A2E;--muted:#6E6785;--line:#E2DCEE;--accent:#6B4FD8;--accent-ink:#fff;--pop:#D4F25A;--pop-ink:#283100;--good:#1E9D63}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#14121B;--card:#201D2B;--fg:#EEEAF7;--muted:#A39CB8;--line:#332E44;--accent:#9D88FF;--accent-ink:#140F24;--good:#4CC98E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14121B;--card:#201D2B;--fg:#EEEAF7;--muted:#A39CB8;--line:#332E44;--accent:#9D88FF;--accent-ink:#140F24;--good:#4CC98E;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-block:32px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+h1{margin:0;font-weight:900;font-size:28px}
+p{margin:0;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.card h2{margin:0;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+.tag{font-size:12px;font-weight:700;background:var(--pop);color:var(--pop-ink);border-radius:999px;padding:2px 10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{font:inherit;border:0;border-radius:999px;padding:12px 22px;font-weight:700;font-size:15px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+button:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.ok{color:var(--good);font-weight:700;font-size:14px}
+textarea{width:100%;height:120px;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px ui-monospace,Menlo,monospace;background:var(--bg);color:var(--fg);resize:vertical}
+ol{margin:0;padding-left:20px;color:var(--fg)}
+code{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+</style>
+<div class="wrap">
+  <div><h1>複製程式碼</h1><p>按按鈕複製，再到 Apps Script 全選、刪除、貼上。</p></div>
+  <div class="card">
+    <h2>Index.html <span class="tag">這次要重貼的</span></h2>
+    <ol><li>按下面「複製 Index.html」</li><li>Apps Script 左邊點「Index.html」，點進內容，按 <code>Ctrl+A</code>（Mac 是 <code>⌘A</code>）全選，按刪除</li><li>按 <code>Ctrl+V</code>（Mac 是 <code>⌘V</code>）貼上，第一行應該是 <code>&lt;!DOCTYPE html&gt;</code></li><li>按儲存，再到「管理部署作業」› 鉛筆 ›「新版本」›「部署」</li></ol>
+    <div class="row"><button id="b1">複製 Index.html</button><span class="ok" id="m1"></span></div>
+    <textarea id="t1" readonly aria-label="Index.html 內容"></textarea>
+  </div>
+  <div class="card">
+    <h2>Code.gs（程式碼.gs） <span class="tag">這次要重貼的</span></h2>
+    <p>{{NOTE}}</p>
+    <div class="row"><button id="b2">複製 Code.gs</button><span class="ok" id="m2"></span></div>
+    <textarea id="t2" readonly aria-label="Code.gs 內容"></textarea>
+  </div>
+</div>
+<script>
+const dec=b=>new TextDecoder().decode(Uint8Array.from(atob(b),c=>c.charCodeAt(0)));
+const IDX=dec("{{INDEX_B64}}"),CODE=dec("{{CODE_B64}}");
+const t1=document.getElementById('t1'),t2=document.getElementById('t2');t1.value=IDX;t2.value=CODE;
+function copy(txt,ta,msg){const m=document.getElementById(msg);
+  const fb=()=>{ta.focus();ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}m.textContent=ok?'已複製':'請在下方框內按 Ctrl+A／⌘A 全選後手動複製';};
+  try{navigator.clipboard.writeText(txt).then(()=>{m.textContent='已複製 '+txt.length.toLocaleString()+' 字';},fb);}catch(e){fb();}}
+document.getElementById('b1').onclick=()=>copy(IDX,t1,'m1');
+document.getElementById('b2').onclick=()=>copy(CODE,t2,'m2');
+</script>

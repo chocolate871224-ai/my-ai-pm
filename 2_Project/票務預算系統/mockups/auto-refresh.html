@@ -1,0 +1,72 @@
+<title>自動同步最新版</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Manrope:wght@600;800&display=swap">
+<style>
+/* layout: three stacked states of the same sidebar sync pill + banner, then the open questions */
+:root{
+  --bg:#FDFBF6; --surface:#FFFFFF; --surface2:#F3F0E9; --line:#ECE7DD; --fg:#17151C; --muted:#6E6876;
+  --accent:#5B3FD0; --accent-ink:#FFFFFF; --pop:#DDE96A; --good:#4E7D10; --warn:#B86A18;
+  --font-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif; --font-num:"Manrope","Noto Sans TC",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-ink:#17151C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A1722;--surface:#24202E;--surface2:#2E2939;--line:#3A3446;--fg:#F1EEF6;--muted:#ADA6BA;--accent:#A895FF;--accent-ink:#17151C;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.65 var(--font-body)}
+.wrap{max-width:860px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+h1{font-size:24px;font-weight:900;margin:0;text-wrap:balance}
+h2{font-size:16px;margin:0}
+p{margin:0}
+.lead{color:var(--muted);max-width:62ch;margin-top:6px}
+.eyebrow{font:800 11px var(--font-num);letter-spacing:.2em;color:var(--accent);text-transform:uppercase}
+.state{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.state .when{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;align-self:flex-start}
+.pill i{width:7px;height:7px;border-radius:50%}
+.banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--accent);color:var(--accent-ink);border-radius:16px;padding:12px 16px}
+.banner b{font-size:14.5px}
+.banner span{font-size:13px;opacity:.85}
+.banner .sp{flex:1}
+.banner button{border:0;border-radius:999px;padding:7px 14px;font:700 13px var(--font-body);cursor:pointer}
+.b1{background:rgba(255,255,255,.18);color:inherit}
+.b2{background:var(--pop);color:#17151C}
+.toast{align-self:flex-start;background:var(--fg);color:var(--bg);border-radius:12px;padding:8px 14px;font-size:13px}
+.ask{background:var(--surface2);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+ol{margin:0;padding-left:20px}
+li{margin:4px 0}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Ticket &amp; Seat・示意</div>
+    <h1>不同裝置同時用，畫面自動跟上最新版</h1>
+    <p class="lead">系統每隔一段時間問一次試算表「有沒有人存過新的修改」。只問一個時間戳記，很快、不會拖慢畫面。有新版本才重新讀座位圖。切回這個視窗時也會馬上檢查一次。</p>
+  </header>
+
+  <section class="state">
+    <h2>情況一：你沒有在改東西</h2>
+    <p class="when">別台裝置存了修改 → 這邊自動換成最新版，跳一個小提示</p>
+    <span class="pill"><i style="background:var(--good)"></i>已同步 18:52・每 20 秒檢查</span>
+    <span class="toast">已更新成最新版（另一台裝置 18:52 儲存了 24 席）</span>
+  </section>
+
+  <section class="state">
+    <h2>情況二：你有還沒儲存的修改</h2>
+    <p class="when">不會自動蓋掉你的修改，改成在上方提醒，讓你決定</p>
+    <span class="pill"><i style="background:var(--warn)"></i>12 席尚未儲存</span>
+    <div class="banner"><div><b>試算表有更新的版本</b><br><span>另一台裝置 18:52 儲存了 24 席。先儲存你的修改，或放棄後載入最新版。</span></div><span class="sp"></span><button class="b1" type="button">放棄並載入最新版</button><button class="b2" type="button">先儲存我的修改</button></div>
+  </section>
+
+  <section class="state">
+    <h2>情況三：有人直接在試算表上塗顏色</h2>
+    <p class="when">試算表上手動改顏色，系統偵測不到（Google 不會通知顏色變動）</p>
+    <span class="pill"><i style="background:var(--good)"></i>已同步 18:52・<u>重新讀取</u></span>
+    <p style="font-size:13px;color:var(--muted)">同步標籤旁加「重新讀取」，點一下立刻從試算表抓最新的座位顏色。</p>
+  </section>
+
+  <section class="ask">
+    <h2>要你決定</h2>
+    <ol>
+      <li>多久檢查一次？建議 <b>20 秒</b>（再短 Google 的使用量會比較吃緊）。</li>
+      <li>情況二的做法可以嗎？</li>
+    </ol>
+  </section>
+</div>
