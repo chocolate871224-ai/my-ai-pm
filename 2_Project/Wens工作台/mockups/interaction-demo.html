@@ -597,6 +597,69 @@ body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none}
 .board{align-items:start!important}
 .col{height:auto!important;max-height:min(calc(100vh - 150px),760px)}
 .demo-tag{font-size:12px;line-height:1;color:var(--muted);height:24px;padding:0 10px;border:1px dashed var(--line);border-radius:999px;display:inline-flex;align-items:center}
+/* motion v1 (2026-11-23): springy accents, see mockups/motion-ideas.html */
+:root{--spring:cubic-bezier(.34,1.56,.64,1)}
+.spk{position:fixed;z-index:62;font-size:14px;line-height:1;pointer-events:none;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;animation:spk .7s ease-out forwards}
+.row .box{cursor:pointer}
+@keyframes spk{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1);opacity:0}}
+@keyframes wig{0%{transform:rotate(0) scale(1)}25%{transform:rotate(-14deg) scale(1.18)}50%{transform:rotate(10deg) scale(1.12)}75%{transform:rotate(-4deg) scale(1.04)}100%{transform:rotate(0) scale(1)}}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-3px) rotate(-8deg)}100%{transform:translateY(0)}}
+@keyframes mpop{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-5px) scale(1.2)}100%{transform:translateY(0) scale(1)}}
+@keyframes boing{0%{transform:scale(1,1)}25%{transform:scale(1.2,.8)}50%{transform:scale(.92,1.1) translateY(-3px)}75%{transform:scale(1.04,.97)}100%{transform:scale(1,1)}}
+@keyframes tick{0%{transform:rotate(-45deg) translate(1px,-1px) scale(0)}100%{transform:rotate(-45deg) translate(1px,-1px) scale(1)}}
+@keyframes nudgex{0%,72%,100%{transform:translateX(0)}76%{transform:translateX(-4px)}80%{transform:translateX(4px)}84%{transform:translateX(-2px)}88%{transform:translateX(0)}}
+@keyframes ringdot{0%,72%,100%{box-shadow:0 0 0 0 var(--tag-warn)}76%{box-shadow:0 0 0 0 var(--tag-warn)}96%{box-shadow:0 0 0 7px transparent}}
+@media (prefers-reduced-motion:no-preference){
+  .emo:hover,.lg:hover .e,.cemo:hover{animation:wig .55s var(--spring)}
+  .nav-item:hover .ic{animation:hop .45s var(--spring)}
+  .mpop{display:inline-block;transform-origin:left bottom;animation:mpop .45s var(--spring)}
+  .st-ico.go{animation:boing .6s var(--spring)}
+  .mouth.yum{animation:yum .6s var(--spring)}
+  .box.bpop{animation:mpop .4s var(--spring)}
+  .box.on.bpop::after{animation:tick .28s .06s ease-out both}
+  .alert:not(.blue),.stock-alert.lv-full,.stock-alert.lv-over{animation:nudgex 3s ease-in-out infinite}
+  .alert:not(.blue) .dot,.stock-alert.lv-full .dot,.stock-alert.lv-over .dot{animation:ringdot 3s ease-out infinite}
+}
+/* one-line bagel card */
+.bcard{align-items:center!important;height:44px;padding:0 6px 0 0!important;gap:8px!important}
+.bcard .grip{height:44px;width:18px}
+.bcard .cemo{width:28px;height:28px;border-radius:8px;font-size:17px}
+.bcard .cemo .cimg{width:22px;height:22px}
+.bcard .bc-name{flex:1 1 0;min-width:64px;display:block!important;-webkit-line-clamp:unset;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13.5px!important;line-height:44px!important}
+.bcard .guess-btn{margin-left:0;flex:none;height:20px;padding:0 6px;font-size:11px}
+.bcard .bmeta{flex:none;display:inline-flex;align-items:center;gap:8px;min-width:0}
+.bcard .bchip{flex:none;max-width:120px;overflow:hidden}
+.bcard .bchip>.bav{flex:none}
+.bcard .bq{flex:none;display:inline-flex;align-items:center;height:20px;font-size:12px;line-height:1;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:36px;justify-content:flex-end}
+.bcard .eat,.bcard .mini{flex:none;height:26px;padding:0 8px;font-size:11.5px}
+.bcard .pchk{margin:0 0 0 6px}
+.bcard .next{top:-9px}
+.grp-items,.col-body{gap:4px}
+@media (max-width:480px){
+ .bcard{display:grid!important;grid-template-columns:18px 28px minmax(0,1fr) auto;grid-template-rows:20px 26px;height:auto;padding:6px 8px 6px 0!important;column-gap:8px!important;row-gap:4px;align-items:center!important}
+ .bcard .grip,.bcard .pchk{grid-column:1;grid-row:1/3;height:auto;align-self:stretch}
+ .bcard .pchk{align-self:center}
+ .bcard .cemo{grid-column:2;grid-row:1/3}
+ .bcard .bc-name{grid-column:3/5;grid-row:1;line-height:20px!important}
+ .bcard:has(.guess-btn) .bc-name{grid-column:3}
+ .bcard .guess-btn{grid-column:4;grid-row:1;justify-self:end}
+ .bcard .bmeta{grid-column:3;grid-row:2;gap:6px;flex-wrap:nowrap;overflow:hidden}
+ .bcard .eat,.bcard .mini{grid-column:4;grid-row:2}
+ .bcard .bchip{flex:0 1 auto;min-width:0;max-width:100%}
+ .bcard .bq{min-width:0}
+}
+.intransit{color:var(--em);font-weight:700}
+.srcedit>label:first-child{grid-column:1/-1}
+/* eaten list on narrow screens: name gets the full row, stars + 退回 go underneath */
+@media (max-width:560px){.log li{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"d n" "r r";row-gap:6px;padding:10px 12px}.log li>.d{grid-area:d}.log li>span:nth-child(2){grid-area:n}.log li>.log-r{grid-area:r;justify-content:space-between}}
+.plat{display:flex;flex-wrap:wrap;gap:6px}
+.plat button{height:32px;padding:0 10px 0 6px;border-radius:8px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);font:inherit;font-size:13px;font-weight:600;line-height:1;display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.plat button[aria-pressed="true"]{border-color:var(--em);box-shadow:inset 0 0 0 1px var(--em);background:var(--surface)}
+.pl-ico{width:18px;height:18px;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1}
+.pl-ico svg{width:18px;height:18px;display:block}
+.src .pl-ico{width:16px;height:16px;margin-right:3px;vertical-align:-3px}
+.src .pl-ico svg{width:16px;height:16px}
+.plat-other{margin-top:6px;height:32px;border:1px solid var(--line);border-radius:8px;background:var(--sheet);color:var(--ink);font:inherit;font-size:13px;padding:0 8px;width:100%}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -652,17 +715,30 @@ function catIco(c){return CATIMG[c.id]?'<img class="cimg" src="'+CATIMG[c.id]+'"
 function cat(id){for(var i=0;i<CATS.length;i++)if(CATS[i].id===id)return CATS[i];return CATS[CATS.length-1]}
 // the bagel's journey: making 製作中 → shipping 出貨中 → arrived 已抵達 → fridge 冰箱 → eaten (drag to 😋)
 var STAGES=[
- {id:'making',label:'製作中',emoji:'🏭',ic:'i-oven',btn:'出貨了',bulk:'全部出貨了',to:'shipping',empty:'沒有在做的貝果'},
- {id:'shipping',label:'運送中',emoji:'🚚',ic:'i-truck',btn:'取件',bulk:'全部取件',to:'fridge',empty:'沒有在路上的'},
+ {id:'making',label:'製作中',emoji:'🏭',ic:'i-oven',btn:'到店了',bulk:'整筆到店了',to:'shipping',empty:'沒有在做的貝果'},
+ {id:'shipping',label:'已抵達',emoji:'📦',ic:'i-truck',btn:'取件',bulk:'全部取件',to:'fridge',empty:'沒有等取件的'},
  {id:'fridge',label:'冷凍庫',emoji:'🧊',ic:'i-snow',btn:null,empty:'冷凍庫空空的'}];
 var BOARD=['fridge','shipping','making'],CAP=12;
 var FRIDGE='<svg class="fridge-ico" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="5" y="1.8" width="14" height="20" rx="3" fill="#eef7fc" stroke="#5f93b8" stroke-width="1.4"/><path d="M5 9.2h14" stroke="#5f93b8" stroke-width="1.4"/><path d="M8.2 4.6v2.4M8.2 12v4.4" stroke="#3f7299" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 21.8v1.2M16.5 21.8v1.2" stroke="#5f93b8" stroke-width="1.4" stroke-linecap="round"/></svg>';
 function stIcon(st){return st.id==='fridge'?FRIDGE:st.emoji}
 var PICKUP={'超商':'🏪','面交':'🤝','宅配':'🏠'};
-var SOURCE={shop:{label:'店家直購',emoji:'🏬'},resale:{label:'網友收購',emoji:'👥'},'':{label:'來源未填',emoji:'✎'}};
+var SOURCE={shop:{label:'店家購買',emoji:'🏬'},resale:{label:'網友收購',emoji:'👥'},group:{label:'社團團購',emoji:'📣'},'':{label:'來源未填',emoji:'✎'}};
+var PLAT={
+ IG:{label:'IG',svg:'<svg viewBox="0 0 24 24"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".35" stop-color="#fa7e1e"/><stop offset=".6" stop-color="#d62976"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs><rect x="1" y="1" width="22" height="22" rx="6.5" fill="url(#igg)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="16.3" cy="7.7" r="1.1" fill="#fff"/></svg>'},
+ Threads:{label:'Threads',svg:'<svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="#111"/><text x="12" y="16.6" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="#fff">@</text></svg>'},
+ LINE:{label:'LINE',svg:'<svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6.5" fill="#06c755"/><path d="M12 5.6c-4 0-7.2 2.6-7.2 5.8 0 2.9 2.5 5.3 6 5.7.4.1.4.5.3 1l-.2 1.1c0 .3.3.6.6.4 2.9-1.6 7.7-4.6 7.7-8.2 0-3.2-3.2-5.8-7.2-5.8z" fill="#fff"/><text x="12" y="13.1" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="4.2" font-weight="800" fill="#06c755">LINE</text></svg>'}};
+function platIco(p){return PLAT[p]?'<span class="pl-ico" aria-hidden="true">'+PLAT[p].svg+'</span>':''}
+function platPicker(scope,cur){cur=cur||'';var other=!!cur&&!PLAT[cur];
+  return '<div class="plat" role="group" aria-label="平台來源">'+Object.keys(PLAT).map(function(k){return '<button type="button" data-platpick="'+k+'" data-scope="'+scope+'" aria-pressed="'+(cur===k)+'">'+platIco(k)+PLAT[k].label+'</button>'}).join('')+
+    '<button type="button" data-platpick="其他" data-scope="'+scope+'" aria-pressed="'+other+'"><span class="pl-ico" aria-hidden="true">✎</span>其他</button></div>'+
+    (other?'<input class="plat-other" data-platother data-scope="'+scope+'" value="'+esc(cur==='其他'?'':cur)+'" placeholder="哪個平台，例如 FB 社團、蝦皮">':'')}
+function setPlat(scope,v){if(scope==='form')form.platform=v;else if(scope==='paste')pasteSrc.platform=v;else{var o=ORDERS[scope.slice(2)];if(o){snap('修改訂單');o.platform=v}}render()}
+function platList(){return '';var seen={};Object.keys(ORDERS).forEach(function(k){var p=ORDERS[k].platform;if(p)seen[p]=1});return '<datalist id="platList">'+Object.keys(seen).map(function(p){return '<option value="'+esc(p)+'">'}).join('')+'</datalist>'}
+function whoTxt(o){return [o.platform==='其他'?'':o.platform,o.seller].filter(Boolean).join(' · ')}
+function whoHTML(o){var a=[];if(o.platform&&o.platform!=='其他')a.push(platIco(o.platform)+esc(o.platform));if(o.seller)a.push(esc(o.seller));return a.join(' · ')}
 function splitOrder(oid,brand){var o=ORDERS[oid];if(!o)return null;var its=items.filter(function(it){return it.order===oid&&(it.status==='making'||it.status==='shipping')&&(brand==null||it.brand===brand)});if(!its.length)return null;
-  var n=addOrder({source:o.source,seller:o.seller,date:o.date,pickup:o.pickup,plan:o.plan,arrived:o.arrived,arrivedOn:o.arrivedOn});its.forEach(function(it){it.order=n});return n}
-function orderLabel(o){var b={};items.forEach(function(it){if(it.order===o.id&&(it.status==='making'||it.status==='shipping'))b[it.brand]=1});var bs=Object.keys(b);return (o.source&&o.source!=='shop'?srcLabel(o.source)+(o.seller?' · '+o.seller:'')+'：':'')+(bs.join('、')||'（空的）')+(o.date?' · '+md(parseD(o.date))+' 出貨':'')}
+  var n=addOrder({source:o.source,platform:o.platform||'',seller:o.seller,date:o.date,pickup:o.pickup,plan:o.plan,arrived:o.arrived,arrivedOn:o.arrivedOn});its.forEach(function(it){it.order=n});return n}
+function orderLabel(o){var b={};items.forEach(function(it){if(it.order===o.id&&(it.status==='making'||it.status==='shipping'))b[it.brand]=1});var bs=Object.keys(b);return (o.source&&o.source!=='shop'?srcLabel(o.source)+(whoTxt(o)?' · '+whoTxt(o):'')+'：':'')+(bs.join('、')||'（空的）')+(o.date?' · '+md(parseD(o.date))+' 出貨':'')}
 function srcLabel(k){return SOURCE[k]?SOURCE[k].label:'來源未填'}
 function srcButtons(attr,cur){return Object.keys(SOURCE).filter(function(k){return k}).map(function(k){return '<button type="button" '+attr+'="'+k+'" aria-pressed="'+(cur===k)+'"><span class="e" aria-hidden="true">'+SOURCE[k].emoji+'</span> '+esc(SOURCE[k].label)+'</button>'}).join('')}
 function addSource(label){label=label.trim();if(!label)return null;for(var k in SOURCE)if(SOURCE[k].label===label)return k;var id='c'+Date.now().toString(36);SOURCE[id]={label:label,emoji:'📦'};return id}
@@ -708,6 +784,15 @@ function byId(id){for(var i=0;i<items.length;i++)if(items[i].id===id)return item
 function sum(list){return list.reduce(function(a,it){return a+srv(it)},0)}
 function inStage(s){return items.filter(function(it){return it.status===s})}
 
+function shipped(o){return !!(o&&o.date&&parseD(o.date)<=TODAY)}
+function cloneOrder(o,arrived){return addOrder({source:o.source||'',platform:o.platform||'',seller:o.seller||'',date:o.date||null,pickup:o.pickup||'超商',plan:o.plan||'台北',arrived:!!arrived,arrivedOn:arrived?(o.arrivedOn||isoD(TODAY)):null})}
+/* one order = one stage: 已抵達 items mark the order arrived; if an order has items in both columns, the minority side moves to a copy of the order */
+function syncOrders(){
+  Object.keys(ORDERS).forEach(function(k){var o=ORDERS[k],mk=[],sh=[];items.forEach(function(it){if(it.order!==k)return;if(it.status==='making')mk.push(it);else if(it.status==='shipping')sh.push(it)});
+    if(mk.length&&sh.length){if(o.arrived){var n=cloneOrder(o,false);mk.forEach(function(it){it.order=n})}else{var n2=cloneOrder(o,true);sh.forEach(function(it){it.order=n2})}}
+    else if(sh.length&&!o.arrived){o.arrived=true;o.arrivedOn=o.arrivedOn||isoD(TODAY)}
+    else if(mk.length&&o.arrived){o.arrived=false;o.arrivedOn=null}});
+}
 function moveTo(it,status,date,home){it.status=status;if(status==='fridge')it.home=home||it.home||here}
 function place(it,refId,before){
   items.splice(items.indexOf(it),1);
@@ -734,19 +819,20 @@ function card(it,isNext){
     (isNext?'<span class="next">下一個吃</span>':'')+
     '<span class="grip" aria-hidden="true"><svg viewBox="0 0 10 16"><circle cx="3" cy="3" r="1.3"/><circle cx="7" cy="3" r="1.3"/><circle cx="3" cy="8" r="1.3"/><circle cx="7" cy="8" r="1.3"/><circle cx="3" cy="13" r="1.3"/><circle cx="7" cy="13" r="1.3"/></svg></span>'+
     '<span class="cemo" style="background:'+c.color+'26" title="'+esc(c.label)+'">'+catIco(c)+'</span>'+
-    '<div class="bc-main"><div class="bc-name">'+esc(it.name)+(it.guess?'<button type="button" class="guess-btn" data-guess="'+it.id+'" title="這是我依品名猜的種類，點一下確認或改掉">是'+esc(cat(it.cat).label)+'嗎？</button>':'')+'</div>'+
-    '<div class="bc-sub">'+brandChip(it.brand,1)+'<span>'+qtyTxt(it)+(it.price?' · '+money(it.price):'')+'</span>'+
+    '<span class="bc-name">'+esc(it.name)+'</span>'+
+    (it.guess?'<button type="button" class="guess-btn" data-guess="'+it.id+'" title="這是我依品名猜的種類，點一下確認或改掉"><span class="gl">'+esc(cat(it.cat).label)+'</span>？</button>':'')+
+    '<span class="bmeta">'+brandChip(it.brand,1)+'<span class="bq">'+qtyTxt(it)+'</span></span>'+
     (it.status==='fridge'?'<button class="eat" type="button" data-eat="'+it.id+'">吃掉</button>':'<button class="mini" type="button" data-adv="'+it.id+'">'+st.btn+'</button>')+
-    '</div></div></div>';
+    '</div>';
 }
 function orderGroup(o,list,st){
   var key=o.id+st.id,fold=(key in folded)?folded[key]:st.id==='making',s=SOURCE[o.source]||SOURCE[''],brands={};list.forEach(function(it){brands[it.brand]=1});
-  var bkeys=Object.keys(brands),who=o.source==='shop'?(o.seller||bkeys.join('、')||'店家直購'):(o.source?srcLabel(o.source)+(o.seller?' · '+o.seller:''):'來源未填');
-  var meta=(st.id==='making'?(o.date?md(parseD(o.date))+' 出貨':'出貨日未填'):PICKUP[o.pickup]+' '+o.pickup);
+  var bkeys=Object.keys(brands),who=o.source==='shop'?esc(o.seller||bkeys.join('、')||'店家購買'):(o.source?esc(srcLabel(o.source))+(whoHTML(o)?' · '+whoHTML(o):''):'來源未填');
+  var meta=(st.id==='making'?(o.date?(shipped(o)?'<b class="intransit">🚚 已出貨・運送中</b> '+md(parseD(o.date))+' 出貨':md(parseD(o.date))+' 出貨'):'出貨日未填'):PICKUP[o.pickup]+' '+o.pickup+(o.arrivedOn?' · '+md(parseD(o.arrivedOn))+' 到店':''));
   var h='<div class="grp" data-order="'+o.id+'"><div class="grp-h one">'+
     '<button type="button" class="fold" data-fold="'+key+'" aria-expanded="'+!fold+'" aria-label="收合">'+(fold?'▸':'▾')+'</button>'+
-    '<button type="button" class="src'+(o.source?'':' unset')+'" data-src="'+o.id+'"><span class="e" aria-hidden="true">'+s.emoji+'</span>'+esc(who)+'</button>'+
-    '<span class="gcnt">'+(st.id==='making'&&o.date?md(parseD(o.date))+' · ':'')+list.length+' 項</span></div>'+
+    '<button type="button" class="src'+(o.source?'':' unset')+'" data-src="'+o.id+'"><span class="e" aria-hidden="true">'+s.emoji+'</span>'+who+'</button>'+
+    '<span class="gcnt">'+(st.id==='making'&&o.date?(shipped(o)?'🚚 運送中 · ':md(parseD(o.date))+' · '):'')+list.length+' 項</span></div>'+
     (fold?'':'<div class="grp-sub"><span><span class="ocode" title="試算表裡的訂單編號">'+o.id+'</span> '+meta+'</span>'+(list.length>1&&o.id!=='none'?'<button type="button" class="mini" data-pick="'+key+'">✂️ 拆單</button>':'')+(st.id==='shipping'&&list.length&&o.id!=='none'?'<button type="button" class="mini" data-back="'+o.id+'">↩ 整筆移回製作中</button>':'')+(list.length?'<button type="button" class="mini bulk" data-bulk="'+o.id+'" data-stage="'+st.id+'">'+st.bulk+'</button>':'')+'</div>');
   if(!fold&&!list.length)h+='<div class="empty-ord"><span>這筆還是空的<br>把卡片拖進來，或在別筆訂單按「✂️ 拆單」移過來</span><button type="button" class="mini" data-delord="'+o.id+'">刪掉這筆</button></div>';
   if(!fold&&pickKey===key){var np=list.filter(function(it){return picked[it.id]}).length;
@@ -754,7 +840,7 @@ function orderGroup(o,list,st){
        '<button type="button" class="btn sm primary" data-pickgo="'+o.id+'"'+(np?'':' disabled')+'>拆出去</button><button type="button" class="mini" data-pickx>取消</button></div></div>'}
   if(editSrc===o.id){
     h+='<div class="srcedit"><label><span class="flabel">來源</span><select data-oid="'+o.id+'" data-ok="source">'+Object.keys(SOURCE).filter(function(k){return k}).map(function(k){return '<option value="'+k+'"'+(o.source===k?' selected':'')+'>'+SOURCE[k].emoji+' '+esc(SOURCE[k].label)+'</option>'}).join('')+'<option value=""'+(!o.source?' selected':'')+'>未填</option></select></label>'+(o.source?'':'<label class="full"><span class="flabel">沒有適合的來源</span>'+ADDSRC.replace('data-addsrc','data-addsrc="'+o.id+'"')+'</label>')+
-       (o.source==='shop'?'<label><span class="flabel">店家名稱</span><input data-oid="'+o.id+'" data-ok="seller" value="'+esc(o.seller)+'" placeholder="哪一家店"></label>':o.source?'<label><span class="flabel">賣家</span><input data-oid="'+o.id+'" data-ok="seller" value="'+esc(o.seller)+'" placeholder="誰釋出的"></label>':'')+
+       (o.source==='shop'?'<label><span class="flabel">店家名稱</span><input data-oid="'+o.id+'" data-ok="seller" value="'+esc(o.seller)+'" placeholder="哪一家店"></label>':o.source?'<div class="full"><span class="flabel">平台來源</span>'+platPicker('o:'+o.id,o.platform)+'</div><label><span class="flabel">'+(o.source==='group'?'團主名稱':'對方名稱')+'</span><input data-oid="'+o.id+'" data-ok="seller" value="'+esc(o.seller)+'" placeholder="帳號或暱稱"></label>'+platList():'')+
        '<label><span class="flabel">出貨日</span><input type="date" data-oid="'+o.id+'" data-ok="date" value="'+(o.date||'')+'"></label>'+
        '<label><span class="flabel">取貨方式</span><select data-oid="'+o.id+'" data-ok="pickup">'+Object.keys(PICKUP).map(function(k){return '<option'+(o.pickup===k?' selected':'')+'>'+k+'</option>'}).join('')+'</select></label>'+
        '<button type="button" class="btn sm" data-src="'+o.id+'">完成</button></div>';
@@ -767,7 +853,7 @@ function pad(n){return ('0'+n).slice(-2)}
 // what happens next for the freezer in the home you're in
 function forecast(fs,A,S,Mk,FO,other){
   if(A.length){var e2=addDays(TODAY,Math.max(0,Math.floor(fs+sum(A))-1));return {k:'接下來',v:'先取件',d:'<b class="warn">'+A.length+' 項等取貨</b> · 取完可以吃到 '+md(e2)}}
-  if(S.length)return {k:'接下來',v:'在路上',d:S.length+' 項快到了'};
+  if(S.length)return {k:'接下來',v:'等取件',d:S.length+' 項已到店'};
   var end=addDays(TODAY,Math.max(0,Math.floor(fs)-1));
   var ds=Mk.map(function(it){return ORDERS[it.order]&&ORDERS[it.order].date}).filter(Boolean).sort();
   if(!ds.length)return {k:'接下來',v:'沒有下一批',d:here+' '+md(end)+' 吃完'};
@@ -799,7 +885,7 @@ function fitOf(o){
 }
 function fitTag(o){if(!liveItems(o.id).length)return '';var f=fitOf(o);return '<span class="fit '+f.k+'">'+(f.k==='ok'?'放得下':f.k==='rush'?'要加速':'放不下')+'</span>'}
 function waitDays(o){return o.arrivedOn?Math.max(1,Math.round((TODAY-parseD(o.arrivedOn))/864e5)+1):1}
-function oname(o){var b={};liveItems(o.id).forEach(function(it){b[it.brand]=1});return o.source==='resale'?(o.seller||'網友收購'):Object.keys(b).join('、')}
+function oname(o){var b={};liveItems(o.id).forEach(function(it){b[it.brand]=1});return o.source&&o.source!=='shop'?(whoTxt(o)||srcLabel(o.source)):Object.keys(b).join('、')}
 function incomingTo(h){return Object.keys(ORDERS).filter(function(k){return liveItems(k).length&&homeOf(ORDERS[k])===h})}
 /* inventory level, like a shop's stock warning */
 function stockLevel(h){
@@ -807,7 +893,7 @@ function stockLevel(h){
   if(left<0)return {k:'over',t:'放不下了',d:'超出 '+fmt(-left)+' 顆，先吃掉或送出'};
   if(left<=FULL_LEFT)return {k:'full',t:'快放不下了',d:'只剩 '+fmt(left)+' 顆的位置，先別下單'};
   if(days<=LOW_DAYS&&!coming)return {k:'low',t:'可以下單了',d:'只夠吃 '+Math.max(0,Math.floor(days))+' 天，還能放 '+fmt(left)+' 顆'};
-  return {k:'ok',t:'庫存正常',d:'還能放 '+fmt(left)+' 顆'+(coming?' · 有 '+coming+' 筆在路上':'')};
+  return {k:'ok',t:'庫存正常',d:'還能放 '+fmt(left)+' 顆'+(coming?' · 有 '+coming+' 筆進貨中':'')};
 }
 function spaceHTML(list){var lv=stockLevel(here);return '<div class="stock-alert lv-'+lv.k+'"><span class="dot"></span><div><b>'+lv.t+'</b><small>'+lv.d+'</small></div></div>'}
 function alertsHTML(){
@@ -817,6 +903,7 @@ function alertsHTML(){
     if(f.k==='rush')out.push({c:'',t:'<b>'+when+' '+esc(oname(o))+' 到貨，要先清出 '+fmt(f.short)+' 顆的位置</b><small>到貨前每天吃 1.5 顆就來得及</small>'});
     if(f.k==='over')out.push({c:'',t:'<b>'+when+' '+esc(oname(o))+' 到貨，差 '+fmt(f.short)+' 顆的位置</b><small>每天吃 1.5 顆也來不及，建議先釋出或送親友（先挑吃過的口味）</small>'});
     if(o.arrived)out.push({c:'blue',t:'<b>'+esc(oname(o))+' 已到店，等取件第 '+waitDays(o)+' 天</b><small>'+liveItems(k).length+' 項</small>'});
+    else if(shipped(o))out.push({c:'blue',t:'<b>'+esc(oname(o))+' 已出貨，運送中</b><small>'+md(parseD(o.date))+' 出貨 · 到店後按「到店了」</small>'});
   });
   if(!out.length)return '';
   return '<div class="alerts">'+out.slice(0,3).map(function(a){return '<div class="alert '+a.c+'"><span class="dot"></span><div class="txt">'+a.t+'</div></div>'}).join('')+'</div>';
@@ -829,8 +916,11 @@ function nextStat(){
 }
 function normalize(){
   if(SOURCE.resale&&SOURCE.resale.emoji==='🤝')SOURCE.resale.emoji='👥';
+  if(!SOURCE.group)SOURCE.group={label:'社團團購',emoji:'📣'};
+  if(SOURCE.shop&&SOURCE.shop.label==='店家直購')SOURCE.shop.label='店家購買';
   var ago=isoD(addDays(TODAY,-2));
   items.forEach(function(it){if(it.status==='arrived'){it.status='shipping';var o=ORDERS[it.order];if(o){o.arrived=true;o.arrivedOn=o.arrivedOn||ago}}});
+  items.forEach(function(it){if(it.status==='shipping'){var o=ORDERS[it.order];if(!o||!o.arrived)it.status='making'}});
   var loose=null;items.forEach(function(it){var live=it.status==='making'||it.status==='shipping';
     if(it.order&&!ORDERS[it.order])ORDERS[it.order]={id:it.order,source:'',seller:'',date:null,pickup:'超商',plan:'台北'};
     else if(!it.order&&live){loose=loose||addOrder({source:'',seller:'',date:null,pickup:'超商',plan:'台北'});it.order=loose}});
@@ -918,7 +1008,7 @@ function breadPage(){
   h+='<section class="stats compact">'+
      stat(here+'冷凍庫',fmt(used),' / '+CAP+' 顆',used>CAP?'<b class="warn">超出 '+fmt(used-CAP)+' 顆</b>':'還有 '+fmt(CAP-used)+' 顆的位置',1)+
      stat('可以吃到',FH.length?md(stockEnd):'—','',FH.length?'還有 '+Math.max(1,Math.floor(fs))+' 天':'冷凍庫空了')+
-     stat('進貨中',fmt(qtySum(S)+qtySum(Mk)),'顆',A.length?'<b class="warn">'+ordersOf(A).length+' 筆等取件</b>':'製作中＋運送中')+
+     stat('進貨中',fmt(qtySum(S)+qtySum(Mk)),'顆',A.length?'<b class="warn">'+ordersOf(A).length+' 筆等取件</b>':'製作中＋已抵達')+
      nextStat()+'</section>';
   var cc={};items.forEach(function(it){if(it.status==='fridge')cc[it.cat]=(cc[it.cat]||0)+1});
   h+='<div class="toolbar">';
@@ -950,7 +1040,7 @@ function breadPage(){
     h+='<div class="col st-'+st.id+'" data-drop="'+st.id+'">'+(st.id==='fridge'?'<div class="door" id="door"></div>':'')+'<div class="col-h"><span class="st-ico" id="ico-'+st.id+'" aria-hidden="true">'+stIcon(st)+'</span><b>'+st.label+'</b>'+(st.id==='fridge'?'<div class="homeseg col-home" role="group" aria-label="現在在哪個家">'+HOMES.map(function(x){return '<button type="button" data-home="'+x+'" aria-pressed="'+(here===x)+'">'+x+'</button>'}).join('')+'</div>':'')+(st.id!=='fridge'?'<button type="button" class="mini addord" data-neword="'+st.id+'">＋訂單</button>':'')+'<span class="cnt">'+list.length+' 項</span></div>'+
        '<div class="col-body">'+(body||'<div class="empty"><span class="e" aria-hidden="true">'+stIcon(st)+'</span>'+st.empty+'</div>')+'</div></div>';
   });
-  h+='</div><p class="note">拖曳卡片換階段，冷凍庫裡上下拖可以排順序；把運送中的卡片拖進冷凍庫就是取件；把冷凍庫的貝果拖到跳出來的 😋 就吃掉。手機請按住 ⠿ 拖曳。</p>';
+  h+='</div><p class="note">拖曳卡片換階段，冷凍庫裡上下拖可以排順序；把已抵達的卡片拖進冷凍庫就是取件；把冷凍庫的貝果拖到跳出來的 😋 就吃掉。手機請按住 ⠿ 拖曳。</p>';
   h+='<section class="sec"><div class="sec-head"><h2>😋 吃掉的</h2><span class="note">吃完會跳出評價，日期可以改</span></div>'+eatenList()+'</section>';
   h+='<p class="note">整理訂單：把卡片拖到另一筆訂單裡就會移過去；點卡片也能選「屬於哪筆訂單」。卡片上寫「是夾餡嗎？」這類問句的，是我依品名猜的種類，點一下確認或改掉。點任何一張卡片都可以改品名、品牌、剩幾顆。</p>';
   if(showForm)h+='<div class="drawer-scrim" data-act="form"></div><aside class="drawer" aria-label="貝果進冷凍">'+formHTML()+'</aside>';
@@ -964,7 +1054,8 @@ function formHTML(){
   var brands={};items.forEach(function(it){brands[it.brand]=1});
   var h='<form class="panel" id="inForm" novalidate><div class="drawer-h"><h2><span class="e" aria-hidden="true">🥯</span> 進貨單 · 專業版</h2><button type="button" class="icon-x" data-act="form" aria-label="關閉">✕</button></div>';
   h+='<span class="flabel">怎麼買的</span><div class="seg2" role="group" aria-label="來源">'+srcButtons('data-srcf',form.source)+'</div>'+ADDSRC;
-  if(form.source!=='shop')h+='<label><span class="flabel">賣家（誰釋出的）</span><input data-f2="seller" value="'+esc(form.seller)+'" placeholder="例如：IG 帳號或暱稱"></label>';
+  if(form.source!=='shop')h+='<div><span class="flabel">平台來源</span>'+platPicker('form',form.platform)+'</div><label><span class="flabel">'+(form.source==='group'?'團主名稱':'對方名稱')+'</span><input data-f2="seller" value="'+esc(form.seller)+'" placeholder="帳號或暱稱"></label>'+platList();
+  else h+='<label><span class="flabel">店家名稱</span><input data-f2="seller" value="'+esc(form.seller)+'" placeholder="哪一家店（不填就用品項的店家）"></label>';
   h+='<span class="flabel">現在在哪一站</span><div class="seg4" role="group" aria-label="階段">'+STAGES.map(function(st){return '<button type="button" data-st="'+st.id+'" aria-pressed="'+(form.status===st.id)+'"><span class="e" aria-hidden="true">'+stIcon(st)+'</span>'+st.label+'</button>'}).join('')+'</div>';
   if(form.status==='making')h+='<label><span class="flabel">出貨日</span><input type="date" data-f2="date" value="'+form.date+'"></label>';
   if(form.status!=='fridge')h+='<label><span class="flabel">取貨方式</span><select data-f2="pickup">'+Object.keys(PICKUP).map(function(k){return '<option'+(form.pickup===k?' selected':'')+'>'+k+'</option>'}).join('')+'</select></label>';
@@ -991,9 +1082,9 @@ function submitForm(){
   if(form.source==='shop'&&rows.some(function(r){return !r.brand.trim()})){flash='<span class="err">店家直購要填品牌。</span>';render();return}
   if(form.status==='making'&&!form.date){flash='<span class="err">製作中要填出貨日。</span>';render();return}
   snap('進冷凍 '+rows.length+' 項');
-  var o=addOrder({source:form.source,seller:form.seller.trim(),date:form.status==='making'?form.date:null,pickup:form.pickup,plan:form.home});
+  var o=addOrder({source:form.source,platform:form.source==='shop'||form.platform==='其他'?'':(form.platform||'').trim(),seller:form.seller.trim(),date:form.status==='making'?form.date:null,pickup:form.pickup,plan:form.home});
   rows.forEach(function(r){items.push({id:nid('i'),name:r.name.trim(),qty:+r.qty,cat:r.cat,guess:false,brand:r.brand.trim()||form.seller.trim()||'未填',status:form.status,order:o,home:form.status==='fridge'?form.home:null,price:r.price?+r.price:0})});
-  var who=form.source==='resale'?(form.seller.trim()||'收購'):rows[0].brand.trim();
+  var who=form.source!=='shop'?(form.seller.trim()||srcLabel(form.source)):(form.seller.trim()||rows[0].brand.trim());
   flash='🧊 '+esc(who)+' '+rows.length+' 項進冷凍了！';
   form={source:form.source,seller:'',status:form.status,date:form.date,pickup:form.pickup,home:form.home,rows:[newRow()]};
   showForm=false;render();printReceipt(rows.map(function(r){return {brand:r.brand.trim()||form.seller.trim()||'未填',name:r.name.trim(),qty:+r.qty}}),ORDERS[o],form.status);
@@ -1046,7 +1137,7 @@ function parseList(txt){
 }
 function pasteHTML(){
   var h='<div class="panel"><div class="drawer-h"><h2><span class="e" aria-hidden="true">📋</span> 進貨單 · 簡易版</h2><button type="button" class="icon-x" data-act="paste" aria-label="關閉">✕</button></div>';
-  h+='<span class="flabel">怎麼買的</span><div class="seg2" role="group" aria-label="來源">'+srcButtons('data-psrc',pasteSrc.source)+'</div>'+ADDSRC+(pasteSrc.source!=='shop'?'<label><span class="flabel">賣家</span><input data-pseller value="'+esc(pasteSrc.seller)+'" placeholder="IG 帳號或暱稱"></label>':'');
+  h+='<span class="flabel">怎麼買的</span><div class="seg2" role="group" aria-label="來源">'+srcButtons('data-psrc',pasteSrc.source)+'</div>'+ADDSRC+(pasteSrc.source!=='shop'?'<div><span class="flabel">平台來源</span>'+platPicker('paste',pasteSrc.platform)+'</div><label><span class="flabel">'+(pasteSrc.source==='group'?'團主名稱':'對方名稱')+'</span><input data-pseller value="'+esc(pasteSrc.seller)+'" placeholder="帳號或暱稱"></label>'+platList():'<label><span class="flabel">店家名稱</span><input data-pseller value="'+esc(pasteSrc.seller)+'" placeholder="哪一家店"></label>');
   h+='<p class="note">照你平常傳的格式貼進來就好：標題行寫「台北｜已進冰箱冷凍」「等取貨」「12/2出貨」，品項行寫「* 品牌-品名*0.5」。</p>';
   h+='<textarea class="paste-ta" data-paste aria-label="清單">'+esc(pasteText)+'</textarea>';
   h+='<button type="button" class="btn" data-act="parse">看看會怎麼放</button>';
@@ -1077,7 +1168,7 @@ function applyParsed(replace){
   }
   var n=0;
   parsed.forEach(function(sec){
-    var o=sec.status==='fridge'?null:addOrder({source:pasteSrc.source,seller:pasteSrc.seller.trim(),date:sec.date,pickup:'超商',plan:'台北',arrived:!!sec.arrived,arrivedOn:sec.arrived?isoD(TODAY):null});
+    var o=sec.status==='fridge'?null:addOrder({source:pasteSrc.source,platform:pasteSrc.source==='shop'||pasteSrc.platform==='其他'?'':(pasteSrc.platform||'').trim(),seller:pasteSrc.seller.trim(),date:sec.date,pickup:'超商',plan:'台北',arrived:!!sec.arrived,arrivedOn:sec.arrived?isoD(TODAY):null});
     sec.rows.forEach(function(r){n++;if(sec.status!=='fridge')printed.push(r);items.push({id:nid('i'),name:r.name,qty:r.qty,cat:r.cat,guess:r.guess,brand:r.brand,status:sec.status,order:o,home:sec.status==='fridge'?sec.home:null,price:0})});
   });
   showPaste=false;parsed=null;pasteText='';render();if(printed.length)printReceipt(printed,null,'making');else toast((replace?'🔄 已更新全部狀態，':'🧊 新增了 ')+n+' 項',true);
@@ -1207,10 +1298,20 @@ document.getElementById('nav1').innerHTML=navHTML(NAV1);
 document.getElementById('nav2').innerHTML=navHTML(NAV2);
 var page=document.getElementById('page'),app=document.getElementById('app'),mb=document.getElementById('menuBtn');
 function current(){var h=location.hash.slice(1);return PAGES[h]?h:'bread'}
-function render(){
+function render(){syncOrders();
   var p=current();page.innerHTML=PAGES[p]();page.classList.toggle('wide',p==='bread');
   document.querySelectorAll('.nav-item').forEach(function(a){if(a.dataset.p===p)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  popChanged(p);
 }
+/* numbers that changed since the last render hop once */
+var prevV={};
+function popChanged(p){
+  page.querySelectorAll('.stat .v,.col .cnt').forEach(function(el){
+    var box=el.closest('.stat'),key=p+'|'+(box?box.querySelector('.k').textContent:el.closest('.col').className.split(' ')[1]),t=el.textContent;
+    if(key in prevV&&prevV[key]!==t)el.classList.add('mpop');prevV[key]=t});
+}
+function sparks(x,y){if(reduceMotion)return;for(var i=0;i<6;i++){var s=document.createElement('span');s.className='spk';s.textContent='✨';var a=Math.random()*Math.PI*2,r=18+Math.random()*16;
+  s.style.left=x+'px';s.style.top=y+'px';s.style.setProperty('--dx',Math.cos(a)*r+'px');s.style.setProperty('--dy',Math.sin(a)*r+'px');document.body.appendChild(s);setTimeout(function(n){return function(){n.remove()}}(s),750)}}
 window.addEventListener('hashchange',function(){render();toggle(false);window.scrollTo(0,0)});
 function toggle(o){app.classList.toggle('open',o);mb.setAttribute('aria-expanded',String(o))}
 mb.addEventListener('click',function(){toggle(!app.classList.contains('open'))});
@@ -1225,7 +1326,7 @@ page.addEventListener('click',function(e){
   if(t=e.target.closest('[data-pick]')){pickKey=pickKey===t.dataset.pick?null:t.dataset.pick;picked={};pickTo='__new';editSrc=null;render();return}
   if(t=e.target.closest('[data-pickx]')){pickKey=null;picked={};render();return}
   if(t=e.target.closest('[data-pickgo]')){var from=t.dataset.pickgo,to=pickTo,mv=items.filter(function(x){return picked[x.id]});if(!mv.length)return;
-    snap('拆訂單');var fo=ORDERS[from]||{};if(to==='__new')to=addOrder({source:fo.source||'',seller:fo.seller||'',date:fo.date||null,pickup:fo.pickup||'超商',plan:fo.plan||'台北'});
+    snap('拆訂單');var fo=ORDERS[from]||{};if(to==='__new')to=addOrder({source:fo.source||'',platform:fo.platform||'',seller:fo.seller||'',date:fo.date||null,pickup:fo.pickup||'超商',plan:fo.plan||'台北'});
     mv.forEach(function(x){x.order=to});dropEmptyOrder(from);pickKey=null;picked={};editSrc=to;render();toast(mv.length+' 項拆到 '+to+'，下面可以改這筆的來源、賣家、出貨日',true);return}
   if(pickKey&&(t=e.target.closest('.bcard.picking'))&&!e.target.closest('[data-adv],[data-eat],[data-guess]')){var pid=t.dataset.id;if(picked[pid])delete picked[pid];else picked[pid]=1;render();return}
   if(t=e.target.closest('[data-splitb]')){snap('拆訂單');var nb=splitOrder(t.dataset.splitb,t.dataset.brand);render();if(nb)toast(t.dataset.brand+' 拆成一筆新訂單',true);return}
@@ -1233,7 +1334,8 @@ page.addEventListener('click',function(e){
   if(t=e.target.closest('[data-addsrc]')){var box=t.parentNode.querySelector('[data-newsrc]'),nk=addSource(box?box.value:'');if(!nk){if(box)box.focus();return}var oid=t.getAttribute('data-addsrc');if(oid&&ORDERS[oid]){snap('新增來源');ORDERS[oid].source=nk}else if(showForm)form.source=nk;else if(showPaste)pasteSrc.source=nk;render();toast('新增來源：'+SOURCE[nk].label,false);return}
   if(t=e.target.closest('[data-guess]')){guessId=t.dataset.guess;render();return}
   if(t=e.target.closest('[data-setcat]')){var gx=byId(guessId);if(gx){snap('分類 '+gx.name);gx.cat=t.dataset.setcat;gx.guess=false;toast(gx.name+' 分類改成 '+cat(gx.cat).label,true)}guessId=null;render();return}
-  if(t=e.target.closest('[data-arrive]')){var oa=ORDERS[t.dataset.arrive];if(oa){snap('到店');oa.arrived=!oa.arrived;oa.arrivedOn=isoD(TODAY)}render();return}
+  if(t=e.target.closest('[data-platpick]')){var pv=t.dataset.platpick,sc=t.dataset.scope;setPlat(sc,pv);if(pv==='其他')setTimeout(function(){var x=document.querySelector('[data-platother][data-scope="'+sc+'"]');if(x)x.focus()},0);return}
+  if(t=e.target.closest('[data-arrive]')){var oa=ORDERS[t.dataset.arrive];if(oa){snap('到店');oa.arrived=!oa.arrived;oa.arrivedOn=oa.arrived?isoD(TODAY):null;var ka=t.dataset.arrive;items.forEach(function(x){if(x.order===ka&&(x.status==='making'||x.status==='shipping'))x.status=oa.arrived?'shipping':'making'})}render();return}
   if(t=e.target.closest('[data-psrc]')){pasteSrc.source=t.dataset.psrc;render();return}
   if(t=e.target.closest('[data-step]')){it=byId(editId);if(it){snap('改數量 '+it.name);it.qty=Math.max(0,Math.round((it.qty+(+t.dataset.step))*10)/10);render()}return}
   if(t=e.target.closest('[data-homefold]')){homeOpen[t.dataset.homefold]=!homeOpen[t.dataset.homefold];render();return}
@@ -1247,8 +1349,11 @@ page.addEventListener('click',function(e){
   if(t=e.target.closest('[data-dropr]')){form.rows.splice(+t.dataset.dropr,1);render();return}
   if(t=e.target.closest('[data-fold]')){var fk=t.dataset.fold;folded[fk]=!((fk in folded)?folded[fk]:/making$/.test(fk));render();return}
   if(t=e.target.closest('[data-src]')){editSrc=editSrc===t.dataset.src?null:t.dataset.src;render();return}
-  if(t=e.target.closest('[data-eat]')){it=byId(t.dataset.eat);snap('吃掉 '+it.name);eatOne(it);render();afterEat(it);return}
-  if(t=e.target.closest('[data-adv]')){it=byId(t.dataset.adv);if(it.status==='shipping'){pendingPick={ids:[it.id]};render();return}var st=stage(it.status),nx=stage(st.to);snap(nx.label+' '+it.name);moveTo(it,st.to);place(it,null);render();toast(nx.emoji+' '+it.name+' → '+nx.label,true);return}
+  if(t=e.target.closest('[data-eat]')){it=byId(t.dataset.eat);var er=t.getBoundingClientRect();snap('吃掉 '+it.name);eatOne(it);render();if(it.status!=='done')crumbs(er.left+er.width/2,er.top);afterEat(it);return}
+  if(t=e.target.closest('.row .box')){var on=t.classList.toggle('on'),rw=t.closest('.row');rw.classList.toggle('done',on);t.classList.remove('bpop');void t.offsetWidth;t.classList.add('bpop');
+    if(on){var xr=t.getBoundingClientRect();sparks(xr.left+xr.width/2,xr.top+xr.height/2)}return}
+  if(t=e.target.closest('[data-adv]')){it=byId(t.dataset.adv);if(it.status==='shipping'){pendingPick={ids:[it.id]};render();return}
+    if(it.status==='making'&&it.order){var all=items.filter(function(x){return x.order===it.order&&x.status==='making'});snap('到店 '+oname(ORDERS[it.order]||{}));all.forEach(function(x){moveTo(x,'shipping');place(x,null)});var oo=ORDERS[it.order];if(oo){oo.arrived=true;oo.arrivedOn=isoD(TODAY)}folded[it.order+'shipping']=false;render();toast('📦 '+all.length+' 項 → 已抵達',true);return}var st=stage(it.status),nx=stage(st.to);snap(nx.label+' '+it.name);moveTo(it,st.to);place(it,null);render();toast(nx.emoji+' '+it.name+' → '+nx.label,true);return}
   if(t=e.target.closest('[data-bulk]')){
     var o=t.dataset.bulk,sg=stage(t.dataset.stage),nx2=stage(sg.to);
     var moved=items.filter(function(x){return x.status===sg.id&&(x.order||'none')===o});
@@ -1281,6 +1386,7 @@ page.addEventListener('input',function(e){
   var t=e.target;
   if(t.hasAttribute('data-paste')){pasteText=t.value;return}
   if(t.hasAttribute('data-pseller')){pasteSrc.seller=t.value;return}
+  if(t.hasAttribute('data-pplat')){pasteSrc.platform=t.value;return}
   if(t.dataset.f2){form[t.dataset.f2]=t.value;return}
   if(t.dataset.rk){form.rows[+t.dataset.r][t.dataset.rk]=t.value;var s=document.getElementById('fsum');if(s)s.innerHTML=fsum();return}
 });
@@ -1293,10 +1399,11 @@ page.addEventListener('change',function(e){
     else if(k==='price')it.price=+v||0;
     else if(k==='status'){if(v==='fridge')moveTo(it,'fridge',null,it.home||here);else it.status=v}
     else if(k==='cat'){it.cat=v;it.guess=false}
-    else if(k==='order'){var oldOrd=it.order;if(v==='__new'){var so2=ORDERS[it.order]||{};it.order=addOrder({source:so2.source||'',seller:so2.seller||'',date:so2.date||null,pickup:so2.pickup||'超商',plan:so2.plan||'台北',arrived:so2.arrived,arrivedOn:so2.arrivedOn})}else it.order=v;dropEmptyOrder(oldOrd)}
+    else if(k==='order'){var oldOrd=it.order;if(v==='__new'){var so2=ORDERS[it.order]||{};it.order=addOrder({source:so2.source||'',platform:so2.platform||'',seller:so2.seller||'',date:so2.date||null,pickup:so2.pickup||'超商',plan:so2.plan||'台北',arrived:so2.arrived,arrivedOn:so2.arrivedOn})}else it.order=v;dropEmptyOrder(oldOrd)}
     else it[k]=v.trim()||it[k];
     render();return}
   if(t.dataset.pr){var q=t.dataset.pr.split(':'),row=parsed[+q[0]].rows[+q[1]];row[t.dataset.pk]=t.value;if(t.dataset.pk==='cat')row.guess=false;render();return}
+  if(t.hasAttribute('data-platother')){setPlat(t.dataset.scope,t.value.trim()||'其他');return}
   if(t.dataset.ok){var o=ORDERS[t.dataset.oid];if(o){snap('修改訂單');o[t.dataset.ok]=t.value||(t.dataset.ok==='date'?null:'');render()}return}
   if(t.dataset.ck){snap('修改分類');var c=CATS[+t.dataset.ci];c[t.dataset.ck]=t.dataset.ck==='per'?Math.max(.5,+t.value||1):t.value;render();return}
   if(t.dataset.rk==='cat'){var s=document.getElementById('fsum');if(s)s.innerHTML=fsum()}

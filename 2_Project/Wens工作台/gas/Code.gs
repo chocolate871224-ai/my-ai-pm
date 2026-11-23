@@ -6,15 +6,15 @@
 var SHEETS = {items: '品項', orders: '訂單', eaten: '吃掉紀錄', cats: '分類', sources: '來源'};
 var COLS = {
   items:   [['id','id'],['name','品名'],['brand','店家'],['qty','剩幾顆'],['cat','分類'],['guess','分類是猜的'],['status','階段'],['order','訂單'],['home','放哪個冷凍庫'],['price','價格']],
-  orders:  [['id','id'],['source','來源'],['seller','賣家'],['date','出貨日'],['pickup','取貨方式'],['plan','預計放'],['arrived','已到店'],['arrivedOn','到店日']],
+  orders:  [['id','id'],['source','來源'],['seller','賣家'],['date','出貨日'],['pickup','取貨方式'],['plan','預計放'],['arrived','已到店'],['arrivedOn','到店日'],['platform','平台']],
   eaten:   [['d','日期'],['n','品名'],['b','店家'],['per','吃了多少'],['id','品項id'],['r','星等'],['note','心得'],['gift','送出']],
   cats:    [['id','id'],['label','名稱'],['emoji','emoji'],['color','顏色'],['per','一天的量'],['unit','單位']],
   sources: [['id','id'],['label','名稱'],['emoji','emoji']]
 };
 var NUM = {qty: 1, price: 1, per: 1, r: 1};
 var BOOL = {guess: 1, arrived: 1, gift: 1};
-var STATUS_ZH = {making: '製作中', shipping: '運送中', arrived: '運送中', fridge: '冷凍庫', done: '吃完'};
-var STATUS_ID = {'製作中': 'making', '運送中': 'shipping', '冷凍庫': 'fridge', '吃完': 'done'};
+var STATUS_ZH = {making: '製作中', shipping: '已抵達', arrived: '已抵達', fridge: '冷凍庫', done: '吃完'};
+var STATUS_ID = {'製作中': 'making', '運送中': 'shipping', '已抵達': 'shipping', '冷凍庫': 'fridge', '吃完': 'done'};
 
 /* The page and the first-run data live as files in Google Drive, so Claude can update the page
    without anyone pasting code or redeploying: to ship a new page, upload a new file with PAGE_TITLE;
@@ -135,10 +135,31 @@ function makeSheet_(ss, key) {
   return sh;
 }
 
+/* columns added later (e.g. 訂單 → 平台) get their header written into row 1 */
+function fillHeaders_(key) {
+  try {
+    var sh = sheet_(key), cols = COLS[key], head = sh.getRange(1, 1, 1, cols.length).getDisplayValues()[0];
+    cols.forEach(function (c, i) { if (head[i] === '') sh.getRange(1, i + 1).setValue(c[1]); });
+    SpreadsheetApp.flush();
+  } catch (e) {}
+}
+
+/* if 品項 → 階段 is a dropdown, make sure it accepts 已抵達 */
+function allowStatus_() {
+  try {
+    var sh = sheet_('items'), col = 1 + COLS.items.map(function (c) { return c[0]; }).indexOf('status');
+    var rg = sh.getRange(2, col, Math.max(sh.getMaxRows() - 1, 1), 1), rule = rg.getDataValidation();
+    if (!rule || rule.getCriteriaType() !== SpreadsheetApp.DataValidationCriteria.VALUE_IN_LIST) return;
+    var v = rule.getCriteriaValues(), list = v[0];
+    if (list.indexOf('已抵達') < 0) { rg.setDataValidation(rule.copy().requireValueInList(list.concat(['已抵達']), v[1]).build()); SpreadsheetApp.flush(); }
+  } catch (e) {}
+}
+
 function ensureSheets_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var fresh = !ss.getSheetByName(SHEETS.items);
-  Object.keys(SHEETS).forEach(function (k) { sheet_(k); });
+  Object.keys(SHEETS).forEach(function (k) { sheet_(k); fillHeaders_(k); });
+  allowStatus_();
   ss.getSheets().forEach(function (sh) {
     var n = sh.getName();
     if ((n === '工作表1' || n === 'Sheet1') && sh.getLastRow() === 0 && ss.getSheets().length > 1) ss.deleteSheet(sh);
