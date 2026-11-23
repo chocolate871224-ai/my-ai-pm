@@ -4,13 +4,13 @@ Wendy 的個人工作台網頁：待辦、行程日曆、案件進度、工作�
 
 ## 新版：Google 試算表＋Apps Script（2026-11-23 起）
 
-她決定改用 Google 試算表當資料庫。舊的 artifact 版（下面那段）先留著，等新版裝好、確認可用後再停用。
+她決定改用 Google 試算表當資料庫（11/23 確認架構維持 Apps Script＋試算表，GitHub 只當版本備份，每次改版推一次）。舊的 artifact 版（下面那段）先留著，等新版裝好、確認可用後再停用。
 
 | 東西 | 在哪裡 |
 |---|---|
-| **正式網址** | https://script.google.com/macros/s/AKfycbyAeORdxWSZ7pH8M1oU7ZFnHN0Xa5VpSOGPnmcrMs_miUR-qkBe682G9rlClX-dRoOSvw/exec （11/23 部署第 2 版，只有 iamsyuanyu.chen 能開；網址不變） |
+| **正式網址** | https://script.google.com/macros/s/AKfycbyAeORdxWSZ7pH8M1oU7ZFnHN0Xa5VpSOGPnmcrMs_miUR-qkBe682G9rlClX-dRoOSvw/exec （11/23 部署第 4 版：存檔失敗不會清空、空白網頁不能清空試算表；只有 iamsyuanyu.chen 能開；網址不變） |
 | Apps Script 專案 | 綁在試算表上 https://script.google.com/home/projects/1Aa4KQGoqLPyQm8NDsovoOyNBB15WpHl00LNiV_fLnojhOe9pwgVSsD0j/edit （只放 Code.gs） |
-| 網頁檔（雲端硬碟） | 檔名「Wen's 工作台 · 網頁（Index.html）」。後台讀**同名檔案中最新建立的那一個**（第 2 版起）。**改網頁＝跑 `python3 -I 99_TEMP/build_gas.py`，再用 Drive 連接器 create_file 上傳一個同名新檔**（連接器不能覆寫舊檔），重新整理就生效，不用貼程式、不用重新部署。11/23 第二版檔案 id `19_4EOSYTy_ZvWfeUuHri4keV_LWD54qY`；舊檔 `1I7bRz-…` 只當備援 |
+| 網頁檔（雲端硬碟） | 檔名「Wen's 工作台 · 網頁（Index.html）」。後台讀**同名檔案中最新建立的那一個**（第 2 版起）。**改網頁＝跑 `python3 -I 99_TEMP/build_gas.py`，再用 Drive 連接器 create_file 上傳一個同名新檔**（連接器不能覆寫舊檔），重新整理就生效，不用貼程式、不用重新部署。目前最新檔案 id `1omz_BBz9qPfAnoCbCsplT_ykm4RbOkI9`（11/23，加了「📊 資料庫」按鈕）；舊檔 `1I7bRz-…` 只當備援 |
 | 初始資料（雲端硬碟） | 「Wen's 工作台 · 初始資料（seed.json）」id `1_aAi5_aFdY7Lf6YqULnJlj2p66zqSb4N`，只在第一次開啟時用過 |
 | 試算表（資料正本） | 「Wen's 工作台 · 貝果資料庫」 https://docs.google.com/spreadsheets/d/1OQIZFtB58dPozx_AaMIydJBx4pOnnD3rz9lbucIpdB4/edit （擁有者 iamsyuanyu.chen） |
 | 後台程式 | `gas/Code.gs`（綁在試算表上的 Apps Script；`SEED` 是 11/23 從舊資料庫搬來的資料，只在第一次開啟時寫入） |
@@ -19,6 +19,8 @@ Wendy 的個人工作台網頁：待辦、行程日曆、案件進度、工作�
 | 互動示範（設計確認用） | `mockups/interaction-demo.html` → https://claude.ai/artifact/A2H9BqW9CNtn4w4TdGPhgB |
 
 試算表分頁：品項、訂單、吃掉紀錄、分類、來源。第一列是欄位名稱，不要改；階段用中文（製作中／運送中／冷凍庫／吃完）。
+
+> **11/23 事故**：品項分頁被轉成「表格」（欄位有型別），舊版存檔先清空再寫入、寫入失敗，品項全被清空。已用版本記錄還原到 11/23 凌晨 2:16。第 3、4 版起：寫入失敗會放回原資料、網頁送來 0 筆品項時拒絕存檔，分頁是不是表格都能存。資料出事先去「檔案 → 版本記錄」還原。
 重建：`python3 -I 99_TEMP/build_gas.py`（從示範頁產生 gas/），測試：`node 99_TEMP/test_gas.cjs`，複製頁：`python3 -I 99_TEMP/copy_page.py`。
 
 ## 舊版：三個地方，各管一件事

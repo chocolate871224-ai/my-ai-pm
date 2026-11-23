@@ -78,6 +78,8 @@ function saveState(state) {
   lock.waitLock(20000);
   try {
     if (typeof state === 'string') state = JSON.parse(state);
+    // a page that loaded nothing must never blank a tab that still has bagels in it
+    if (!(state.items || []).length && sheet_('items').getLastRow() > 1) throw new Error('refused: page sent 0 items but the sheet still has items');
     var orders = Object.keys(state.orders || {}).map(function (k) { var o = state.orders[k]; o.id = o.id || k; return o; });
     var sources = Object.keys(state.sources || {}).filter(function (k) { return k; })
       .map(function (k) { return {id: k, label: state.sources[k].label, emoji: state.sources[k].emoji}; });
@@ -92,10 +94,12 @@ function saveState(state) {
   }
 }
 
+/* Safe write: never clear first. Keep a copy of the old rows, write the new rows over them,
+   then blank only the leftover rows. If anything fails, put the old rows back and rethrow,
+   so a failed save can never leave a tab empty. */
 function writeTable_(key, list) {
-  var sh = sheet_(key), cols = COLS[key], old = sh.getLastRow() - 1;
-  if (old > 0) sh.getRange(2, 1, old, cols.length).clearContent();
-  if (!list.length) return;
+  var sh = sheet_(key), cols = COLS[key], old = Math.max(0, sh.getLastRow() - 1);
+  var backup = old ? sh.getRange(2, 1, old, cols.length).getValues() : [];
   var rows = list.map(function (o) {
     return cols.map(function (c) {
       var f = c[0], v = o[f];
@@ -105,9 +109,17 @@ function writeTable_(key, list) {
       return String(v);
     });
   });
-  var rg = sh.getRange(2, 1, rows.length, cols.length);
-  rg.setNumberFormat('@');
-  rg.setValues(rows);
+  try {
+    if (rows.length) {
+      var rg = sh.getRange(2, 1, rows.length, cols.length);
+      try { rg.setNumberFormat('@'); } catch (e) {} // typed columns (Sheets tables) refuse number formats; keep going
+      rg.setValues(rows);
+    }
+    if (old > rows.length) sh.getRange(2 + rows.length, 1, old - rows.length, cols.length).clearContent();
+  } catch (err) {
+    if (backup.length) sh.getRange(2, 1, backup.length, cols.length).setValues(backup);
+    throw err;
+  }
 }
 
 /* ---------- tabs ---------- */
