@@ -10,7 +10,7 @@ Wendy 的個人工作台網頁：待辦、行程日曆、案件進度、工作�
 |---|---|
 | **正式網址** | https://script.google.com/macros/s/AKfycbyAeORdxWSZ7pH8M1oU7ZFnHN0Xa5VpSOGPnmcrMs_miUR-qkBe682G9rlClX-dRoOSvw/exec （11/23 部署第 4 版：存檔失敗不會清空、空白網頁不能清空試算表；只有 iamsyuanyu.chen 能開；網址不變） |
 | Apps Script 專案 | 綁在試算表上 https://script.google.com/home/projects/1Aa4KQGoqLPyQm8NDsovoOyNBB15WpHl00LNiV_fLnojhOe9pwgVSsD0j/edit （只放 Code.gs） |
-| 網頁檔（雲端硬碟） | 檔名「Wen's 工作台 · 網頁（Index.html）」。後台讀**同名檔案中最新建立的那一個**（第 2 版起）。**改網頁＝跑 `python3 -I 99_TEMP/build_gas.py`，再用 Drive 連接器 create_file 上傳一個同名新檔**（連接器不能覆寫舊檔），重新整理就生效，不用貼程式、不用重新部署。目前最新檔案 id `1omz_BBz9qPfAnoCbCsplT_ykm4RbOkI9`（11/23，加了「📊 資料庫」按鈕）；舊檔 `1I7bRz-…` 只當備援 |
+| 網頁檔（雲端硬碟） | 檔名「Wen's 工作台 · 網頁（Index.html）」。後台讀**同名檔案中最新建立的那一個**（第 2 版起）。**改網頁＝跑 `python3 -I 99_TEMP/build_gas.py`，再用 Drive 連接器 create_file 上傳一個同名新檔**（連接器不能覆寫舊檔），重新整理就生效，不用貼程式、不用重新部署。目前最新檔案 id `16L1b2EaejuMCYgrOjE0UK4zEoeEEfLIL`（11/23 下午，加了彈性動態：圖示搖擺、數字跳動、冰箱彈一下、吃掉噴碎屑、打勾星星、警示輕晃；示意 mockups/motion-ideas.html）；前一版 `1omz_BBz9qPfAnoCbCsplT_ykm4RbOkI9`；舊檔 `1I7bRz-…` 只當備援 |
 | 初始資料（雲端硬碟） | 「Wen's 工作台 · 初始資料（seed.json）」id `1_aAi5_aFdY7Lf6YqULnJlj2p66zqSb4N`，只在第一次開啟時用過 |
 | 試算表（資料正本） | 「Wen's 工作台 · 貝果資料庫」 https://docs.google.com/spreadsheets/d/1OQIZFtB58dPozx_AaMIydJBx4pOnnD3rz9lbucIpdB4/edit （擁有者 iamsyuanyu.chen） |
 | 後台程式 | `gas/Code.gs`（綁在試算表上的 Apps Script；`SEED` 是 11/23 從舊資料庫搬來的資料，只在第一次開啟時寫入） |

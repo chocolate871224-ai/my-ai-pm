@@ -112,7 +112,7 @@ function writeTable_(key, list) {
   try {
     if (rows.length) {
       var rg = sh.getRange(2, 1, rows.length, cols.length);
-      try { rg.setNumberFormat('@'); } catch (e) {} // typed columns (Sheets tables) refuse number formats; keep going
+      try { rg.setNumberFormat('@'); SpreadsheetApp.flush(); } catch (e) {} // typed columns (Sheets tables) refuse number formats; Sheets defers the error, so flush here to catch it and keep going
       rg.setValues(rows);
     }
     if (old > rows.length) sh.getRange(2 + rows.length, 1, old - rows.length, cols.length).clearContent();
