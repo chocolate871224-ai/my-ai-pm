@@ -170,3 +170,46 @@ function ensureSheets_() {
     props.setProperty('seeded', new Date().toISOString());
   }
 }
+
+/* ---------- 行程日曆 (Google Calendar) ---------- */
+// k = key the page uses for colour; w = the page may add events to it
+var CALS = [
+  {id: 'iamsyuanyu.chen@gmail.com', k: 'work', label: '💼 Work', w: 1},
+  {id: 'chocolate871224@gmail.com', k: 'me', label: '個人', w: 1},
+  {id: 'zh.taiwan#holiday@group.v.calendar.google.com', k: 'holiday', label: '節假日', w: 0}
+];
+function calIso_(d) { return Utilities.formatDate(d, 'Asia/Taipei', "yyyy-MM-dd'T'HH:mm"); }
+/* events of one month (y, m = 1-12), plus a week either side so the grid edges fill in */
+function getEvents(y, m) {
+  var start = new Date(y, m - 1, 1), end = new Date(y, m, 1);
+  start.setDate(start.getDate() - 7); end.setDate(end.getDate() + 7);
+  var out = [], cals = [];
+  CALS.forEach(function (c) {
+    var cal = null;
+    try { cal = CalendarApp.getCalendarById(c.id); } catch (e) { cal = null; }
+    if (!cal) return;
+    cals.push({k: c.k, label: c.label, id: c.id, w: c.w});
+    cal.getEvents(start, end).forEach(function (e) {
+      out.push({t: e.getTitle(), s: calIso_(e.getStartTime()), e: calIso_(e.getEndTime()), all: e.isAllDayEvent(), k: c.k, loc: e.getLocation() || ''});
+    });
+  });
+  return {events: out, cals: cals};
+}
+/* o = {title, date: 'yyyy-MM-dd', time: 'HH:mm' or '', mins, cal} */
+function addEvent(o) {
+  var title = String(o && o.title || '').trim();
+  if (!title || !/^\d{4}-\d{2}-\d{2}$/.test(o.date || '')) throw new Error('需要標題和日期');
+  var c = CALS.filter(function (x) { return x.id === o.cal && x.w; })[0] || CALS[0];
+  var cal = CalendarApp.getCalendarById(c.id);
+  if (!cal) throw new Error('找不到這個日曆');
+  var p = o.date.split('-'), ev;
+  if (o.time && /^\d{2}:\d{2}$/.test(o.time)) {
+    var t = o.time.split(':'), st = new Date(+p[0], +p[1] - 1, +p[2], +t[0], +t[1]);
+    ev = cal.createEvent(title, st, new Date(st.getTime() + (+o.mins || 60) * 60000));
+  } else {
+    ev = cal.createAllDayEvent(title, new Date(+p[0], +p[1] - 1, +p[2]));
+  }
+  return {ok: true, id: ev.getId()};
+}
+/* run once from the editor to approve calendar access */
+function authorizeCalendar() { var d = new Date(); return getEvents(d.getFullYear(), d.getMonth() + 1).events.length; }

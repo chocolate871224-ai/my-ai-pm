@@ -8,9 +8,9 @@ Wendy 的個人工作台網頁：待辦、行程日曆、案件進度、工作�
 
 | 東西 | 在哪裡 |
 |---|---|
-| **正式網址** | https://script.google.com/macros/s/AKfycbyAeORdxWSZ7pH8M1oU7ZFnHN0Xa5VpSOGPnmcrMs_miUR-qkBe682G9rlClX-dRoOSvw/exec （11/23 部署第 6 版：安全寫入、拒絕空白存檔、表格分頁可存、訂單平台欄與「已抵達」階段；只有 iamsyuanyu.chen 能開；網址不變） |
+| **正式網址** | https://script.google.com/macros/s/AKfycbyAeORdxWSZ7pH8M1oU7ZFnHN0Xa5VpSOGPnmcrMs_miUR-qkBe682G9rlClX-dRoOSvw/exec （11/23 部署第 7 版：第 6 版＋行程日曆讀寫 Google 日曆（getEvents／addEvent／authorizeCalendar，已授權）；第 6 版是安全寫入、拒絕空白存檔、表格分頁可存、訂單平台欄與「已抵達」階段；只有 iamsyuanyu.chen 能開；網址不變） |
 | Apps Script 專案 | 綁在試算表上 https://script.google.com/home/projects/1Aa4KQGoqLPyQm8NDsovoOyNBB15WpHl00LNiV_fLnojhOe9pwgVSsD0j/edit （只放 Code.gs） |
-| 網頁檔（雲端硬碟） | 檔名「Wen's 工作台 · 網頁（Index.html）」。後台讀**同名檔案中最新建立的那一個**（第 2 版起）。**改網頁＝跑 `python3 -I 99_TEMP/build_gas.py`，再用 Drive 連接器 create_file 上傳一個同名新檔**（連接器不能覆寫舊檔），重新整理就生效，不用貼程式、不用重新部署。目前最新檔案 id `1slqjnuG9drTviR9AYqsAQo3ZflzYX97a`（11/23：三種來源＋平台 logo、手機版兩行卡片、已抵達欄）；前一版 `1omz_BBz9qPfAnoCbCsplT_ykm4RbOkI9`；舊檔 `1I7bRz-…` 只當備援 |
+| 網頁檔（雲端硬碟） | 檔名「Wen's 工作台 · 網頁（Index.html）」。後台讀**同名檔案中最新建立的那一個**（第 2 版起）。**改網頁＝跑 `python3 -I 99_TEMP/build_gas.py`，再用 Drive 連接器 create_file 上傳一個同名新檔**（連接器不能覆寫舊檔），重新整理就生效，不用貼程式、不用重新部署。目前最新檔案 id `1hlgDk-7hnCbiyMv5FLjZ9DPhqZfUwRKx`（11/23 15:28，側欄換頁修好：Apps Script 網頁在框裡，`#連結` 不會傳進來，改成頁面自己記目前分頁、用 google.script.history 同步網址）；更早一版 `1I5FUr_VLPqjv_L7zqMkzAswDSVLTpMXO`（11/23 15:14，行程日曆接 Google 日曆：讀 Work／chocolate871224／節假日，可新增；後台要貼新版 Code.gs＋執行 authorizeCalendar＋部署新版本，步驟頁 https://claude.ai/artifact/C5q7FNrJTmENFTQDMGTCsP；測試 `node 99_TEMP/test_cal.cjs`）；更早一版 `1Avzly76tL5hvVb5gK3ravz9bzqahd0kj`（11/23 15:04，延伸色淡藍紫 --em2、收據 v2（＋訂單也印）、「吃掉的」點一行開心得頁、半顆星；示意 mockups/lavender-receipt-review.html）；更早一版 `1slqjnuG9drTviR9AYqsAQo3ZflzYX97a`（11/23：三種來源＋平台 logo、手機版兩行卡片、已抵達欄）；前一版 `1omz_BBz9qPfAnoCbCsplT_ykm4RbOkI9`；舊檔 `1I7bRz-…` 只當備援 |
 | 初始資料（雲端硬碟） | 「Wen's 工作台 · 初始資料（seed.json）」id `1_aAi5_aFdY7Lf6YqULnJlj2p66zqSb4N`，只在第一次開啟時用過 |
 | 試算表（資料正本） | 「Wen's 工作台 · 貝果資料庫」 https://docs.google.com/spreadsheets/d/1OQIZFtB58dPozx_AaMIydJBx4pOnnD3rz9lbucIpdB4/edit （擁有者 iamsyuanyu.chen） |
 | 後台程式 | `gas/Code.gs`（綁在試算表上的 Apps Script；`SEED` 是 11/23 從舊資料庫搬來的資料，只在第一次開啟時寫入） |

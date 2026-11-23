@@ -658,6 +658,73 @@ body.is-dragging,body.is-dragging *{cursor:grabbing!important;user-select:none}
 .src .pl-ico{width:16px;height:16px;margin-right:3px;vertical-align:-3px}
 .src .pl-ico svg{width:16px;height:16px}
 .plat-other{margin-top:6px;height:32px;border:1px solid var(--line);border-radius:8px;background:var(--sheet);color:var(--ink);font:inherit;font-size:13px;padding:0 8px;width:100%}
+/* palette v2 (2026-11-23): --em stays the brand purple; --em2 lavender = selected / state fills, dark ink on it */
+:root{--em2:#a7a9f7;--em2-line:#8689ee;--em2-ink:#1c1d40}
+.chip[aria-pressed="true"],.lg[aria-pressed="true"],.seg2 button[aria-pressed="true"],.homeseg button[aria-pressed="true"],.col-home button[aria-pressed="true"]{background:var(--em2);border-color:var(--em2-line);color:var(--em2-ink);box-shadow:inset 0 0 0 1px var(--em2-line)}
+.lg[aria-pressed="true"] .n{color:var(--em2-ink)}
+.box.on{background:var(--em2);border-color:var(--em2-line);color:var(--em2-ink)}
+/* receipt v2 */
+.paper{background:#fff;color:#111;font:14px/22px ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding:30px 22px 34px;
+  -webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/16px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 51% repeat-x;
+  mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/16px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 51% repeat-x}
+.paper-clip{padding-bottom:10px}
+.paper .rbrand{font:800 26px/1.1 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;letter-spacing:-.02em;text-align:center;margin-bottom:4px}
+.paper .c{text-align:center;color:#777}
+.paper hr{border:0;border-top:1.5px dashed #bbb;margin:12px 0}
+.paper .tot{font-weight:700}
+.paper .bye{text-align:center;color:#111}
+/* eaten list + review sheet */
+.log li[data-review]{cursor:pointer;grid-template-columns:72px minmax(0,1fr) auto}
+.log li[data-review]:hover{background:var(--nav-hover)}
+.nodate{height:24px;padding:0 8px;border-radius:999px;border:1px dashed var(--tag-warn);color:var(--tag-warn);font-size:12px;line-height:1;font-weight:600;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+.log .nt{display:block;color:var(--muted);font-size:12px;line-height:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sm-stars{color:var(--tag-warn);font-size:13px;line-height:1;letter-spacing:1px;white-space:nowrap}
+.sm-stars.none{color:var(--muted);letter-spacing:0;font-size:12px}
+.rv{position:fixed;z-index:67;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 32px);overflow-y:auto;background:var(--sheet);color:var(--ink);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:18px;box-shadow:0 20px 50px rgba(0,0,0,.22)}
+.rv-head{display:grid;grid-template-columns:64px minmax(0,1fr) 40px;gap:14px;align-items:start}
+.rv-ico{width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:36px;line-height:1;font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.rv-ico .cimg{width:46px;height:46px}
+.rv-name{font-size:18px;line-height:24px;font-weight:700}
+.rv-brand{font-size:14px;line-height:20px;color:var(--muted);margin-top:2px}
+.rv-src{font-size:13px;line-height:20px;color:var(--muted)}
+.rv-x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--sheet);display:inline-flex;align-items:center;justify-content:center;font-size:15px;line-height:1;cursor:pointer;color:var(--ink)}
+.rv h3{margin:0 0 8px;font-size:14px;line-height:20px}
+.big-stars{display:inline-flex;gap:4px;padding:6px 8px;border-radius:14px;border:2px solid var(--em2-line)}
+.bst{position:relative;width:44px;height:44px;cursor:pointer;border:0;background:transparent;padding:0}
+.bst svg{position:absolute;inset:0;width:44px;height:44px}
+.bst .bg{fill:var(--line)}
+.bst .fg{fill:#d19a12;clip-path:inset(0 100% 0 0)}
+.bst.full .fg{clip-path:inset(0 0 0 0)}
+.bst.half .fg{clip-path:inset(0 50% 0 0)}
+@media (prefers-reduced-motion:no-preference){.bst.pop{animation:mpop .35s var(--spring)}}
+.score{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13px;line-height:20px;color:var(--muted)}
+.score b{font-size:18px;color:var(--tag-warn)}
+.score button{border:0;background:transparent;padding:0;color:var(--ink);text-decoration:underline;font-size:13px;cursor:pointer}
+.rv textarea{width:100%;min-height:120px;resize:vertical;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);font:inherit;font-size:15px;line-height:24px;padding:12px 14px}
+.rv .cnt2{text-align:right;font-size:12px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.rv input[type=date]{height:40px;border:1px solid var(--line);border-radius:10px;background:var(--sheet);color:var(--ink);font:inherit;font-size:14px;padding:0 12px}
+.rv-foot{display:flex;align-items:center;gap:10px}
+.rv-foot .del{margin-right:auto;border:0;background:transparent;color:var(--muted);text-decoration:underline;font-size:13px;cursor:pointer;padding:0}
+.pill{height:44px;min-width:88px;padding:0 18px;border-radius:999px;font-size:15px;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--line);background:var(--sheet);color:var(--ink)}
+.pill.save{background:var(--em2);border-color:var(--em2-line);color:var(--em2-ink)}
+@media (max-width:420px){.rv{padding:18px}.bst,.bst svg{width:38px;height:38px}.pill{min-width:72px;padding:0 14px}}
+/* calendar v2 (2026-11-23): live Google Calendar */
+.cal div[data-calday]{cursor:pointer;transition:background-color .12s}
+.cal div[data-calday]:hover{background:var(--nav-hover)}
+.cal .out .dn{opacity:.4}
+.cal .out .ev{opacity:.55}
+.ev.k-work{background:var(--chat);color:var(--ink)}
+.ev.k-me{background:var(--em2);color:var(--em2-ink)}
+.ev.k-holiday{background:transparent;color:var(--tag-warn);padding-left:0;font-weight:600}
+.ev .tm{font-variant-numeric:tabular-nums;opacity:.7;margin-right:4px}
+.ev-more{display:block;margin-top:4px;font-size:11px;line-height:14px;color:var(--muted)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;line-height:1;color:var(--muted)}
+.cal-legend span{display:inline-flex;align-items:center;gap:6px}
+.cal-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.calform{display:grid;grid-template-columns:minmax(0,2fr) 150px 120px 130px auto auto;gap:8px;align-items:center;padding:12px}
+.calform input,.calform select{height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--sheet);color:var(--ink);font:inherit;font-size:14px;min-width:0;width:100%}
+@media (max-width:900px){.calform{grid-template-columns:1fr 1fr}.calform .full{grid-column:1/-1}}
+.cal-msg{display:flex;align-items:center;gap:10px}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -949,17 +1016,24 @@ var fx=null;
 function fxClose(){if(fx){fx.remove();fx=null}}
 function fxOpen(html){fxClose();fx=document.createElement('div');fx.innerHTML=html;document.body.appendChild(fx);return fx}
 /* the receipt printer for a new intake slip */
-function printReceipt(rows,o,status){
-  var tot=Math.round(rows.reduce(function(a,r){return a+(+r.qty||0)},0)*10)/10,f=o?fitOf(o):null,st=status==='shipping'?'shipping':status==='fridge'?'fridge':'making';
+function printReceipt(rows,o,status,opt){
+  opt=opt||{};
+  var tot=Math.round(rows.reduce(function(a,r){return a+(+r.qty||0)},0)*10)/10,f=(o&&rows.length)?fitOf(o):null,st=status==='shipping'?'shipping':status==='fridge'?'fridge':'making';
   var src=o?(o.source?srcLabel(o.source):''):srcLabel(pasteSrc.source),seller=o?o.seller:pasteSrc.seller;
-  fxOpen('<div class="fx-scrim"></div><div class="printer"><div class="printer-slot"></div><div class="paper-clip"><div class="paper"><h4>進貨單</h4><div class="c">'+md(TODAY)+(src?' · '+src:'')+'</div>'+(seller?'<div class="c">賣家 '+esc(seller)+'</div>':'')+'<hr>'+
-    rows.map(function(r){return '<div class="ln"><span>'+esc(r.brand)+' '+esc(r.name)+'</span><span>×'+r.qty+'</span></div>'}).join('')+
-    '<hr><div class="ln"><span>共 '+rows.length+' 項</span><span>'+tot+' 顆</span></div>'+(f?'<div class="ln"><span>放'+homeOf(o)+'</span><span>'+(f.k==='ok'?'放得下':f.k==='rush'?'要加速':'放不下')+'</span></div>':'')+
-    '<hr><div class="c">收好了</div></div></div><button type="button" class="btn primary" data-fx="filed">收進'+stage(st).label+'</button></div>');
+  var d=new Date(),tm=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+' · '+pad(d.getHours())+':'+pad(d.getMinutes());
+  var m=o&&/^o(\d+)$/.exec(o.id||''),no=('000'+(m?m[1]:Object.keys(ORDERS).length)).slice(-4);
+  var who=[src,seller].filter(Boolean).map(esc).join(' · ');
+  var body=rows.length?
+    rows.map(function(r){return '<div class="ln"><span>'+esc(r.brand)+' '+esc(r.name)+'</span><span>x'+r.qty+'</span></div>'}).join('')+
+      '<hr><div class="ln tot"><span>BAGELS</span><span>'+tot+'</span></div>'+
+      (f?'<hr><div class="ln"><span>放'+homeOf(o)+'</span><span>'+(f.k==='ok'?'放得下':f.k==='rush'?'要加速':'放不下')+'</span></div>':''):
+    '<div class="ln"><span>訂單</span><span>'+esc(o?o.id:'')+'</span></div><div class="ln"><span>階段</span><span>'+stage(st).label+'</span></div><hr><div class="c">還沒有品項<br>把卡片拖進來就會加入</div>';
+  fxOpen('<div class="fx-scrim"></div><div class="printer"><div class="printer-slot"></div><div class="paper-clip"><div class="paper"><div class="rbrand">Wen\'s Bagel</div><div class="c">bagel shop · No. '+no+'</div><div class="c">'+tm+'</div>'+(who?'<div class="c">'+who+'</div>':'')+'<hr>'+
+    body+'<hr><div class="bye">好好吃，下次再來 =^.^=</div><div class="c">wens.desk</div></div></div><button type="button" class="btn primary" data-fx="filed">收進'+stage(st).label+'</button></div>');
   fx.querySelector('[data-fx="filed"]').addEventListener('click',function(){
     var p=fx.querySelector('.printer'),col=document.querySelector('.st-'+st);
     if(col&&getComputedStyle(col).display!=='none'){var a=p.getBoundingClientRect(),b=col.getBoundingClientRect();p.style.transform='translate('+(b.left+b.width/2-(a.left+a.width/2))+'px,'+(b.top-a.top)+'px) scale(.2)';p.style.opacity='0'}
-    setTimeout(function(){fxClose();mTab=st;render();pulse('ico-'+st);toast('進貨單收好了',true)},520);
+    setTimeout(function(){fxClose();mTab=st;render();pulse('ico-'+st);toast(opt.msg||'進貨單收好了',true);if(opt.after)opt.after()},520);
   });
 }
 function crumbFx(x,y){for(var i=0;i<14;i++){var c=document.createElement('span');c.className='crumb';var a=Math.random()*Math.PI*2,r=50+Math.random()*60;c.style.left=x+'px';c.style.top=y+'px';c.style.setProperty('--dx',Math.cos(a)*r+'px');c.style.setProperty('--dy',(Math.sin(a)*r-20)+'px');c.style.background=['#d9a066','#b7791f','#f1d3a1','#8a5a2b'][i%4];document.body.appendChild(c);setTimeout(function(n){return function(){n.remove()}}(c),900)}}
@@ -978,14 +1052,31 @@ function adjEat(id,v){
   if(it.status==='done')it.status='fridge';
   render();toast('這次吃 '+fmt(e0.per)+' '+cat(it.cat).unit+'，還剩 '+fmt(it.qty),true,adjBtns(id));
 }
-function rateSheet(it){
-  var k=0;
-  fxOpen('<div class="fx-scrim" data-fx="skip"></div><div class="rate-sheet" role="dialog" aria-label="寫評價"><h3>好吃嗎？</h3><div><b>'+esc(it.name)+'</b><div class="note">'+esc(it.brand)+'</div></div><div class="rate">'+[1,2,3,4,5].map(function(n){return '<button type="button" data-star="'+n+'" aria-label="'+n+' 顆星">★</button>'}).join('')+'</div><label><span class="flabel">一句心得</span><input id="rNote" placeholder="例如：奶酥很香，下次再買"></label><label><span class="flabel">哪天吃的</span><input id="rDate" type="date" value="'+isoD(TODAY)+'"></label><div class="modal-btns"><button type="button" class="btn" data-fx="skip">先跳過</button><button type="button" class="btn primary" data-fx="save">存起來</button></div></div>');
-  fx.addEventListener('click',function(e){
-    var s=e.target.closest('[data-star]');if(s){k=+s.dataset.star;fx.querySelectorAll('[data-star]').forEach(function(b){b.classList.toggle('on',+b.dataset.star<=k)});return}
-    var a=e.target.closest('[data-fx]');if(!a)return;var e0=null;for(var i=0;i<eaten.length;i++)if(eaten[i].id===it.id){e0=eaten[i];break}
-    if(a.dataset.fx==='save'&&e0){e0.r=k;e0.note=fx.querySelector('#rNote').value.trim();var dv=fx.querySelector('#rDate').value;if(dv)e0.d=md(parseD(dv))}
-    fxClose();render();if(a.dataset.fx==='save')toast('評價存好了',false);
+function rateSheet(it){var i=0;for(;i<eaten.length;i++)if(eaten[i].id===it.id)break;if(i<eaten.length)reviewSheet(i)}
+var STAR='M22 3.5l5.6 11.4 12.6 1.8-9.1 8.9 2.1 12.5L22 32.2l-11.2 5.9 2.1-12.5-9.1-8.9 12.6-1.8z';
+function dToIso(d){var m=/^(\d{1,2})\/(\d{1,2})$/.exec(d||'');if(!m)return '';var x=new Date(TODAY.getFullYear(),+m[1]-1,+m[2]);if(x>TODAY)x.setFullYear(x.getFullYear()-1);return isoD(x)}
+function reviewSheet(i){
+  var e=eaten[i];if(!e)return;var it=e.id?byId(e.id):null,c=it?cat(it.cat):cat(guessCat(e.n,'',null).cat),o=it&&ORDERS[it.order],val=+e.r||0;
+  var from=o?(srcLabel(o.source)+(o.seller?' · '+esc(o.seller):'')):'';
+  var st='';for(var k=1;k<=5;k++)st+='<button type="button" class="bst" data-bst="'+k+'" aria-label="'+k+' 顆星"><svg viewBox="0 0 44 44"><path class="bg" d="'+STAR+'"/></svg><svg viewBox="0 0 44 44"><path class="fg" d="'+STAR+'"/></svg></button>';
+  fxOpen('<div class="fx-scrim" data-fx="close"></div><div class="rv" role="dialog" aria-label="心得紀錄">'+
+    '<div class="rv-head"><span class="rv-ico" style="background:'+c.color+'26">'+catIco(c)+'</span><div><div class="rv-name">'+esc(e.n)+'</div><div class="rv-brand">'+esc(e.b||'')+'</div>'+(from?'<div class="rv-src">來自「'+from+'」</div>':'')+'</div><button type="button" class="rv-x" data-fx="close" aria-label="關閉">✕</button></div>'+
+    '<div><h3>我的評分</h3><div class="big-stars" role="group" aria-label="評分">'+st+'</div><div class="score"><b id="rvScore"></b><span>點星星左半邊是半顆</span><button type="button" data-fx="clear">清除評分</button></div></div>'+
+    '<div><h3>我的筆記</h3><textarea id="rvNote" maxlength="2000" placeholder="記下吃起來的口感、喜歡的地方，或下次想不想再買。">'+esc(e.note||'')+'</textarea><div class="cnt2"><span id="rvCnt">0</span> / 2000</div></div>'+
+    '<div><h3>哪天吃的</h3><input id="rvDate" type="date" value="'+dToIso(e.d)+'"></div>'+
+    '<div class="rv-foot"><button type="button" class="del" data-fx="del">刪除這則紀錄</button><button type="button" class="pill" data-fx="close">取消</button><button type="button" class="pill save" data-fx="save">儲存</button></div></div>');
+  var nt=fx.querySelector('#rvNote'),cn=fx.querySelector('#rvCnt');
+  function cnt(){cn.textContent=nt.value.length}nt.addEventListener('input',cnt);cnt();
+  function draw(){fx.querySelectorAll('.bst').forEach(function(b){var k=+b.dataset.bst;b.classList.toggle('full',val>=k);b.classList.toggle('half',val===k-.5)});fx.querySelector('#rvScore').textContent=fmt(val)+' / 5 顆星'}
+  draw();
+  fx.addEventListener('click',function(ev){
+    var b=ev.target.closest('[data-bst]');if(b){var r=b.getBoundingClientRect(),k=+b.dataset.bst;val=(ev.clientX-r.left<r.width/2)?k-.5:k;draw();b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');return}
+    var a=ev.target.closest('[data-fx]');if(!a)return;var act=a.dataset.fx;
+    if(act==='clear'){val=0;draw();return}
+    if(act==='close'){fxClose();return}
+    if(act==='del'){snap('刪除紀錄 '+e.n);var bi=e.id?byId(e.id):null;if(bi){bi.qty=Math.round((bi.qty+e.per)*10)/10;if(bi.status==='done')bi.status='fridge'}
+      eaten.splice(i,1);fxClose();render();toast(bi?'已刪除紀錄，'+e.n+' 退回冰箱':'已刪除紀錄：'+e.n,true);return}
+    if(act==='save'){snap('心得 '+e.n);e.r=val;e.note=nt.value.trim();var dv=fx.querySelector('#rvDate').value;if(dv)e.d=md(parseD(dv));fxClose();render();toast('心得存好了',true)}
   });
 }
 
@@ -1037,7 +1128,7 @@ function breadPage(){
        '<div class="col-body">'+(body||'<div class="empty"><span class="e" aria-hidden="true">'+stIcon(st)+'</span>'+st.empty+'</div>')+'</div></div>';
   });
   h+='</div><p class="note">拖曳卡片換階段，冷凍庫裡上下拖可以排順序；把已抵達的卡片拖進冷凍庫就是取件；把冷凍庫的貝果拖到跳出來的 😋 就吃掉。手機請按住 ⠿ 拖曳。</p>';
-  h+='<section class="sec"><div class="sec-head"><h2>😋 吃掉的</h2><span class="note">吃完會跳出評價，日期可以改</span></div>'+eatenList()+'</section>';
+  h+='<section class="sec"><div class="sec-head"><h2>😋 吃掉的</h2><span class="note">點任一行寫心得、補日期</span></div>'+eatenList()+'</section>';
   h+='<p class="note">整理訂單：把卡片拖到另一筆訂單裡就會移過去；點卡片也能選「屬於哪筆訂單」。卡片上寫「是夾餡嗎？」這類問句的，是我依品名猜的種類，點一下確認或改掉。點任何一張卡片都可以改品名、品牌、剩幾顆。</p>';
   if(showForm)h+='<div class="drawer-scrim" data-act="form"></div><aside class="drawer" aria-label="貝果進冷凍">'+formHTML()+'</aside>';
   if(showPaste)h+='<div class="drawer-scrim" data-act="paste"></div><aside class="drawer wide" aria-label="貼上清單">'+pasteHTML()+'</aside>';
@@ -1087,10 +1178,11 @@ function submitForm(){
   var fb=document.querySelector('.freeze');if(fb){fb.classList.add('frozen');setTimeout(function(){fb.classList.remove('frozen')},700)}
   setTimeout(function(){flash='';var m=document.getElementById('fmsg');if(m)m.innerHTML=''},2500);
 }
+function smStars(r){r=+r||0;if(!r)return '<span class="sm-stars none">還沒評分</span>';var h='';for(var k=1;k<=5;k++)h+=r>=k?'★':r===k-.5?'½':'';for(k=Math.ceil(r);k<5;k++)h+='☆';return '<span class="sm-stars" aria-label="'+fmt(r)+' 顆星">'+h+'</span>'}
 function stars(e,i){var r=e.r||0,h='<span class="stars" role="group" aria-label="評分">';for(var k=1;k<=5;k++)h+='<button type="button" data-rate="'+i+':'+k+'" aria-label="'+k+' 顆星" aria-pressed="'+(k<=r)+'">'+(k<=r?'★':'☆')+'</button>';return h+'</span>'}
 function eatenList(){
   if(!eaten.length) return '<div class="card note">還沒有紀錄。按「吃掉」，或把冷凍庫的貝果拖到 😋。</div>';
-  return '<ul class="log">'+eaten.map(function(e,i){return '<li><span class="d">'+e.d+'</span><span>'+esc(e.n)+' <span class="b">'+esc(e.b)+(e.gift?' · 送出':'')+'</span>'+(e.note?'<span class="b" style="display:block">'+esc(e.note)+'</span>':'')+'</span><span class="log-r">'+stars(e,i)+'<button type="button" class="linkbtn" data-uneat="'+i+'">退回</button></span></li>'}).join('')+'</ul>';
+  return '<ul class="log">'+eaten.map(function(e,i){var hasD=/^\d{1,2}\/\d{1,2}$/.test(e.d||'');return '<li data-review="'+i+'" title="點一下寫心得"><span class="d">'+(hasD?e.d:'<span class="nodate">補日期</span>')+'</span><span>'+esc(e.n)+' <span class="b">'+esc(e.b)+(e.gift?' · 送出':'')+'</span>'+(e.note?'<span class="nt">'+esc(e.note)+'</span>':'')+'</span><span class="log-r">'+smStars(e.r)+'</span></li>'}).join('')+'</ul>';
 }
 
 /* ---------- 📋 paste a list in the same format Wendy writes ---------- */
@@ -1242,6 +1334,54 @@ function chip(k,l,n){return '<button class="chip" type="button" data-f="'+k+'" a
 var EMO={'待辦清單':'✅','行程日曆':'📅','案件進度':'💼','工作日誌':'📝','待閱讀':'🔖','靈感筆記':'💡','我的消費':'🧾'};
 function sampleHead(eb,t,lede,btn){return '<header class="ph"><div class="eyebrow">'+eb+'</div><div class="head"><div><h1 class="title"><span class="emo" aria-hidden="true">'+EMO[t]+'</span>'+t+'</h1><p class="lede">'+lede+'</p></div><div style="display:flex;gap:8px;align-items:center"><span class="sample">範例內容</span>'+(btn?'<button class="btn primary" type="button">'+btn+'</button>':'')+'</div></div></header>'}
 
+/* ---------- 📅 行程日曆: Google Calendar through Apps Script ---------- */
+var calY=TODAY.getFullYear(),calM=TODAY.getMonth()+1,calCache={},calBusy={},calErr='',calForm=null;
+function hasGas(){return !!(window.google&&google.script&&google.script.run)}
+function calKey(){return calY+'-'+calM}
+function calLoad(force){var k=calKey();if(!hasGas()||calBusy[k]||(calCache[k]&&!force))return;calBusy[k]=1;
+  google.script.run.withSuccessHandler(function(r){calBusy[k]=0;calCache[k]=r;calErr='';if(current()==='calendar')render()})
+    .withFailureHandler(function(e){calBusy[k]=0;calErr=String(e&&e.message||e);if(current()==='calendar')render()}).getEvents(calY,calM)}
+function calSample(){var y=calY,m=pad(calM);function d(n,t,k,tm){var day=y+'-'+m+'-'+pad(n);return {t:t,s:day+'T'+(tm||'00:00'),e:day+'T'+(tm||'23:59'),all:!tm,k:k}}
+  return {events:[d(5,'面試 A 公司','work','14:00'),d(12,'牙醫','me','10:30'),d(19,'寄履歷','work'),d(21,'咖啡 Amy','me','15:00'),d(22,'家族聚餐','me','18:30'),d(25,'行憲紀念日','holiday')],
+    cals:[{k:'work',label:'💼 Work',id:'work',w:1},{k:'me',label:'個人',id:'me',w:1},{k:'holiday',label:'節假日',id:'holiday',w:0}]}}
+function calPage(){
+  var gas=hasGas(),k=calKey(),data=gas?calCache[k]:calSample();
+  if(gas&&!data&&!calErr)calLoad();
+  var h='<header class="ph"><div class="eyebrow">Calendar</div><div class="head"><div><h1 class="title"><span class="emo" aria-hidden="true">📅</span>行程日曆</h1><p class="lede">直接讀你的 Google 日曆，也可以從這裡新增。'+(gas?'':' <span class="sample">本機預覽 · 範例行程</span>')+'</p></div>'+
+    '<div style="display:flex;gap:8px;align-items:center"><button class="btn primary" type="button" data-caladd>＋ 新增行程</button></div></div></header>';
+  var cals=(data&&data.cals)||[];
+  if(calForm){var wc=cals.filter(function(c){return c.w});
+    h+='<div class="card calform"><input class="full" data-cf="title" placeholder="要做什麼，例如：牙醫" value="'+esc(calForm.title)+'"><input type="date" data-cf="date" value="'+calForm.date+'"><input type="time" data-cf="time" value="'+calForm.time+'" aria-label="時間（不填＝整天）">'+
+      '<select data-cf="cal" aria-label="加到哪個日曆">'+(wc.length?wc:[{id:'',label:'💼 Work'}]).map(function(c){return '<option value="'+esc(c.id)+'"'+(calForm.cal===c.id?' selected':'')+'>'+esc(c.label)+'</option>'}).join('')+'</select>'+
+      '<button class="btn primary" type="button" data-calsave'+(calForm.saving?' disabled':'')+'>'+(calForm.saving?'加入中…':'加入')+'</button><button class="btn" type="button" data-caladd>取消</button></div><p class="note" style="margin-top:-16px">時間不填就是整天的行程；加好會直接出現在 Google 日曆。</p>'}
+  h+='<div class="sec-head"><h2>'+calY+' 年 '+calM+' 月</h2><div style="display:flex;gap:6px"><button class="btn sm" type="button" data-calnav="-1" aria-label="上個月">‹</button><button class="btn sm" type="button" data-calnav="0">今天</button><button class="btn sm" type="button" data-calnav="1" aria-label="下個月">›</button></div></div>';
+  h+='<div class="cal-legend">'+cals.map(function(c){return '<span><i class="ev k-'+c.k+'" style="margin:0;padding:0'+(c.k==='holiday'?';background:var(--tag-warn)':'')+'"></i>'+esc(c.label)+'</span>'}).join('')+'<span><i style="background:var(--hl)"></i>貝果到貨</span></div>';
+  if(gas&&calErr)h+='<div class="card note cal-msg"><span class="e" aria-hidden="true">🔒</span><span>讀不到 Google 日曆：'+esc(calErr)+'<br>如果是第一次用，要先在 Apps Script 編輯器執行一次 authorizeCalendar 並按「允許」。</span><button class="btn sm" type="button" data-calnav="r">再試一次</button></div>';
+  else if(gas&&!data)h+='<div class="card note">讀取 Google 日曆中…</div>';
+  // day → events
+  var byDay={};function put(key,e){(byDay[key]=byDay[key]||[]).push(e)}
+  ((data&&data.events)||[]).forEach(function(e){var sd=e.s.slice(0,10);
+    if(e.all){var d=parseD(sd),end=parseD(e.e.slice(0,10));if(!(end>d))end=addDays(d,1);for(var g=0;d<end&&g<62;g++){put(isoD(d),e);d=addDays(d,1)}}else put(sd,e)});
+  Object.keys(ORDERS).forEach(function(ok){var o=ORDERS[ok];if(!liveItems(ok).length)return;put(isoD(arrivalOf(o)),{t:'🥯 '+oname(o)+' 到貨',k:'bread',all:true})});
+  var first=new Date(calY,calM-1,1),start=addDays(first,-first.getDay()),last=new Date(calY,calM,0),cells=Math.ceil((first.getDay()+last.getDate())/7)*7,tk=isoD(TODAY);
+  h+='<div class="cal">';
+  '日一二三四五六'.split('').forEach(function(d){h+='<div class="dow">'+d+'</div>'});
+  for(var i=0;i<cells;i++){var dt=addDays(start,i),key=isoD(dt),list=(byDay[key]||[]).slice().sort(function(a,b){return (b.all?1:0)-(a.all?1:0)||(a.s<b.s?-1:1)}),
+      cls=(key===tk?'today':'')+(dt.getMonth()!==calM-1?' out':'');
+    h+='<div class="'+cls.trim()+'" data-calday="'+key+'" title="點一下在這天新增行程"><span class="dn">'+dt.getDate()+'</span>'+
+      list.slice(0,3).map(function(e){return '<span class="ev '+(e.k==='bread'?'bread':'k-'+e.k)+'" title="'+esc(e.t+(e.loc?' · '+e.loc:''))+'">'+(e.all?'':'<span class="tm">'+e.s.slice(11,16)+'</span>')+esc(e.t)+'</span>'}).join('')+
+      (list.length>3?'<span class="ev-more">還有 '+(list.length-3)+' 個</span>':'')+'</div>'}
+  return h+'</div><p class="note">點任一天可以直接在那天新增行程。貝果的預計到貨日會標在日曆上（螢光綠）。</p>';
+}
+function calSave(){
+  var f=calForm;if(!f||f.saving)return;if(!f.title.trim()||!f.date){toast('要填「要做什麼」和日期',false);return}
+  if(!hasGas()){toast('本機預覽不會真的加進日曆',false);calForm=null;render();return}
+  f.saving=true;render();
+  google.script.run.withSuccessHandler(function(){var t=f.title.trim(),p=f.date.split('-');calForm=null;calY=+p[0];calM=+p[1];delete calCache[calKey()];calLoad(true);render();toast('📅 已加進 Google 日曆：'+t,false)})
+    .withFailureHandler(function(e){f.saving=false;render();toast('沒加成功：'+String(e&&e.message||e),false)}).addEvent({title:f.title,date:f.date,time:f.time,cal:f.cal});
+}
+function calOpenForm(date){var cs=calCache[calKey()],w=cs&&cs.cals.filter(function(c){return c.w})[0];calForm={title:'',date:date||isoD(TODAY),time:'',cal:w?w.id:'',saving:false};render();var ti=page.querySelector('[data-cf="title"]');if(ti)ti.focus()}
+
 var PAGES={
  bread:breadPage,
  todo:function(){
@@ -1252,15 +1392,7 @@ var PAGES={
    '<div class="rows">'+t.map(function(x){return '<div class="row'+(x[2]?' done':'')+'"><span class="box'+(x[2]?' on':'')+'"></span><div class="grow"><div>'+x[0]+'</div></div>'+(x[3]?'<span class="tag '+x[3]+'">'+x[4]+'</span>':'')+'</div>'}).join('')+'</div>'+
    '<p class="note">也可以直接跟 Claude 說「加一個待辦：…」。</p>';
  },
- calendar:function(){
-  var h=sampleHead('Calendar','行程日曆','直接讀你的 Google 行事曆，這裡只看不改。','');
-  h+='<div class="sec-head"><h2>2026 年 11 月</h2><div style="display:flex;gap:6px"><button class="btn sm" type="button">‹</button><button class="btn sm" type="button">今天</button><button class="btn sm" type="button">›</button></div></div><div class="cal">';
-  '日一二三四五六'.split('').forEach(function(d){h+='<div class="dow">'+d+'</div>'});
-  var ev={5:['面試 A 公司'],12:['牙醫'],19:['寄履歷'],21:['咖啡 Amy'],22:['家族聚餐'],27:['🥯 11/27 出貨']};
-  for(var i=1;i<=30;i++){h+='<div class="'+(i===19?'today':'')+'"><span class="dn">'+i+'</span>'+(ev[i]||[]).map(function(e){return '<span class="ev'+(e.indexOf('🥯')===0?' bread':'')+'">'+e+'</span>'}).join('')+'</div>'}
-  for(var j=0;j<5;j++)h+='<div></div>';
-  return h+'</div><p class="note">麵包的出貨日也會標在日曆上（綠色）。</p>';
- },
+ calendar:calPage,
  projects:function(){
   var P=[['LINE 小助理','個人專案',['構想','進行中','測試','完成'],2,'等貼 forecast patch'],['票務預算系統','個人專案',['構想','進行中','測試','完成'],3,'11/18 示範版完成'],['A 公司 · 產品企劃','求職',['投遞','面試','等結果','結束'],1,'11/25 二面'],['品牌合作提案','接案',['洽談','確認','製作','交付','結案'],0,'等對方回覆報價']];
   return sampleHead('Projects','案件進度','每個案件可以選不同流程：個人專案、接案、求職。','＋ 新增案件')+
@@ -1298,7 +1430,14 @@ function navHTML(list){return list.map(function(n){return '<a class="nav-item" h
 document.getElementById('nav1').innerHTML=navHTML(NAV1);
 document.getElementById('nav2').innerHTML=navHTML(NAV2);
 var page=document.getElementById('page'),app=document.getElementById('app'),mb=document.getElementById('menuBtn');
-function current(){var h=location.hash.slice(1);return PAGES[h]?h:'bread'}
+/* pages switch inside the page: inside Apps Script the page sits in a frame whose links go to the top window,
+   so a plain #link never reaches us. Keep the page in a variable and mirror it to the address bar when we can. */
+var curPage=location.hash.slice(1);
+function current(){return PAGES[curPage]?curPage:'bread'}
+function gasNav(){return !!(window.google&&google.script&&google.script.history&&google.script.url)}
+function go(p,quiet){if(!PAGES[p])return;curPage=p;if(!quiet){try{if(gasNav())google.script.history.push(null,null,p);else if(location.hash.slice(1)!==p)history.pushState(null,'','#'+p)}catch(_){}}render();toggle(false);window.scrollTo(0,0)}
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;var p=a.getAttribute('href').slice(1);if(!PAGES[p])return;e.preventDefault();go(p)},true);
+if(gasNav()){try{google.script.url.getLocation(function(l){if(l&&l.hash&&PAGES[l.hash]&&l.hash!==current())go(l.hash,true)});google.script.history.setChangeHandler(function(ev){var h=ev&&ev.location&&ev.location.hash;go(PAGES[h]?h:'bread',true)})}catch(_){}}
 function render(){if(mode==='db')setTimeout(scheduleSave,0);syncOrders();
   var p=current();page.innerHTML=PAGES[p]();page.classList.toggle('wide',p==='bread');
   document.querySelectorAll('.nav-item').forEach(function(a){if(a.dataset.p===p)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
@@ -1313,7 +1452,8 @@ function popChanged(p){
 }
 function sparks(x,y){if(reduceMotion)return;for(var i=0;i<6;i++){var s=document.createElement('span');s.className='spk';s.textContent='✨';var a=Math.random()*Math.PI*2,r=18+Math.random()*16;
   s.style.left=x+'px';s.style.top=y+'px';s.style.setProperty('--dx',Math.cos(a)*r+'px');s.style.setProperty('--dy',Math.sin(a)*r+'px');document.body.appendChild(s);setTimeout(function(n){return function(){n.remove()}}(s),750)}}
-window.addEventListener('hashchange',function(){render();toggle(false);window.scrollTo(0,0)});
+window.addEventListener('hashchange',function(){var h=location.hash.slice(1);if(PAGES[h]&&h!==curPage)go(h,true)});
+window.addEventListener('popstate',function(){var h=location.hash.slice(1);go(PAGES[h]?h:'bread',true)});
 function toggle(o){app.classList.toggle('open',o);mb.setAttribute('aria-expanded',String(o))}
 mb.addEventListener('click',function(){toggle(!app.classList.contains('open'))});
 document.getElementById('scrim').addEventListener('click',function(){toggle(false)});
@@ -1321,7 +1461,7 @@ page.addEventListener('click',function(e){
   var t,it;
   if(drag&&drag.justDropped)return;
   if(t=e.target.closest('[data-neword]')){var ns=t.dataset.neword;snap('新增訂單');var no=addOrder({source:'',seller:'',date:null,pickup:'超商',plan:'台北',stage:ns});folded[no+ns]=false;editSrc=no;pickKey=null;picked={};render();
-    var ng=document.querySelector('.grp[data-order="'+no+'"]');if(ng)ng.scrollIntoView({block:'center',behavior:'smooth'});toast('開了新訂單 '+no+'，填好來源後把卡片拖進來',true);return}
+    printReceipt([],ORDERS[no],ns,{msg:'開了新訂單 '+no+'，填好來源後把卡片拖進來',after:function(){var ng=document.querySelector('.grp[data-order="'+no+'"]');if(ng)ng.scrollIntoView({block:'center',behavior:'smooth'})}});return}
   if(t=e.target.closest('[data-delord]')){var dk=t.dataset.delord;if(items.some(function(x){return x.order===dk}))return;snap('刪掉訂單');delete ORDERS[dk];if(editSrc===dk)editSrc=null;render();toast('刪掉了空訂單 '+dk,true);return}
   if(t=e.target.closest('[data-back]')){var bk2=t.dataset.back,bm=items.filter(function(x){return x.order===bk2&&x.status==='shipping'});if(!bm.length)return;snap('整筆移回製作中');bm.forEach(function(x){moveTo(x,'making');place(x,null)});folded[bk2+'making']=false;mTab='making';render();toast('🏭 '+bk2+' 整筆 '+bm.length+' 項 → 製作中',true);return}
   if(t=e.target.closest('[data-pick]')){pickKey=pickKey===t.dataset.pick?null:t.dataset.pick;picked={};pickTo='__new';editSrc=null;render();return}
@@ -1340,6 +1480,11 @@ page.addEventListener('click',function(e){
   if(t=e.target.closest('[data-psrc]')){pasteSrc.source=t.dataset.psrc;render();return}
   if(t=e.target.closest('[data-step]')){it=byId(editId);if(it){snap('改數量 '+it.name);it.qty=Math.max(0,Math.round((it.qty+(+t.dataset.step))*10)/10);render()}return}
   if(t=e.target.closest('[data-homefold]')){homeOpen[t.dataset.homefold]=!homeOpen[t.dataset.homefold];render();return}
+  if(t=e.target.closest('[data-calnav]')){var cn=t.dataset.calnav;if(cn==='r'){calErr='';delete calCache[calKey()]}else if(cn==='0'){calY=TODAY.getFullYear();calM=TODAY.getMonth()+1}else{calM+=+cn;if(calM<1){calM=12;calY--}if(calM>12){calM=1;calY++}}render();return}
+  if(t=e.target.closest('[data-caladd]')){if(calForm){calForm=null;render()}else calOpenForm();return}
+  if(t=e.target.closest('[data-calsave]')){calSave();return}
+  if(t=e.target.closest('[data-calday]')){calOpenForm(t.dataset.calday);return}
+  if(t=e.target.closest('[data-review]')){reviewSheet(+t.dataset.review);return}
   if(t=e.target.closest('[data-rate]')){var pr=t.dataset.rate.split(':');eaten[+pr[0]].r=+pr[1];render();return}
   if(t=e.target.closest('[data-pickhome]')){var hm=t.dataset.pickhome,ids=pendingPick.ids;pendingPick=null;render();putAway(ids,hm,null);return}
   if(t=e.target.closest('.homeseg [data-home]')){here=t.dataset.home;try{localStorage.setItem('wens-here',here)}catch(_){}render();return}
@@ -1385,6 +1530,7 @@ page.addEventListener('click',function(e){
 });
 page.addEventListener('input',function(e){
   var t=e.target;
+  if(t.dataset.cf&&calForm){calForm[t.dataset.cf]=t.value;return}
   if(t.hasAttribute('data-paste')){pasteText=t.value;return}
   if(t.hasAttribute('data-pseller')){pasteSrc.seller=t.value;return}
   if(t.hasAttribute('data-pplat')){pasteSrc.platform=t.value;return}
@@ -1393,6 +1539,7 @@ page.addEventListener('input',function(e){
 });
 page.addEventListener('change',function(e){
   var t=e.target;
+  if(t.dataset.cf&&calForm){calForm[t.dataset.cf]=t.value;return}
   if(t.dataset.f2){form[t.dataset.f2]=t.value;return}
   if('pickto' in t.dataset){pickTo=t.value;return}
   if(t.dataset.ef){it=byId(editId);if(!it)return;snap('編輯 '+it.name);var k=t.dataset.ef,v=t.value;
@@ -1410,7 +1557,7 @@ page.addEventListener('change',function(e){
   if(t.dataset.rk==='cat'){var s=document.getElementById('fsum');if(s)s.innerHTML=fsum()}
 });
 page.addEventListener('submit',function(e){e.preventDefault();submitForm()});
-document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.hasAttribute&&e.target.hasAttribute('data-newsrc')){e.preventDefault();var ab=e.target.parentNode.querySelector('[data-addsrc]');if(ab)ab.click();return}
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.cf&&calForm){e.preventDefault();calSave();return}if(e.key==='Enter'&&e.target.hasAttribute&&e.target.hasAttribute('data-newsrc')){e.preventDefault();var ab=e.target.parentNode.querySelector('[data-addsrc]');if(ab)ab.click();return}
   if(e.key==='Escape'&&(showForm||showPaste||pendingPick||editId)){showForm=showPaste=false;pendingPick=null;editId=null;render();return}
   if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&current()==='bread'){e.preventDefault();undo()}
 });
