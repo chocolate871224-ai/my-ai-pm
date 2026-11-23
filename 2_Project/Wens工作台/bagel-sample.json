@@ -1,0 +1,481 @@
+{
+ "v": 1,
+ "items": [
+  {
+   "id": "i1",
+   "name": "雙雙純咖啡乳酪",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "雙日",
+   "status": "fridge",
+   "order": null,
+   "home": "台北",
+   "price": 0
+  },
+  {
+   "id": "i2",
+   "name": "迷你貝-蜂蜜．開囍烏龍乳酪",
+   "qty": 1,
+   "cat": "other",
+   "guess": true,
+   "brand": "雙日",
+   "status": "fridge",
+   "order": null,
+   "home": "台北",
+   "price": 0
+  },
+  {
+   "id": "i3",
+   "name": "迷你貝-蜂蜜．玄米茶乳酪",
+   "qty": 1,
+   "cat": "other",
+   "guess": true,
+   "brand": "雙日",
+   "status": "fridge",
+   "order": null,
+   "home": "台北",
+   "price": 0
+  },
+  {
+   "id": "i4",
+   "name": "咖啡夾心（咖啡乳酪）",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "ICF",
+   "status": "fridge",
+   "order": null,
+   "home": "台北",
+   "price": 0
+  },
+  {
+   "id": "i5",
+   "name": "泰茶奶蓋",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "YOLON",
+   "status": "fridge",
+   "order": null,
+   "home": "台北",
+   "price": 0
+  },
+  {
+   "id": "i6",
+   "name": "紅烏龍",
+   "qty": 0.5,
+   "cat": "plain",
+   "guess": true,
+   "brand": "YOLON",
+   "status": "fridge",
+   "order": null,
+   "home": "台北",
+   "price": 0
+  },
+  {
+   "id": "i7",
+   "name": "伯爵空貝",
+   "qty": 1,
+   "cat": "plain",
+   "guess": false,
+   "brand": "林氏",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i8",
+   "name": "蔓越莓乳酪",
+   "qty": 1,
+   "cat": "filled",
+   "guess": false,
+   "brand": "林氏",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i9",
+   "name": "抹茶草莓奶酥",
+   "qty": 1,
+   "cat": "filled",
+   "guess": true,
+   "brand": "林氏",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i10",
+   "name": "抹茶空貝",
+   "qty": 1,
+   "cat": "plain",
+   "guess": false,
+   "brand": "好享",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i11",
+   "name": "芝麻姥姥",
+   "qty": 1,
+   "cat": "filled",
+   "guess": true,
+   "brand": "好享",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i12",
+   "name": "奶香金萱",
+   "qty": 1,
+   "cat": "filled",
+   "guess": true,
+   "brand": "好享",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i13",
+   "name": "咖啡奶酥",
+   "qty": 1,
+   "cat": "filled",
+   "guess": true,
+   "brand": "潘樓",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i14",
+   "name": "抹茶酸種",
+   "qty": 3,
+   "cat": "slice",
+   "guess": false,
+   "brand": "Phang",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i15",
+   "name": "濃鐵觀音空貝",
+   "qty": 1,
+   "cat": "plain",
+   "guess": false,
+   "brand": "ICF",
+   "status": "fridge",
+   "order": null,
+   "home": "高雄",
+   "price": 0
+  },
+  {
+   "id": "i16",
+   "name": "薄荷可可黑巧優酪",
+   "qty": 1,
+   "cat": "filled",
+   "guess": false,
+   "brand": "來口",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i17",
+   "name": "茶花烏龍空貝",
+   "qty": 2,
+   "cat": "plain",
+   "guess": false,
+   "brand": "來口",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i18",
+   "name": "花生觀音奶酥",
+   "qty": 1,
+   "cat": "filled",
+   "guess": true,
+   "brand": "來口",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i19",
+   "name": "伯爵藍莓乳酪",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "醜醜",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i20",
+   "name": "抹茶乳酪",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "醜醜",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i21",
+   "name": "可可藍莓乳酪優格丁",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "醜醜",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i22",
+   "name": "蘭姆無花果可可酸種",
+   "qty": 1,
+   "cat": "other",
+   "guess": true,
+   "brand": "派不賴",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i23",
+   "name": "薰衣草桑椹魔杖",
+   "qty": 1,
+   "cat": "other",
+   "guess": true,
+   "brand": "派不賴",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i24",
+   "name": "金萱茶",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": true,
+   "brand": "甜麵匠",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i25",
+   "name": "包種茶",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": true,
+   "brand": "甜麵匠",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i26",
+   "name": "開心藍莓檸檬優格夾心",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "一碗",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i27",
+   "name": "香濃花生肉鬆夾心",
+   "qty": 0.5,
+   "cat": "filled",
+   "guess": false,
+   "brand": "一碗",
+   "status": "arrived",
+   "order": "o1",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i28",
+   "name": "起司夏威夷",
+   "qty": 1,
+   "cat": "filled",
+   "guess": true,
+   "brand": "辣三",
+   "status": "making",
+   "order": "o2",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i29",
+   "name": "酸種空貝果",
+   "qty": 3,
+   "cat": "plain",
+   "guess": false,
+   "brand": "辣三",
+   "status": "making",
+   "order": "o2",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i30",
+   "name": "開心藍莓檸檬優格夾心",
+   "qty": 1,
+   "cat": "filled",
+   "guess": false,
+   "brand": "一碗",
+   "status": "making",
+   "order": "o2",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i31",
+   "name": "烏龍茶柚香檸檬夾心",
+   "qty": 1,
+   "cat": "filled",
+   "guess": false,
+   "brand": "一碗",
+   "status": "making",
+   "order": "o2",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i32",
+   "name": "黑啤全麥鹼水",
+   "qty": 1,
+   "cat": "other",
+   "guess": true,
+   "brand": "YOLON",
+   "status": "making",
+   "order": "o3",
+   "home": null,
+   "price": 0
+  },
+  {
+   "id": "i33",
+   "name": "伯爵蘋果威士忌海鹽乳酪",
+   "qty": 1,
+   "cat": "filled",
+   "guess": false,
+   "brand": "YOLON",
+   "status": "making",
+   "order": "o3",
+   "home": null,
+   "price": 0
+  }
+ ],
+ "orders": {
+  "o1": {
+   "source": "",
+   "seller": "",
+   "date": null,
+   "pickup": "超商",
+   "id": "o1"
+  },
+  "o2": {
+   "source": "",
+   "seller": "",
+   "date": "2026-12-02",
+   "pickup": "超商",
+   "id": "o2"
+  },
+  "o3": {
+   "source": "",
+   "seller": "",
+   "date": "2026-12-13",
+   "pickup": "超商",
+   "id": "o3"
+  }
+ },
+ "eaten": [
+  {
+   "d": "—",
+   "n": "蜂蜜貝果",
+   "b": "雙日",
+   "per": 0.5,
+   "id": null
+  },
+  {
+   "d": "—",
+   "n": "酸種麵包：可可（1 片）",
+   "b": "ICF",
+   "per": 1,
+   "id": null
+  },
+  {
+   "d": "—",
+   "n": "紅烏龍可可（半顆）",
+   "b": "YOLON",
+   "per": 0.5,
+   "id": null
+  }
+ ],
+ "cats": [
+  {
+   "id": "plain",
+   "label": "空貝",
+   "emoji": "🥯",
+   "color": "#b7791f",
+   "per": 1,
+   "unit": "顆"
+  },
+  {
+   "id": "filled",
+   "label": "夾餡",
+   "emoji": "🧀",
+   "color": "#d9468f",
+   "per": 0.5,
+   "unit": "顆"
+  },
+  {
+   "id": "slice",
+   "label": "酸種片",
+   "emoji": "🍞",
+   "color": "#5f8a1e",
+   "per": 2.5,
+   "unit": "片"
+  },
+  {
+   "id": "other",
+   "label": "其他",
+   "emoji": "🥐",
+   "color": "#7d8590",
+   "per": 1,
+   "unit": "個"
+  }
+ ]
+}
