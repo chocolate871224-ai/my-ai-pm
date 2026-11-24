@@ -1111,6 +1111,9 @@ body.odrag [data-mtab].o-ok{outline:2px dashed var(--em2-line);outline-offset:-2
 .oce-it{height:auto!important;min-height:38px;padding:3px 0}
 .oce-it .nm,.oc-it .nm{white-space:normal!important;text-overflow:clip!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:17px;word-break:break-word}
 .oc-it{height:auto!important;min-height:36px;padding-top:4px!important;padding-bottom:4px!important}
+/* v6 fixes: toasts must actually hide (display:flex beat [hidden]) */
+.toast[hidden]{display:none!important}
+.toast{cursor:pointer}
 
 </style>
 
@@ -1220,7 +1223,7 @@ function undo(){var h=undoStack.pop();if(!h)return;items=JSON.parse(h.i);ORDERS=
 var toastEl=null,toastT=null;
 function toast(msg,canUndo,extra){
   if(!toastEl){toastEl=document.createElement('div');toastEl.className='toast';toastEl.setAttribute('role','status');document.body.appendChild(toastEl);
-    toastEl.addEventListener('click',function(e){var a=e.target.closest('[data-adj]');if(a){adjEat(a.dataset.id,+a.dataset.v);return}if(e.target.closest('[data-undo]'))undo()})}
+    toastEl.addEventListener('click',function(e){var a=e.target.closest('[data-adj]');if(a){adjEat(a.dataset.id,+a.dataset.v);return}if(e.target.closest('[data-undo]')){undo();return}if(!e.target.closest('button')){clearTimeout(toastT);toastEl.hidden=true}})}
   toastEl.innerHTML='<span>'+esc(msg)+'</span>'+(extra||'')+(canUndo?'<button type="button" data-undo>復原</button>':'');
   toastEl.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){toastEl.hidden=true},6000);
 }
@@ -2493,6 +2496,8 @@ var _r4=render;render=function(){_r4();segGlass()};
 window.addEventListener('resize',function(){clearTimeout(segGlass.t);segGlass.t=setTimeout(segGlass,120)});
 
 function fitJpg(c){var q=.8,u=c.toDataURL('image/jpeg',q);while(u.length>45000){if(q>.5)q-=.1;else{var d=document.createElement('canvas');d.width=Math.round(c.width*.8);d.height=Math.round(c.height*.8);d.getContext('2d').drawImage(c,0,0,d.width,d.height);c=d}u=c.toDataURL('image/jpeg',q)}return u}
+
+var _impY=importState;importState=function(s){_impY(s);var f=function(b){return /^\s*yolon\s*$/i.test(b||'')?'Yolan':b};items.forEach(function(it){it.brand=f(it.brand)});eaten.forEach(function(e){e.b=f(e.b)});for(var k in ORDERS)ORDERS[k].seller=f(ORDERS[k].seller);if(BRANDS&&BRANDS.YOLON){BRANDS.Yolan=BRANDS.Yolan||BRANDS.YOLON;delete BRANDS.YOLON}};
 
 try{here=localStorage.getItem('wens-here')||here}catch(_){}
 gasInit();
