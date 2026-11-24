@@ -3,15 +3,16 @@
  * Bound to the spreadsheet「Wen's 工作台 · 貝果資料庫」. The spreadsheet is the database:
  * each tab is one table, row 1 is the header. The web page (Index.html) calls getState / saveState.
  */
-var SHEETS = {items: '品項', orders: '訂單', eaten: '吃掉紀錄', cats: '分類', sources: '來源'};
+var SHEETS = {items: '品項', orders: '訂單', eaten: '吃掉紀錄', cats: '分類', sources: '來源', brands: '品牌'};
 var COLS = {
-  items:   [['id','id'],['name','品名'],['brand','店家'],['qty','剩幾顆'],['cat','分類'],['guess','分類是猜的'],['status','階段'],['order','訂單'],['home','放哪個冷凍庫'],['price','價格']],
-  orders:  [['id','id'],['source','來源'],['seller','賣家'],['date','出貨日'],['pickup','取貨方式'],['plan','預計放'],['arrived','已到店'],['arrivedOn','到店日'],['platform','平台']],
-  eaten:   [['d','日期'],['n','品名'],['b','店家'],['per','吃了多少'],['id','品項id'],['r','星等'],['note','心得'],['gift','送出']],
+  items:   [['id','id'],['name','品名'],['brand','店家'],['qty','剩幾顆'],['cat','分類'],['guess','分類是猜的'],['status','階段'],['order','訂單'],['home','放哪個冷凍庫'],['price','單價'],['added','放進冷凍庫日']],
+  orders:  [['id','id'],['source','來源'],['seller','賣家'],['date','出貨日'],['pickup','取貨方式'],['plan','預計放'],['arrived','已到店'],['arrivedOn','到店日'],['platform','平台'],['fee','運費']],
+  eaten:   [['d','日期'],['n','品名'],['b','店家'],['per','吃了多少'],['id','品項id'],['r','星等'],['note','心得'],['gift','送出'],['rebuy','回購'],['cat','分類'],['photo','照片']],
   cats:    [['id','id'],['label','名稱'],['emoji','emoji'],['color','顏色'],['per','一天的量'],['unit','單位']],
-  sources: [['id','id'],['label','名稱'],['emoji','emoji']]
+  sources: [['id','id'],['label','名稱'],['emoji','emoji']],
+  brands:  [['name','品牌'],['ig','IG 帳號'],['url','網站'],['logo','logo']]
 };
-var NUM = {qty: 1, price: 1, per: 1, r: 1};
+var NUM = {qty: 1, price: 1, per: 1, r: 1, fee: 1};
 var BOOL = {guess: 1, arrived: 1, gift: 1};
 var STATUS_ZH = {making: '製作中', shipping: '已抵達', arrived: '已抵達', fridge: '冷凍庫', done: '吃完'};
 var STATUS_ID = {'製作中': 'making', '運送中': 'shipping', '已抵達': 'shipping', '冷凍庫': 'fridge', '吃完': 'done'};
@@ -51,6 +52,12 @@ function getState() {
   var sources = {};
   s.sources.forEach(function (x) { sources[x.id] = {label: x.label, emoji: x.emoji}; });
   s.sources = sources;
+  var brands = {};
+  s.brands.forEach(function (x) { if (x.name) brands[x.name] = {ig: x.ig, url: x.url, logo: x.logo}; });
+  s.brands = brands;
+  var fix = function (b) { return /^yolon$/i.test(b || '') ? 'Yolan' : b; };
+  s.items.forEach(function (it) { it.brand = fix(it.brand); });
+  s.eaten.forEach(function (e) { e.b = fix(e.b); });
   return s;
 }
 
@@ -88,6 +95,9 @@ function saveState(state) {
     writeTable_('eaten', state.eaten || []);
     writeTable_('cats', state.cats || []);
     writeTable_('sources', sources);
+    var brands = Object.keys(state.brands || {}).filter(function (k) { return k; })
+      .map(function (k) { var b = state.brands[k] || {}; return {name: k, ig: b.ig || '', url: b.url || '', logo: b.logo || ''}; });
+    if (brands.length) writeTable_('brands', brands);
     return {ok: true, at: new Date().toISOString()};
   } finally {
     lock.releaseLock();
@@ -122,6 +132,17 @@ function writeTable_(key, list) {
   }
 }
 
+/* ---------- 進貨單圖片 → 雲端硬碟 ---------- */
+var RECEIPT_FOLDER = "Wen's 工作台 · 進貨單";
+function saveReceipt(dataUrl, name) {
+  var m = /^data:image\/png;base64,(.+)$/.exec(dataUrl || '');
+  if (!m) throw new Error('不是 PNG 圖片');
+  var it = DriveApp.getFoldersByName(RECEIPT_FOLDER), folder = it.hasNext() ? it.next() : DriveApp.createFolder(RECEIPT_FOLDER);
+  var safe = String(name || 'receipt.png').replace(/[\\\/:*?"<>|]+/g, '');
+  var f = folder.createFile(Utilities.newBlob(Utilities.base64Decode(m[1]), 'image/png', safe));
+  return {id: f.getId(), url: f.getUrl(), name: safe};
+}
+
 /* ---------- tabs ---------- */
 function sheet_(key) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -139,7 +160,7 @@ function makeSheet_(ss, key) {
 function fillHeaders_(key) {
   try {
     var sh = sheet_(key), cols = COLS[key], head = sh.getRange(1, 1, 1, cols.length).getDisplayValues()[0];
-    cols.forEach(function (c, i) { if (head[i] === '') sh.getRange(1, i + 1).setValue(c[1]); });
+    cols.forEach(function (c, i) { if (head[i] === '' || (c[0] === 'price' && head[i] === '價格')) sh.getRange(1, i + 1).setValue(c[1]); });
     SpreadsheetApp.flush();
   } catch (e) {}
 }
@@ -179,28 +200,75 @@ var CALS = [
   {id: 'zh.taiwan#holiday@group.v.calendar.google.com', k: 'holiday', label: '節假日', w: 0}
 ];
 function calIso_(d) { return Utilities.formatDate(d, 'Asia/Taipei', "yyyy-MM-dd'T'HH:mm"); }
+/* every calendar this account can see: the named ones in CALS first, then everything else in its
+   calendar list (subscribed / shared calendars show up automatically once added to the list) */
+function calList_() {
+  var seen = {}, list = [];
+  function add(cal, def) {
+    var id = cal.getId();
+    if (seen[id] || cal.isHidden && cal.isHidden()) return;
+    seen[id] = 1;
+    var col = '';
+    try { col = cal.getColor() || ''; } catch (e) { col = ''; }
+    var own = false;
+    try { own = cal.isOwnedByMe(); } catch (e) { own = false; }
+    var name = def ? def.label : cal.getName();
+    list.push({cal: cal, id: id, k: def ? def.k : 'x' + list.length, label: name, w: def ? def.w : (own ? 1 : 0), color: col,
+      live: /LIVE王/i.test(name) ? (/售票/.test(name) ? 'tix' : 'show') : ''});
+  }
+  CALS.forEach(function (c) {
+    var cal = null;
+    try { cal = CalendarApp.getCalendarById(c.id); } catch (e) { cal = null; }
+    if (cal) add(cal, c);
+  });
+  var all = [];
+  try { all = CalendarApp.getAllCalendars(); } catch (e) { all = []; }
+  all.forEach(function (cal) { add(cal, null); });
+  return list;
+}
+function calUrl_(e) {
+  var t = '';
+  try { t = (e.getDescription() || '') + ' ' + (e.getLocation() || ''); } catch (x) { t = ''; }
+  var m = t.match(/https?:\/\/[^\s"'<>）)]+/);
+  return m ? m[0].replace(/&amp;/g, '&') : '';
+}
+function calEv_(e, c) {
+  return {t: e.getTitle(), s: calIso_(e.getStartTime()), e: calIso_(e.getEndTime()), all: e.isAllDayEvent(), k: c.k, loc: e.getLocation() || '', url: calUrl_(e)};
+}
+function calInfo_(c) { return {k: c.k, label: c.label, id: c.id, w: c.w, color: c.color, live: c.live}; }
 /* events of one month (y, m = 1-12), plus a week either side so the grid edges fill in */
 function getEvents(y, m) {
   var start = new Date(y, m - 1, 1), end = new Date(y, m, 1);
   start.setDate(start.getDate() - 7); end.setDate(end.getDate() + 7);
   var out = [], cals = [];
-  CALS.forEach(function (c) {
-    var cal = null;
-    try { cal = CalendarApp.getCalendarById(c.id); } catch (e) { cal = null; }
-    if (!cal) return;
-    cals.push({k: c.k, label: c.label, id: c.id, w: c.w});
-    cal.getEvents(start, end).forEach(function (e) {
-      out.push({t: e.getTitle(), s: calIso_(e.getStartTime()), e: calIso_(e.getEndTime()), all: e.isAllDayEvent(), k: c.k, loc: e.getLocation() || ''});
-    });
+  calList_().forEach(function (c) {
+    var evs = [];
+    try { evs = c.cal.getEvents(start, end); } catch (e) { return; }
+    cals.push(calInfo_(c));
+    evs.forEach(function (e) { out.push(calEv_(e, c)); });
   });
   return {events: out, cals: cals};
+}
+/* 近期節目: LIVE王 calendars from today on (default 90 days) */
+function getUpcoming(days) {
+  var start = new Date(); start.setHours(0, 0, 0, 0);
+  var end = new Date(start); end.setDate(end.getDate() + (+days || 90));
+  var out = [];
+  calList_().forEach(function (c) {
+    if (!c.live) return;
+    var evs = [];
+    try { evs = c.cal.getEvents(start, end); } catch (e) { return; }
+    evs.forEach(function (e) { var o = calEv_(e, c); o.g = c.live; out.push(o); });
+  });
+  out.sort(function (a, b) { return a.s < b.s ? -1 : a.s > b.s ? 1 : 0; });
+  return {events: out};
 }
 /* o = {title, date: 'yyyy-MM-dd', time: 'HH:mm' or '', mins, cal} */
 function addEvent(o) {
   var title = String(o && o.title || '').trim();
   if (!title || !/^\d{4}-\d{2}-\d{2}$/.test(o.date || '')) throw new Error('需要標題和日期');
-  var c = CALS.filter(function (x) { return x.id === o.cal && x.w; })[0] || CALS[0];
-  var cal = CalendarApp.getCalendarById(c.id);
+  var c = calList_().filter(function (x) { return x.id === o.cal && x.w; })[0];
+  var cal = c ? c.cal : CalendarApp.getCalendarById(CALS[0].id);
   if (!cal) throw new Error('找不到這個日曆');
   var p = o.date.split('-'), ev;
   if (o.time && /^\d{2}:\d{2}$/.test(o.time)) {
@@ -213,3 +281,19 @@ function addEvent(o) {
 }
 /* run once from the editor to approve calendar access */
 function authorizeCalendar() { var d = new Date(); return getEvents(d.getFullYear(), d.getMonth() + 1).events.length; }
+
+/* run from the editor: shows why each calendar in CALS can or cannot be read */
+function checkCalendars() {
+  try { var d = CalendarApp.getDefaultCalendar(); Logger.log('預設日曆：' + d.getId() + '（' + d.getName() + '）'); } catch (e) { Logger.log('預設日曆錯誤：' + e.message); }
+  CALS.forEach(function (c) {
+    try {
+      var cal = CalendarApp.getCalendarById(c.id);
+      if (!cal) { Logger.log(c.label + '（' + c.id + '）：找不到（沒有分享給這個帳號，或沒有加進日曆清單）'); return; }
+      var n = cal.getEvents(new Date(2026, 10, 1), new Date(2026, 11, 1)).length;
+      Logger.log(c.label + '（' + c.id + '）：讀得到，11 月有 ' + n + ' 個行程');
+    } catch (e) { Logger.log(c.label + '（' + c.id + '）錯誤：' + e.message); }
+  });
+  try { Logger.log('這個帳號看得到的日曆：' + CalendarApp.getAllCalendars().map(function (x) { return x.getName() + ' = ' + x.getId(); }).join('；')); } catch (e) { Logger.log('列日曆錯誤：' + e.message); }
+  var r = getEvents(2026, 11);
+  Logger.log('getEvents(2026, 11)：' + r.cals.length + ' 個日曆、' + r.events.length + ' 個行程');
+}
