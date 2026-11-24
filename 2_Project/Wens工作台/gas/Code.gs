@@ -233,7 +233,13 @@ function calUrl_(e) {
   return m ? m[0].replace(/&amp;/g, '&') : '';
 }
 function calEv_(e, c) {
-  return {t: e.getTitle(), s: calIso_(e.getStartTime()), e: calIso_(e.getEndTime()), all: e.isAllDayEvent(), k: c.k, loc: e.getLocation() || '', url: calUrl_(e)};
+  return {t: e.getTitle(), s: calIso_(e.getStartTime()), e: calIso_(e.getEndTime()), all: e.isAllDayEvent(), k: c.k, loc: e.getLocation() || '', url: calUrl_(e), note: calNote_(e)};
+}
+/* event description for the hover card: plain text, first 300 characters */
+function calNote_(e) {
+  var d = '';
+  try { d = e.getDescription() || ''; } catch (x) { return ''; }
+  return d.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\n{3,}/g, '\n\n').trim().slice(0, 300);
 }
 function calInfo_(c) { return {k: c.k, label: c.label, id: c.id, w: c.w, color: c.color, live: c.live}; }
 /* events of one month (y, m = 1-12), plus a week either side so the grid edges fill in */
@@ -296,4 +302,180 @@ function checkCalendars() {
   try { Logger.log('這個帳號看得到的日曆：' + CalendarApp.getAllCalendars().map(function (x) { return x.getName() + ' = ' + x.getId(); }).join('；')); } catch (e) { Logger.log('列日曆錯誤：' + e.message); }
   var r = getEvents(2026, 11);
   Logger.log('getEvents(2026, 11)：' + r.cals.length + ' 個日曆、' + r.events.length + ' 個行程');
+}
+
+/* =====================================================================
+ * 待辦・信件建議・工作日誌（2026-11-25）
+ * Same spreadsheet, three more tabs. The page calls getDesk / saveDesk / setMailState / scanMail / compileWorklog.
+ * Mail is read only: nothing here marks mail as read, archives, labels or replies.
+ * Run setupDesk once from the editor: it asks for Gmail + trigger permission, then checks mail every 30 minutes
+ * and compiles the work log every night at 23:00.
+ * ===================================================================== */
+SHEETS.todos = '待辦'; SHEETS.mails = '信件建議'; SHEETS.worklog = '工作日誌';
+COLS.todos = [['id','id'],['t','待辦'],['due','期限'],['cat','分類'],['src','來源'],['mail','信件id'],['done','完成日']];
+COLS.mails = [['id','id'],['from','寄件人'],['subj','主旨'],['d','日期'],['sum','摘要'],['sug','建議待辦'],['due','建議期限'],['cat','分類'],['st','狀態'],['cal','行事曆'],['why','備註'],['unread','未讀'],['cc','副本'],['url','連結']];
+COLS.worklog = [['d','日期'],['s','狀態'],['t','內容'],['src','來源'],['key','自動key'],['edited','改過'],['hide','刪除']];
+BOOL.unread = 1; BOOL.cc = 1; BOOL.edited = 1; BOOL.hide = 1;
+var DESK_SEED = {"todos":[{"id":"t1","t":"貼上工作台新版後台（Code.gs）＋部署新版本","due":"2026-11-25","cat":"專案","src":"me","mail":"","done":""},{"id":"t2","t":"取崧鹿家麵包（蛋黃酥 ×10，11:00–19:00 自取）","due":"2026-11-26","cat":"生活","src":"cal","mail":"","done":""},{"id":"t3","t":"自取來口貝果（已付款，按門鈴報姓名）","due":"2026-11-27","cat":"生活","src":"cal","mail":"","done":""},{"id":"t4","t":"準備穩立企業二面（12/4 14:30・南港）","due":"2026-12-03","cat":"求職","src":"mail","mail":"","done":""},{"id":"t5","t":"CAPSULE 業務夥伴職缺投遞（研究報告已做好）","due":"","cat":"求職","src":"me","mail":"","done":""},{"id":"t6","t":"LINE 小助理貼上 forecast patch","due":"","cat":"專案","src":"me","mail":"","done":""},{"id":"d1","t":"回覆子皿：確認入帳 3,648 元","due":"2026-11-24","cat":"工作","src":"mail","mail":"","done":"2026-11-24"},{"id":"d2","t":"回傳穩立「人員資料表」Excel","due":"2026-11-16","cat":"求職","src":"mail","mail":"","done":"2026-11-13"}],"worklog":[{"d":"2026-11-25","s":"完成","t":"貝果頁 v5 上線：物理冷凍庫、心得筆記本、品牌 logo、進貨單存雲端","src":"desk","key":"","edited":false,"hide":false},{"d":"2026-11-25","s":"完成","t":"修好提示框不會消失、YOLON 改 Yolan","src":"desk","key":"","edited":false,"hide":false},{"d":"2026-11-24","s":"完成","t":"CAPSULE 面試功課（公司研究＋面試準備報告）","src":"me","key":"","edited":false,"hide":false},{"d":"2026-11-24","s":"完成","t":"回覆子皿：確認入帳 3,648 元","src":"mail","key":"","edited":false,"hide":false},{"d":"2026-11-24","s":"完成","t":"貝果頁新互動示意（冷凍庫、訂單卡、筆記本）","src":"desk","key":"","edited":false,"hide":false},{"d":"2026-11-24","s":"完成","t":"打給雞老二改時間","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-23","s":"完成","t":"工作台改用 Google 試算表當資料庫（部署第 7 版）","src":"desk","key":"","edited":false,"hide":false},{"d":"2026-11-23","s":"完成","t":"行程日曆接上 Google 日曆","src":"desk","key":"","edited":false,"hide":false},{"d":"2026-11-19","s":"完成","t":"Ticket & Seat 系統（Apps Script 第 29 版）","src":"desk","key":"","edited":false,"hide":false},{"d":"2026-11-19","s":"完成","t":"NTSO 交響派對結案封存","src":"me","key":"","edited":false,"hide":false},{"d":"2026-11-18","s":"完成","t":"LINE 小助理雙向版安裝","src":"me","key":"","edited":false,"hide":false},{"d":"2026-11-18","s":"延後","t":"LINE 小助理貼 forecast patch","src":"me","key":"","edited":false,"hide":false},{"d":"2026-11-17","s":"完成","t":"穩立企業面試（演唱會／展演活動專案執行）","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-13","s":"完成","t":"回傳穩立「人員資料表」","src":"mail","key":"","edited":false,"hide":false},{"d":"2026-11-13","s":"完成","t":"應徵 FREES「專案行政助理」","src":"mail","key":"","edited":false,"hide":false},{"d":"2026-11-12","s":"完成","t":"三創生活面試（展演空間場務人員）","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-09","s":"完成","t":"寄出三創「應徵資料表」Word 檔","src":"mail","key":"","edited":false,"hide":false},{"d":"2026-11-07","s":"完成","t":"NTSO 交響派對 演出日進場・跳彩・正式演出","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-06","s":"完成","t":"NTSO 交響派對 總彩排","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-06","s":"完成","t":"回覆三創面試邀約","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-05","s":"完成","t":"NTSO 交響派對 團練 Day2（台中霧峰）","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-04","s":"完成","t":"NTSO 交響派對 團練 Day1（台中霧峰）","src":"cal","key":"","edited":false,"hide":false},{"d":"2026-11-03","s":"完成","t":"回覆子皿：金音獎報價與建檔資料","src":"mail","key":"","edited":false,"hide":false}]};
+var TZ = 'Asia/Taipei';
+
+function getDesk() {
+  ensureSheets_();
+  var p = PropertiesService.getDocumentProperties();
+  if (!p.getProperty('deskSeeded')) {
+    if (!readTable_('todos').length) writeTable_('todos', DESK_SEED.todos);
+    if (!readTable_('worklog').length) writeTable_('worklog', DESK_SEED.worklog);
+    p.setProperty('deskSeeded', new Date().toISOString());
+  }
+  return {todos: readTable_('todos'), mails: readTable_('mails'), worklog: readTable_('worklog'),
+    meta: {lastScan: p.getProperty('lastScan') || '', auto: deskAuto_()}};
+}
+function deskAuto_() {
+  try { return ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'scanMail'; }); } catch (e) { return false; }
+}
+
+function saveDesk(json) {
+  var lock = LockService.getDocumentLock();
+  lock.waitLock(20000);
+  try {
+    var s = typeof json === 'string' ? JSON.parse(json) : json;
+    // same safety as the bagel tabs: a page that loaded nothing must never blank a full tab
+    if (s.todos && !s.todos.length && sheet_('todos').getLastRow() > 4) throw new Error('refused: page sent 0 todos');
+    if (s.worklog && !s.worklog.length && sheet_('worklog').getLastRow() > 4) throw new Error('refused: page sent 0 work log rows');
+    if (s.todos) writeTable_('todos', s.todos);
+    if (s.worklog) writeTable_('worklog', s.worklog);
+    return {ok: true};
+  } finally { lock.releaseLock(); }
+}
+
+function setMailState(id, st) {
+  if (st === undefined && String(id).indexOf('|') > 0) { var q = String(id).split('|'); id = q[0]; st = q[1]; }
+  var lock = LockService.getDocumentLock();
+  lock.waitLock(20000);
+  try {
+    var list = readTable_('mails');
+    list.forEach(function (m) { if (m.id === id) { m.st = st; if (st === 'new') m.why = ''; } });
+    writeTable_('mails', list);
+    return {ok: true};
+  } finally { lock.releaseLock(); }
+}
+
+/* ---------- 看信 ---------- */
+var MAIL_SKIP = /Daily Forecast|商務英文|電子報|newsletter|unsubscribe|取消訂閱|廣告|優惠|折扣/i;
+var MAIL_NOREPLY = /no-?reply|do-?not-?reply|notification|notify|mailer|newsletter|news@|service@|info@|support@/i;
+var MAIL_KEY = /面試|邀約|邀請|請於|截止|期限|回覆|回信|確認|報價|合約|簽約|付款|匯款|入帳|繳費|發票|deadline|due|RSVP|請協助|麻煩您|麻煩你/i;
+function addr_(s) { var m = /<([^>]+)>/.exec(s || ''); var a = (m ? m[1] : s || '').trim().toLowerCase(); var p = a.split('@'); return p[1] === 'gmail.com' ? p[0].replace(/\./g, '') + '@gmail.com' : a; }
+function isMe_(from, me) { return addr_(from) === addr_(me); }
+function fromName_(s) { var m = /^\s*"?([^"<]+?)"?\s*</.exec(s || ''); return m ? m[1].trim() : (s || '').replace(/@.*/, '').trim(); }
+function cleanSubj_(s) { return String(s || '').replace(/^\s*((re|fwd?|回覆|轉寄)\s*[:：]\s*)+/i, '').trim(); }
+function cut_(s, n) { s = String(s || ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+function summary_(body) { return cut_(String(body || '').replace(/\s+/g, ' ').replace(/^(dear|hi|hello|您好|你好|嗨)[^，,。 ]*[，,。 ]*/i, '').trim(), 90); }
+function sugText_(subj, name, text) {
+  var s = cut_(cleanSubj_(subj), 28);
+  if (/面試/.test(text)) return '回覆／準備面試：' + s;
+  if (/付款|繳費|匯款|發票/.test(text)) return '處理付款：' + s;
+  if (/確認|回覆|回信|報價|合約|簽約/.test(text)) return '回覆 ' + cut_(name, 10) + '：' + s;
+  return '看一下 ' + cut_(name, 10) + ' 的信：' + s;
+}
+function dueFrom_(text, base) {
+  var m = /(\d{1,2})\s*[\/月]\s*(\d{1,2})\s*日?\s*(?:[（(][^）)]{1,4}[）)])?\s*(?:前|之前|以前|截止|內)/.exec(text || '');
+  if (!m) return '';
+  var d = new Date(base.getFullYear(), +m[1] - 1, +m[2]);
+  if (d < new Date(base.getTime() - 30 * 864e5)) d.setFullYear(d.getFullYear() + 1);
+  return Utilities.formatDate(d, TZ, 'yyyy-MM-dd');
+}
+function deskUpcoming_() {
+  var out = [], now = new Date(), end = new Date(now.getTime() + 45 * 864e5);
+  try {
+    calList_().forEach(function (c) {
+      if (!c.w || c.live) return;
+      c.cal.getEvents(now, end).forEach(function (e) { out.push({t: e.getTitle(), s: e.getStartTime(), all: e.isAllDayEvent()}); });
+    });
+  } catch (e) {}
+  return out;
+}
+function calMatch_(subj, name, ups) {
+  var toks = [], m, re = /【([^】]+)】/g;
+  while ((m = re.exec(subj))) toks.push(m[1]);
+  toks.push(name);
+  toks = toks.map(function (t) { return String(t || '').replace(/(股份)?有限公司|企業|公司|・.*$/g, '').trim(); }).filter(function (t) { return t.length >= 2; });
+  for (var i = 0; i < ups.length; i++) for (var j = 0; j < toks.length; j++) if (ups[i].t.indexOf(toks[j]) >= 0) {
+    var d = ups[i].s;
+    return '行事曆已有：' + Utilities.formatDate(d, TZ, 'M/d') + '（' + '日一二三四五六'.charAt(+Utilities.formatDate(d, TZ, 'u') % 7) + '）' + (ups[i].all ? '' : Utilities.formatDate(d, TZ, 'HH:mm') + ' ') + ups[i].t;
+  }
+  return '';
+}
+function scanMail() {
+  var lock = LockService.getDocumentLock();
+  lock.waitLock(20000);
+  try {
+    ensureSheets_();
+    var me = Session.getEffectiveUser().getEmail();
+    var old = readTable_('mails'), byId = {};
+    old.forEach(function (m) { byId[m.id] = m; });
+    var ups = deskUpcoming_();
+    GmailApp.search('in:inbox newer_than:14d -category:promotions -category:social -category:forums', 0, 60).forEach(function (th) {
+      var id = th.getId(), msgs = th.getMessages(), last = msgs[msgs.length - 1], lastMine = isMe_(last.getFrom(), me);
+      var inc = msgs.filter(function (x) { return !isMe_(x.getFrom(), me); });
+      if (!inc.length) return;
+      var m = inc[inc.length - 1], subj = th.getFirstMessageSubject() || '', from = m.getFrom(), name = fromName_(from);
+      if (MAIL_SKIP.test(subj) || MAIL_SKIP.test(name)) return;
+      var body = m.getPlainBody() || '', text = subj + ' ' + body.slice(0, 1500);
+      var ex = byId[id];
+      if (ex) { ex.unread = th.isUnread(); if (lastMine && ex.st === 'new') { ex.st = 'done'; ex.why = '你已回信'; } return; }
+      if (!MAIL_KEY.test(text) && MAIL_NOREPLY.test(from)) return;
+      var to = m.getTo() || '', cc = m.getCc() || '';
+      byId[id] = {id: id, from: name, subj: cleanSubj_(subj), d: Utilities.formatDate(m.getDate(), TZ, 'yyyy-MM-dd'), sum: summary_(body),
+        sug: sugText_(subj, name, text), due: dueFrom_(text, m.getDate()), cat: /面試|履歷|應徵|職缺|人力銀行|徵才|求職/.test(text) ? '求職' : '工作',
+        st: lastMine ? 'done' : 'new', cal: calMatch_(subj, name, ups), why: lastMine ? '你已回信' : '', unread: th.isUnread(),
+        cc: addr_(cc).indexOf(addr_(me)) >= 0 || (cc.toLowerCase().indexOf(addr_(me).split('@')[0]) >= 0 && to.toLowerCase().indexOf(addr_(me).split('@')[0]) < 0), url: th.getPermalink()};
+    });
+    var list = Object.keys(byId).map(function (k) { return byId[k]; }).sort(function (a, b) { return a.d < b.d ? 1 : a.d > b.d ? -1 : 0; }).slice(0, 80);
+    writeTable_('mails', list);
+    PropertiesService.getDocumentProperties().setProperty('lastScan', Utilities.formatDate(new Date(), TZ, 'M/d HH:mm'));
+  } finally { lock.releaseLock(); }
+  return getDesk();
+}
+
+/* ---------- 工作日誌：從行事曆＋寄出的信彙整（改過或刪掉的不會被蓋回來） ---------- */
+var WL_SKIP = /健身|晚餐|午餐|早餐|cafe|咖啡|聚餐|直播|迷信|Reservation|鍋物|鼎泰豐|高鐵|飯店|check ?(in|out)|🚗|🚄|🏨/i;
+function compileWorklog(days) {
+  days = Math.max(1, Math.min(31, +days || 1));
+  var lock = LockService.getDocumentLock();
+  lock.waitLock(20000);
+  try {
+    ensureSheets_();
+    var rows = readTable_('worklog'), keys = {}, now = new Date(), me = Session.getEffectiveUser().getEmail();
+    rows.forEach(function (r) { if (r.key) keys[r.key] = 1; });
+    var start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (days - 1)), day = function (d) { return Utilities.formatDate(d, TZ, 'yyyy-MM-dd'); };
+    calList_().forEach(function (c) {
+      if (!c.w || c.live) return;
+      c.cal.getEvents(start, now).forEach(function (e) {
+        var t = e.getTitle(), d = day(e.getStartTime()), key = 'cal:' + e.getId() + ':' + d;
+        if (keys[key] || WL_SKIP.test(t) || e.getEndTime() > now) return;
+        rows.push({d: d, s: '完成', t: t, src: 'cal', key: key}); keys[key] = 1;
+      });
+    });
+    GmailApp.search('in:sent after:' + Utilities.formatDate(start, TZ, 'yyyy/MM/dd'), 0, 60).forEach(function (th) {
+      th.getMessages().forEach(function (m) {
+        if (!isMe_(m.getFrom(), me) || m.getDate() < start) return;
+        var subj = cleanSubj_(m.getSubject()), key = 'mail:' + m.getId();
+        if (keys[key] || MAIL_SKIP.test(subj) || addr_(m.getTo()) === addr_(me)) return;
+        rows.push({d: day(m.getDate()), s: '完成', t: '寄信給 ' + cut_(fromName_(m.getTo().split(',')[0]), 12) + '：' + cut_(subj, 40), src: 'mail', key: key}); keys[key] = 1;
+      });
+    });
+    rows.sort(function (a, b) { return a.d < b.d ? 1 : a.d > b.d ? -1 : 0; });
+    writeTable_('worklog', rows);
+  } finally { lock.releaseLock(); }
+  return getDesk();
+}
+function nightlyWorklog() { compileWorklog(1); }
+
+/* run once from the editor: approve Gmail + triggers, start the 30-minute mail check and the 23:00 work log */
+function setupDesk() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (['scanMail', 'nightlyWorklog'].indexOf(t.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger('scanMail').timeBased().everyMinutes(30).create();
+  ScriptApp.newTrigger('nightlyWorklog').timeBased().atHour(23).everyDays(1).inTimezone(TZ).create();
+  var r = scanMail();
+  Logger.log('好了：信件建議 ' + r.mails.length + ' 封，之後每 30 分鐘看一次信、每晚 23:00 彙整工作日誌');
 }
