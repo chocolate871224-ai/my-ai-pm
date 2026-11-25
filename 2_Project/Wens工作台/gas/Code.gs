@@ -22,21 +22,25 @@ var STATUS_ID = {'製作中': 'making', '運送中': 'shipping', '已抵達': 's
    the newest one wins. seed.json = data copied from the old workspace, used once. */
 var PAGE_TITLE = "Wen's 工作台 · 網頁（Index.html）";
 var PAGE_FILE_ID = '1I7bRz-WRPyn9V5brmXII2vDFECXXseYM'; // fallback if no file with PAGE_TITLE is found
-function pageHtml_() {
+/* the newest page file id is remembered for 5 minutes, so opening the page skips the Drive search; ?fresh=1 skips the memory */
+function pageHtml_(fresh) {
+  var cache = CacheService.getScriptCache(), id = fresh ? null : cache.get('pageId');
+  if (id) { try { return DriveApp.getFileById(id).getBlob().getDataAsString('UTF-8'); } catch (e) {} }
   var it = DriveApp.getFilesByName(PAGE_TITLE), best = null;
   while (it.hasNext()) {
     var f = it.next();
     if (f.isTrashed()) continue;
     if (!best || f.getDateCreated() > best.getDateCreated()) best = f;
   }
-  return (best || DriveApp.getFileById(PAGE_FILE_ID)).getBlob().getDataAsString('UTF-8');
+  best = best || DriveApp.getFileById(PAGE_FILE_ID);
+  cache.put('pageId', best.getId(), 300);
+  return best.getBlob().getDataAsString('UTF-8');
 }
 var SEED_FILE_ID = '1_aAi5_aFdY7Lf6YqULnJlj2p66zqSb4N';
 function seed_() { return JSON.parse(DriveApp.getFileById(SEED_FILE_ID).getBlob().getDataAsString('UTF-8')); }
 
-function doGet() {
-  ensureSheets_();
-  return HtmlService.createHtmlOutput(pageHtml_())
+function doGet(e) {
+  return HtmlService.createHtmlOutput(pageHtml_(e && e.parameter && e.parameter.fresh))
     .setTitle("Wen's 工作台")
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, viewport-fit=cover');
 }
@@ -176,7 +180,11 @@ function allowStatus_() {
   } catch (e) {}
 }
 
-function ensureSheets_() {
+/* checking every tab and header costs a few seconds, so it runs at most once every 6 hours per schema version */
+var SCHEMA_V = 'v12';
+function ensureSheets_(force) {
+  var cache = CacheService.getScriptCache();
+  if (!force && cache.get('sheetsOk') === SCHEMA_V) return;
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var fresh = !ss.getSheetByName(SHEETS.items);
   Object.keys(SHEETS).forEach(function (k) { sheet_(k); fillHeaders_(k); });
@@ -190,6 +198,7 @@ function ensureSheets_() {
     saveState(seed_());
     props.setProperty('seeded', new Date().toISOString());
   }
+  cache.put('sheetsOk', SCHEMA_V, 21600);
 }
 
 /* ---------- 行程日曆 (Google Calendar) ---------- */
@@ -473,6 +482,7 @@ function nightlyWorklog() { compileWorklog(1); }
 
 /* run once from the editor: approve Gmail + triggers, start the 30-minute mail check and the 23:00 work log */
 function setupDesk() {
+  ensureSheets_(true);
   getDesk(); // creates every tab (品牌／待辦／信件建議／工作日誌) and seeds to-dos + work log right away
   ScriptApp.getProjectTriggers().forEach(function (t) { if (['scanMail', 'nightlyWorklog'].indexOf(t.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger('scanMail').timeBased().everyMinutes(30).create();

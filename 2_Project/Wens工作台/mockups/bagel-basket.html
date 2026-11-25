@@ -1239,6 +1239,82 @@ body.odrag [data-mtab].o-ok{outline:2px dashed var(--em2-line);outline-offset:-2
 .mlive.off{background:color-mix(in srgb,var(--tag-warn) 14%,transparent)}
 .mlive.off i{background:var(--tag-warn);box-shadow:none}
 
+/* ===== 11/25 phone UX + no repeated info ===== */
+/* one summary strip instead of four boxes */
+.fsum{background:var(--sheet);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;margin:12px 0 4px}
+.fsum .fs-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.fsum .k{font-size:13px;color:var(--muted);font-weight:700}
+.fsum .fs-n{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fsum .fs-n b{font-size:22px;line-height:26px;color:var(--ink);font-weight:800}
+.fsum .fs-left{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--muted)}
+.fsum.full .fs-left,.fsum.over .fs-left{color:var(--warn,#d9468f)}
+.fsum .fs-bar{height:8px;border-radius:999px;background:color-mix(in srgb,var(--ink) 9%,transparent);overflow:hidden}
+.fsum .fs-bar i{display:block;height:100%;border-radius:inherit;background:var(--em2,#A7A9F7)}
+.fsum.full .fs-bar i{background:#f0b23c}.fsum.over .fs-bar i{background:var(--warn,#d9468f)}
+.fsum .fs-facts{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px}
+.fsum .fs-facts li{display:flex;justify-content:center;min-width:0;white-space:nowrap;align-items:center;gap:5px;min-height:28px;padding:0 10px;border-radius:999px;background:color-mix(in srgb,var(--ink) 5%,transparent);font-size:12.5px;line-height:1;color:var(--muted)}
+.fsum .fs-facts b{color:var(--ink);font-weight:700}
+.fsum .fs-facts .sub{font-size:11.5px;font-weight:700;padding-left:5px;border-left:1px solid var(--line)}
+.fsum .fs-facts .sub.ok{color:#3c8a2e}.fsum .fs-facts .warn,.fsum .fs-facts .sub.warn{color:var(--warn,#d9468f)}
+.fsum .fs-facts li.warn b{color:inherit}
+/* the strip already says how full it is */
+.wrap:has(.btabs) .st-fridge .stock-alert{display:none!important}
+
+/* tap-a-bagel sheet (touch) */
+.bk-sheet-wrap{position:fixed;inset:0;z-index:95}
+.bk-scrim{position:absolute;inset:0;background:rgba(0,0,0,.35);animation:bkFade .2s}
+.bk-sheet{position:absolute;left:0;right:0;bottom:0;background:var(--sheet);border-radius:18px 18px 0 0;padding:8px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;box-shadow:0 -10px 30px rgba(0,0,0,.2);animation:bkSheetUp .26s cubic-bezier(.2,.9,.3,1)}
+.bk-grab{width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 2px}
+.bk-sh-h{display:flex;align-items:center;gap:12px;min-width:0}
+.bk-sh-h img{width:44px;height:44px;object-fit:contain;flex:none}
+.bk-sh-h b{display:block;font-size:16px;line-height:22px}
+.bk-sh-h small{display:block;font-size:12.5px;color:var(--muted);line-height:18px}
+.bk-sh-seg{align-self:flex-start;max-width:100%}
+.bk-sh-seg button{height:32px;padding:0 12px;white-space:nowrap}
+.bk-sh-acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.bk-sh-acts button{min-height:64px;border-radius:14px;border:1px solid var(--line);background:var(--canvas);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+.bk-sh-acts .e{font-size:24px;line-height:1}
+.bk-sh-acts .eat{background:var(--hl);border-color:var(--hl);color:var(--hl-ink)}
+.bk-sh-edit{height:44px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+@keyframes bkSheetUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes bkFade{from{opacity:0}}
+@media (pointer:coarse){.bk canvas{touch-action:pan-y!important}}
+
+/* phone mode (html.phone: touch screen up to tablet, or narrow window) */
+html.phone body{font-size:14px;line-height:22px}
+html.phone .ph:has(.btabs) h1{font-size:22px;line-height:28px;margin-top:4px}
+html.phone .ph:has(.btabs) .title{gap:10px}
+html.phone .ph:has(.btabs) .title .emo{transform:scale(.8);transform-origin:left center}
+html.phone .ph:has(.btabs) .lede{display:none}
+  /* toolbar: one row, icons for the secondary buttons, words only for 進貨單 */
+html.phone .ph:has(.btabs) .hbtns{flex-wrap:nowrap!important;gap:6px!important;overflow:visible!important}
+html.phone .ph:has(.btabs) .hbtns .btn:not(.primary){font-size:0!important;width:38px;padding:0!important;gap:0}
+html.phone .ph:has(.btabs) .hbtns .btn:not(.primary) .e{font-size:17px;line-height:20px;height:20px;display:inline-flex;align-items:center}
+html.phone .ph:has(.btabs) .hbtns [data-act="undo"]::before{content:'↶';font-size:17px;font-weight:700}
+html.phone .ph:has(.btabs) .hbtns .btn.primary{margin-left:auto;font-size:13.5px;padding:0 14px}
+html.phone .ph:has(.btabs) .hbtns .btn{height:36px}
+html.phone .btabs button{height:34px;font-size:13px;padding:0 10px}
+html.phone .btabs .e{font-size:15px}
+html.phone .fsum{padding:10px 12px;margin-top:10px}
+html.phone .fsum .fs-n b{font-size:20px}
+  /* the stage tab above already names the column and counts it */
+html.phone .wrap:has(.mtabs) .board .col-h>.st-ico,html.phone .wrap:has(.mtabs) .board .col-h>b,html.phone .wrap:has(.mtabs) .board .col-h>.cnt{display:none!important}
+html.phone .fsum .fs-facts{grid-auto-flow:row;grid-template-columns:1fr}
+html.phone .fsum .fs-facts li{justify-content:flex-start;min-height:32px}
+html.phone #savestate,html.phone .demo-tag{display:none!important}
+/* orders: the page scrolls, not a box inside the page */
+html.phone .board .col.st-making,html.phone .board .col.st-shipping{height:auto!important;max-height:none!important;overflow:visible!important}
+html.phone .board .col.st-making .col-body,html.phone .board .col.st-shipping .col-body{overflow:visible!important;flex:none!important}
+html.phone .ocard{touch-action:auto!important;cursor:pointer}
+.oc-acts{display:none}
+html.phone .oc-acts{display:flex;gap:8px;flex-wrap:wrap;padding-top:4px}
+html.phone .oc-acts .mini{height:36px;padding:0 12px;font-size:13px;flex:1 1 auto;justify-content:center}
+html.phone .bk canvas{touch-action:pan-y!important}
+/* category filter: one row, no empty categories */
+.wrap:has(.btabs) .toolbar .legend{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.wrap:has(.btabs) .toolbar .legend>*{flex:none}
+html.phone .wrap:has(.btabs) .toolbar{display:none!important}
+
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1487,6 +1563,21 @@ function alertsHTML(){
   if(!out.length)return '';
   return '<div class="alerts">'+out.slice(0,3).map(function(a){return '<div class="alert '+a.c+'"><span class="dot"></span><div class="txt">'+a.t+'</div></div>'}).join('')+'</div>';
 }
+function fsumHTML(used,end,fs,wait){
+  var pct=Math.min(100,used/CAP*100),left=CAP-used,os=incomingTo(here).map(function(k){return ORDERS[k]}).sort(function(a,b){return arrivalOf(a)-arrivalOf(b)});
+  var facts=[];
+  facts.push(end?'<li>夠吃到 <b>'+end+'</b><span class="sub">'+Math.max(1,Math.floor(fs))+' 天</span></li>':'<li><b>冷凍庫空了</b></li>');
+  var fitTxt=function(need){return need<=left?'<span class="sub ok">放得下</span>':'<span class="sub warn">差 '+fmt(need-left)+' 顆</span>'};
+  var ready=os.filter(function(o){return o.arrived}),later=os.filter(function(o){return !o.arrived});
+  if(ready.length){var rq=ready.reduce(function(t,o){return t+qtySum(liveItems(o.id))},0);
+    facts.push('<li class="warn"><b>'+ready.length+' 筆</b>等你取件・'+fmt(rq)+' 顆'+fitTxt(rq)+'</li>')}
+  else if(wait)facts.push('<li class="warn"><b>'+wait+' 筆</b>等你取件</li>');
+  if(later.length){var o=later[0],f=fitOf(o),n=fmt(qtySum(liveItems(o.id)));
+    facts.push('<li>下一批 <b>'+md(arrivalOf(o))+'</b> 進 '+n+' 顆'+(f.k==='ok'?'<span class="sub ok">放得下</span>':'<span class="sub warn">'+(f.k==='rush'?'先清出 ':'差 ')+fmt(f.short)+' 顆</span>')+'</li>')}
+  else if(!ready.length)facts.push('<li>沒有新貨要進'+here+'</li>');
+  return '<section class="fsum'+(left<0?' over':left<=FULL_LEFT?' full':'')+'"><div class="fs-top"><span class="k">'+here+'冷凍庫</span><span class="fs-n"><b>'+fmt(used)+'</b> / '+CAP+' 顆</span><span class="fs-left">'+(left<0?'超出 '+fmt(-left)+' 顆':'還能放 '+fmt(left)+' 顆')+'</span></div>'+
+    '<div class="fs-bar"><i style="width:'+pct+'%"></i></div><ul class="fs-facts">'+facts.join('')+'</ul></section>';
+}
 function nextStat(){
   var os=incomingTo(here).map(function(k){return ORDERS[k]}).sort(function(a,b){return arrivalOf(a)-arrivalOf(b)});
   if(!os.length)return stat('下一批','沒有','','到'+here+'的訂單');
@@ -1608,15 +1699,11 @@ function breadPage(){
   h+='<header class="ph"><div class="eyebrow">Bagel log</div><div class="head"><div><h1 class="title"><span class="emo" aria-hidden="true">🥯</span>麵包貝果</h1>'+bTabsHTML()+'</div>'+
      '<div class="hbtns"><span id="savestate" role="status">'+saveLabel()+'</span><button type="button" class="btn" data-act="undo"'+(undoStack.length?'':' disabled')+' title="Ctrl/⌘+Z">↶ 復原</button><a class="btn" href="'+SHEET_URL+'" target="_blank" rel="noopener" title="打開貝果資料庫（Google 試算表）"><span class="e" aria-hidden="true">📊</span> 資料庫</a><button type="button" class="btn" data-act="brands"><span class="e" aria-hidden="true">🏷️</span> 品牌</button><button type="button" class="btn" data-act="paste"><span class="e" aria-hidden="true">📋</span> 貼上清單</button><button type="button" class="btn primary" data-act="form"><span class="e" aria-hidden="true">🧾</span> 進貨單</button></div></div></header>';
   h+=bTab==='nb'?notebookHTML():'';if(bTab==='board'){
-  h+='<section class="stats compact">'+
-     stat(here+'冷凍庫',fmt(used),' / '+CAP+' 顆',used>CAP?'<b class="warn">超出 '+fmt(used-CAP)+' 顆</b>':'還有 '+fmt(CAP-used)+' 顆的位置',1)+
-     stat('可以吃到',FH.length?md(stockEnd):'—','',FH.length?'還有 '+Math.max(1,Math.floor(fs))+' 天':'冷凍庫空了')+
-     stat('進貨中',fmt(qtySum(S)+qtySum(Mk)),'顆',A.length?'<b class="warn">'+ordersOf(A).length+' 筆等取件</b>':'製作中＋已抵達')+
-     nextStat()+'</section>';
+  h+=fsumHTML(used,FH.length?md(stockEnd):'',fs,ordersOf(A).length);
   var cc={};items.forEach(function(it){if(it.status==='fridge')cc[it.cat]=(cc[it.cat]||0)+1});
   h+='<div class="toolbar">';
   h+='<div class="legend" role="group" aria-label="分類篩選"><span class="note">冷凍庫裡</span>';
-  CATS.forEach(function(c){h+='<button type="button" class="lg" data-cat="'+c.id+'" aria-pressed="'+(catFilter===c.id)+'"><span class="e" aria-hidden="true">'+catIco(c)+'</span>'+esc(c.label)+'<span class="n">'+(cc[c.id]||0)+'</span></button>'});
+  CATS.forEach(function(c){if(!cc[c.id]&&catFilter!==c.id)return;h+='<button type="button" class="lg" data-cat="'+c.id+'" aria-pressed="'+(catFilter===c.id)+'"><span class="e" aria-hidden="true">'+catIco(c)+'</span>'+esc(c.label)+'<span class="n">'+(cc[c.id]||0)+'</span></button>'});
   h+='<button type="button" class="mng" data-act="cats" aria-expanded="'+showCats+'">管理分類</button></div></div>';
   if(showCats){
     h+='<div class="card catbox"><div class="note">改顏色、Emoji、名稱，以及「幾個算一天」。改完天數會馬上重算。</div>';
@@ -2289,15 +2376,18 @@ function bkFrame(now){
 var bp=null,bd=null;
 function bkPt(e){var r=BK.cv.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}}
 document.addEventListener('pointerdown',function(e){
-  if(!BK.cv||e.target!==BK.cv)return;var hit=Matter.Query.point(bkBodies(),bkPt(e))[0];if(!hit)return;e.preventDefault();
+  if(!BK.cv||e.target!==BK.cv)return;var hit=Matter.Query.point(bkBodies(),bkPt(e))[0];if(!hit)return;
+  if(e.pointerType==='touch'){bp={b:hit,x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,touch:1};return}
+  e.preventDefault();
   bp={b:hit,x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY};
   bp.timer=setTimeout(function(){if(bp&&!bd){var it=byId(hit.iid),grp=bkBodies().filter(function(b){var x=byId(b.iid);return x&&x.brand===it.brand});bkStart(grp,bp.lx,bp.ly)}},480);
 });
 document.addEventListener('pointermove',function(e){
   if(bd){bkMoveGhost(e.clientX,e.clientY);return}
+  if(bp&&bp.touch){if(Math.hypot(e.clientX-bp.x,e.clientY-bp.y)>10)bp=null;return}
   if(bp){bp.lx=e.clientX;bp.ly=e.clientY;if(Math.hypot(e.clientX-bp.x,e.clientY-bp.y)>6){clearTimeout(bp.timer);bkStart([bp.b],e.clientX,e.clientY)}}
 });
-document.addEventListener('pointerup',function(e){if(bp)clearTimeout(bp.timer);if(bd)bkEnd(e.clientX,e.clientY);else if(bp){editId=bp.b.iid;delArm=false;render()}bp=null});
+document.addEventListener('pointerup',function(e){if(bp&&bp.touch){var tb=bp.b;bp=null;bkSheet(tb);return}if(bp)clearTimeout(bp.timer);if(bd)bkEnd(e.clientX,e.clientY);else if(bp){editId=bp.b.iid;delArm=false;render()}bp=null});
 document.addEventListener('pointercancel',function(){if(bp)clearTimeout(bp.timer);if(bd){bkPutBack(bd.bs);bkClean()}bp=null});
 function bkStart(bs,x,y){
   bs.forEach(function(b){Matter.Composite.remove(BK.eng.world,b)});
@@ -2317,9 +2407,7 @@ function bkTarget(x,y){var el=document.elementFromPoint(x,y);return el&&el.close
 function bkClean(){if(bd){bd.g.remove();bd.dock.remove()}bd=null}
 function bkPutBack(bs){bs.forEach(function(b,i){Matter.Body.setPosition(b,{x:BK.R+Math.random()*(BK.W-2*BK.R),y:-BK.R*2-i*BK.R});Matter.Body.setVelocity(b,{x:0,y:0});Matter.Composite.add(BK.eng.world,b)})}
 function bkFx(x,y,emo){var f=document.createElement('div');f.className='bk-pop e';f.textContent=emo;f.style.left=x+'px';f.style.top=y+'px';document.body.appendChild(f);setTimeout(function(){f.remove()},800);if(!reduceMotion)crumbs(x,y)}
-function bkEnd(x,y){
-  var t=bkTarget(x,y),bs=bd.bs,vx=bd.vx,vy=bd.vy,r=BK.cv.getBoundingClientRect();bkClean();
-  if(t){var a=t.dataset.bkt,it0=byId(bs[0].iid);
+function bkDo(a,bs,x,y){var it0=byId(bs[0].iid);
     if(a==='eat'){if(bs.length>1)bkPutBack(bs.slice(1));var q=UQ[bs[0].kind];snap('吃掉 '+it0.name);it0.qty=Math.max(0,Math.round((it0.qty-q)*10)/10);
       eaten.unshift({d:md(TODAY),n:it0.name,b:it0.brand,per:q,id:it0.id});if(it0.qty<=0)it0.status='done';render();bkFx(x,y,'😋');
       if(it0.status==='done')afterEat(it0);else{toast('😋 吃了 '+it0.name+'，順手記一下心得',true);setTimeout(function(){reviewSheet(0)},700)}return}
@@ -2330,7 +2418,10 @@ function bkEnd(x,y){
         if(!dest){dest=JSON.parse(JSON.stringify(it));dest.id='m'+Date.now().toString(36)+i;dest.qty=0;dest.home=to;items.push(dest)}
         dest.qty=Math.round((dest.qty+q)*10)/10;it.qty=Math.max(0,Math.round((it.qty-q)*10)/10);if(it.qty<=0)items.splice(items.indexOf(it),1)});
       render();bkFx(x,y,'🚚');toast('🏠 '+bs.length+' 個移到'+to,true);return}
-  }
+}
+function bkEnd(x,y){
+  var t=bkTarget(x,y),bs=bd.bs,vx=bd.vx,vy=bd.vy,r=BK.cv.getBoundingClientRect();bkClean();
+  if(t){bkDo(t.dataset.bkt,bs,x,y);return}
   if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){var cap=22,M=Matter;bs.forEach(function(b,i){M.Body.setPosition(b,{x:Math.min(BK.W-BK.R,Math.max(BK.R,x-r.left+(i%3-1)*BK.R*.8)),y:Math.min(BK.H-BK.R,y-r.top)-Math.floor(i/3)*BK.R});
     M.Body.setVelocity(b,{x:Math.max(-cap,Math.min(cap,vx)),y:Math.max(-cap,Math.min(cap,vy))});M.Composite.add(BK.eng.world,b)})}
   else bkPutBack(bs);
@@ -2344,7 +2435,7 @@ function ocardHTML(o,list,st){
   var tag=o.source?'<span class="oc-tag" style="--sc:'+srcColor(o.source)+'"><span class="l">'+esc(srcLabel(o.source))+'</span><span class="s">'+esc(SRCS[o.source]||srcLabel(o.source))+'</span></span>':'<span class="oc-tag unset">未填來源</span>';
   var meta=st.id==='making'?(o.date?(shipped(o)?'<span class="oc-meta go">🚚 運送中</span>':'<span class="oc-meta">'+md(parseD(o.date))+' 出貨</span>'):'<span class="oc-meta">出貨日未填</span>'):'<span class="oc-meta go">'+(PICKUP[o.pickup]||'')+' '+esc(o.pickup||'')+'取件</span>';
   if(oedit===o.id)return oeditHTML(o,list,st);
-  var open=oexp[o.id],rows=open?'<div class="oc-items">'+list.map(function(it){var c=cat(it.cat);return '<button type="button" class="oc-it" data-oit="'+it.id+'"><img src="'+catImg(it.cat)+'" alt=""><span class="nm">'+esc(it.name)+'</span><span class="q">'+fmt(it.qty)+' '+c.unit+'</span></button>'}).join('')+'</div>':'';
+  var open=oexp[o.id],acts=open?'<div class="oc-acts">'+oValid(st.id).map(function(to){return '<button type="button" class="mini" data-omv="'+o.id+'|'+st.id+'|'+to+'">'+(to==='shipping'?'📦 到店了':to==='fridge'?'🧊 放進'+here+'冷凍庫':'↩ 移回製作中')+'</button>'}).join('')+'</div>':'',rows=open?'<div class="oc-items">'+list.map(function(it){var c=cat(it.cat);return '<button type="button" class="oc-it" data-oit="'+it.id+'"><img src="'+catImg(it.cat)+'" alt=""><span class="nm">'+esc(it.name)+'</span><span class="q">'+fmt(it.qty)+' '+c.unit+'</span></button>'}).join('')+'</div>':'';rows+=acts;
   return '<div class="ocard'+(open?' open':'')+'" style="--sc:'+srcColor(o.source)+'" data-oc="'+o.id+'" data-ost="'+st.id+'" tabindex="0" role="button" aria-expanded="'+!!open+'" aria-label="'+name+'，拖到下一欄，點一下看品項"><div class="oc-top">'+logo+'<span class="oc-name">'+name+'</span>'+tag+'<button type="button" class="oc-edit" data-oedit="'+o.id+'" aria-label="修改這筆訂單" title="修改">✎</button></div><div class="oc-bot"><span class="oc-minis">'+minis+'</span>'+meta+'</div>'+rows+'</div>';
 }
 /* edit in place: the card's own fields turn into inputs */
@@ -2361,8 +2452,14 @@ function oeditHTML(o,list,st){
     '<div class="oce-foot"><button type="button" class="mini" data-osplit="'+id+'"'+(n&&n<list.length?'':' disabled')+'>✂️ 勾選的拆成新訂單</button><button type="button" class="mini oce-del'+(odelArm===id?' danger':'')+'" data-odel="'+id+'">'+(odelArm===id?'確定刪？連同 '+list.length+' 項':'🗑 刪掉這筆')+'</button><button type="button" class="btn sm primary" data-oedone>完成</button></div></div>';
 }
 var op=null,od=null;
+function oMove(k,from,to,cx,cy){var e={clientX:cx,clientY:cy},its=items.filter(function(x){return x.order===k&&x.status===from});if(!its.length)return;
+
+    if(to==='fridge'){putAway(its.map(function(x){return x.id}),here,{x:e.clientX,y:e.clientY});return}
+    if(to==='shipping'){snap('到店 '+oname(ORDERS[k]||{}));its.forEach(function(x){moveTo(x,'shipping');place(x,null)});var oo=ORDERS[k];if(oo){oo.arrived=true;oo.arrivedOn=isoD(TODAY)}render();toast('📦 '+its.length+' 項 → 已抵達',true);return}
+    if(to==='making'){snap('整筆移回製作中');its.forEach(function(x){moveTo(x,'making');place(x,null)});render();toast('🏭 '+its.length+' 項 → 製作中',true);return}
+}
 function oValid(from){return from==='making'?['shipping','fridge']:['making','fridge']}
-document.addEventListener('pointerdown',function(e){var c=e.target.closest('.ocard');if(!c||e.button>0||e.target.closest('.oc-edit,.oc-it'))return;e.preventDefault();op={el:c,k:c.dataset.oc,from:c.dataset.ost,x:e.clientX,y:e.clientY}});
+document.addEventListener('pointerdown',function(e){var c=e.target.closest('.ocard');if(!c||e.button>0||e.target.closest('.oc-edit,.oc-it,.oc-acts'))return;if(e.pointerType==='touch'||isPhone())return;e.preventDefault();op={el:c,k:c.dataset.oc,from:c.dataset.ost,x:e.clientX,y:e.clientY}});
 document.addEventListener('pointermove',function(e){
   if(od){od.g.style.transform='translate('+(e.clientX-od.dx)+'px,'+(e.clientY-od.dy)+'px)';var z=oZone(e.clientX,e.clientY);
     document.querySelectorAll('.col[data-drop],#bkBox,[data-mtab]').forEach(function(x){x.classList.toggle('o-over',x===z||(z&&z.id==='bkBox'&&x.classList.contains('st-fridge')))});return}
@@ -2377,10 +2474,7 @@ function oZone(x,y){var el=document.elementFromPoint(x,y);if(!el)return null;var
 document.addEventListener('pointerup',function(e){
   if(od){var z=oZone(e.clientX,e.clientY),k=od.k,from=od.from;od.g.remove();od.el.classList.remove('lifted');document.body.classList.remove('odrag');
     document.querySelectorAll('.o-ok,.o-over').forEach(function(x){x.classList.remove('o-ok','o-over')});od=null;justDragged=true;setTimeout(function(){justDragged=false},50);
-    if(!z)return;var to=z.id==='bkBox'?'fridge':(z.dataset.mtab||z.dataset.drop),its=items.filter(function(x){return x.order===k&&x.status===from});if(!its.length)return;
-    if(to==='fridge'){putAway(its.map(function(x){return x.id}),here,{x:e.clientX,y:e.clientY});return}
-    if(to==='shipping'){snap('到店 '+oname(ORDERS[k]||{}));its.forEach(function(x){moveTo(x,'shipping');place(x,null)});var oo=ORDERS[k];if(oo){oo.arrived=true;oo.arrivedOn=isoD(TODAY)}render();toast('📦 '+its.length+' 項 → 已抵達',true);return}
-    if(to==='making'){snap('整筆移回製作中');its.forEach(function(x){moveTo(x,'making');place(x,null)});render();toast('🏭 '+its.length+' 項 → 製作中',true);return}
+    if(!z)return;oMove(k,from,z.id==='bkBox'?'fridge':(z.dataset.mtab||z.dataset.drop),e.clientX,e.clientY);
     return}
   op=null;
 });
@@ -2401,7 +2495,7 @@ function nbCard(x){var e=x.e,i=x.i,c=cat(eCat(e));
   var open=nbOpen[i],file='<input type="file" accept="image/*" data-nbfile="'+i+'" hidden>';
   var photo=!open?'':e.photo?'<label class="nb-photo"><img src="'+e.photo+'" alt="'+esc(e.n)+'的照片"><span class="nb-chg">換照片</span>'+file+'</label>':'<label class="nb-addph"><span class="e" aria-hidden="true">📷</span>加照片'+file+'</label>';
   return '<article class="nb-card'+(open?' open':'')+'" data-nbo="'+i+'" aria-expanded="'+!!open+'">'+(e.photo&&open?photo:'')+
-    '<div class="nb-in"><div class="nb-tags"><span class="nb-cat">'+esc(c.label)+'</span>'+brandChip(e.b,1)+(e.photo&&!open?'<span class="nb-hasph" title="有照片">📷</span>':'')+'<span class="nb-chev" aria-hidden="true">'+(open?'▴':'▾')+'</span></div>'+(open&&!e.photo?photo:'')+
+    '<div class="nb-in"><div class="nb-tags">'+(nbGroup==='cat'?'':'<span class="nb-cat">'+esc(c.label)+'</span>')+(nbGroup==='brand'?'':brandChip(e.b,1))+(e.photo&&!open?'<span class="nb-hasph" title="有照片">📷</span>':'')+'<span class="nb-chev" aria-hidden="true">'+(open?'▴':'▾')+'</span></div>'+(open&&!e.photo?photo:'')+
     '<h3 class="nb-n">'+esc(e.n)+'</h3>'+
     '<div class="nb-tiles">'+tile('評分',e.r?fmt(+e.r):'—',e.r?'顆星':'')+tile('吃的日期',/^\d/.test(e.d||'')?e.d:'—','')+tile('吃了',e.per===.5?'半':fmt(e.per||1),c.unit)+tile('回購',e.rebuy||'—','')+'</div>'+
     '<div class="nb-table"><div class="nb-th">心　得</div>'+
@@ -2470,6 +2564,34 @@ function fitScreen(){var el=document.querySelector('.board')||document.querySele
   var over=de.scrollHeight-window.innerHeight;if(over>0&&h-over>=280)de.style.setProperty('--fit-h',(h-over)+'px')}
 var _render=render;render=function(){_render();if(current()==='bread'){fitScreen();bkAttach();requestAnimationFrame(fitScreen);setTimeout(fitScreen,400)}else BK.cv=null};
 var bkRT;window.addEventListener('resize',function(){clearTimeout(bkRT);bkRT=setTimeout(function(){fitScreen();if(BK.cv)bkSize()},150)});
+
+/* --- phone: tap a bagel -> action sheet (11/25) --- */
+var bkSh=null;
+function bkSheetClose(){if(bkSh){bkSh.remove();bkSh=null}}
+function bkSheet(b){
+  bkSheetClose();var it=byId(b.iid);if(!it)return;
+  var grp=bkBodies().filter(function(x){var y=byId(x.iid);return y&&y.brand===it.brand}),c=cat(it.cat),other=HOMES[1-HOMES.indexOf(here)],all=false;
+  var el=document.createElement('div');el.className='bk-sheet-wrap';
+  function draw(){var n=all?grp.length:1;
+    el.innerHTML='<div class="bk-scrim" data-bks="x"></div><div class="bk-sheet" role="dialog" aria-label="'+esc(it.name)+'"><div class="bk-grab"></div>'+
+      '<div class="bk-sh-h"><img src="'+catImg(it.cat)+'" alt=""><div><b>'+esc(it.name)+'</b><small>'+esc(it.brand)+' · 剩 '+fmt(it.qty)+' '+c.unit+'</small></div></div>'+
+      (grp.length>1?'<div class="homeseg bk-sh-seg" role="group"><button type="button" data-bks="one" aria-pressed="'+!all+'">只這個</button><button type="button" data-bks="all" aria-pressed="'+all+'">整個 '+esc(it.brand)+'（'+grp.length+'）</button></div>':'')+
+      '<div class="bk-sh-acts">'+(all?'':'<button type="button" class="eat" data-bks="eat"><span class="e">😋</span>吃掉</button>')+
+      '<button type="button" data-bks="gift"><span class="e">🎁</span>送親友'+(n>1?' ×'+n:'')+'</button><button type="button" data-bks="move"><span class="e">🏠</span>移到'+other+(n>1?' ×'+n:'')+'</button></div>'+
+      '<button type="button" class="bk-sh-edit" data-bks="edit">✎ 改品名、數量</button></div>'}
+  draw();document.body.appendChild(el);bkSh=el;
+  el.addEventListener('click',function(e){var t=e.target.closest('[data-bks]');if(!t)return;var k=t.dataset.bks;
+    if(k==='x'){bkSheetClose();return}
+    if(k==='one'||k==='all'){all=k==='all';draw();return}
+    if(k==='edit'){bkSheetClose();editId=it.id;delArm=false;render();return}
+    var bs=all?grp:[b],r=BK.cv.getBoundingClientRect(),x=r.left+b.position.x,y=r.top+b.position.y;
+    bkSheetClose();bs.forEach(function(x){Matter.Composite.remove(BK.eng.world,x)});bkDo(k,bs,x,y)});
+}
+
+/* phone mode = touch screen up to tablet size, or any narrow window (11/25) */
+function isPhone(){return document.documentElement.classList.contains('phone')}
+(function(){function f(){var w=window.innerWidth,c=window.matchMedia&&matchMedia('(pointer:coarse)').matches;document.documentElement.classList.toggle('phone',w<=720||(c&&w<=1100))}f();window.addEventListener('resize',f)})();
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('[data-omv]');if(!t)return;e.stopPropagation();var p=t.dataset.omv.split('|'),r=t.getBoundingClientRect();delete oexp[p[0]];oMove(p[0],p[1],p[2],r.left+r.width/2,r.top)},true);
 
 /* ===== v3: delete order, custom sources, priced receipt + image, brand logos, hover info ===== */
 var odelArm=null, srcEdit=null, srcDelArm=null, showBrands=false, BRANDS={}, BLOGO={};
@@ -2587,7 +2709,7 @@ var _imp2=importState;importState=function(s){_imp2(s);BRANDS=(s&&s.brands)||{};
 nbCard=function(x){var e=x.e,i=x.i,c=cat(eCat(e));
   var tile=function(k,v,u){return '<div class="nb-tile"><span class="k">'+k+'</span><b>'+v+'</b>'+(u?'<span class="u">'+u+'</span>':'')+'</div>'};
   return '<article class="nb-card" data-review="'+i+'" tabindex="0" role="button" aria-label="'+esc(e.n)+'，打開評分">'+
-    '<div class="nb-in"><div class="nb-tags"><span class="nb-cat">'+esc(c.label)+'</span>'+brandChip(e.b,1)+(e.photo?'<span class="nb-hasph" title="有照片">📷</span>':'')+'</div>'+
+    '<div class="nb-in"><div class="nb-tags">'+(nbGroup==='cat'?'':'<span class="nb-cat">'+esc(c.label)+'</span>')+(nbGroup==='brand'?'':brandChip(e.b,1))+(e.photo?'<span class="nb-hasph" title="有照片">📷</span>':'')+'</div>'+
     '<h3 class="nb-n">'+esc(e.n)+'</h3>'+
     '<div class="nb-rv"><div class="nb-rvh">'+nbStars(e.r)+'<span class="nb-meta">'+(/^\d/.test(e.d||'')?e.d+' · ':'')+'吃了 '+(e.per===.5?'半':fmt(e.per||1))+' '+c.unit+'</span></div>'+(e.note?'<p>'+esc(e.note)+'</p>':'<p class="empty">還沒寫筆記，點一下開始寫</p>')+'</div></div></article>'};
 var _rs=reviewSheet;reviewSheet=function(i){_rs(i);var e=eaten[i];if(!e||!fx)return;var ico=fx.querySelector('.rv-ico');if(!ico)return;
@@ -2664,10 +2786,12 @@ var TD=[],MAILS=[],WL=[],deskSt='',deskErr='',deskMeta={},deskT=null;
 function wlGroup(rows){var by={},order=[];rows.forEach(function(r){if(!by[r.d]){by[r.d]={d:r.d,items:[]};order.push(r.d)}by[r.d].items.push({s:r.s,t:r.t,src:r.src||'me',key:r.key||'',edited:!!r.edited,hide:!!r.hide})});
   order.sort(function(a,b){return a<b?1:a>b?-1:0});return order.map(function(d){return by[d]})}
 function wlFlat(){var out=[];WL.forEach(function(day){day.items.forEach(function(x){if(!x.t&&!x.key)return;out.push({d:day.d,s:x.s,t:x.t,src:x.src,key:x.key||'',edited:!!x.edited,hide:!!x.hide})})});return out}
-function deskGot(r){TD=r.todos||[];MAILS=r.mails||[];WL=wlGroup(r.worklog||[]);deskMeta=r.meta||{};deskSt='ok';deskErr='';render()}
+function deskGot(r){try{localStorage.setItem('wd_desk',JSON.stringify(r))}catch(e){}TD=r.todos||[];MAILS=r.mails||[];WL=wlGroup(r.worklog||[]);deskMeta=r.meta||{};deskSt='ok';deskErr='';render()}
 function deskInit(){if(deskSt&&deskSt!=='err')return;
   if(!hasGas()){TD=TD_SAMPLE;MAILS=MAILS_SAMPLE;WL=WL_SAMPLE;deskSt='local';return}
-  deskSt='loading';google.script.run.withSuccessHandler(deskGot).withFailureHandler(function(e){deskSt='err';deskErr=String(e&&e.message||e);render()}).getDesk()}
+  var c=null;try{c=JSON.parse(localStorage.getItem('wd_desk')||'null')}catch(e){c=null}
+  if(c&&c.todos){TD=c.todos;MAILS=c.mails||[];WL=wlGroup(c.worklog||[]);deskMeta=c.meta||{};deskSt='cache'}else deskSt='loading';
+  google.script.run.withSuccessHandler(deskGot).withFailureHandler(function(e){if(deskSt==='cache')return;deskSt='err';deskErr=String(e&&e.message||e);render()}).getDesk()}
 function deskCall(fn,arg,ok){google.script.run.withSuccessHandler(function(r){if(r&&r.todos)deskGot(r);if(ok)ok(r)}).withFailureHandler(function(e){toast('沒存到試算表：'+String(e&&e.message||e))})[fn](arg)}
 function deskSave(){if(deskSt!=='ok')return;clearTimeout(deskT);deskT=setTimeout(function(){deskCall('saveDesk',JSON.stringify({todos:TD,worklog:wlFlat()}))},500)}
 function deskWait(title,emo,eb){return '<header class="ph"><div class="eyebrow">'+eb+'</div><div class="head"><div><h1 class="title"><span class="emo" aria-hidden="true">'+emo+'</span>'+title+'</h1></div></div></header>'+
