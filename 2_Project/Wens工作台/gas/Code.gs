@@ -473,6 +473,7 @@ function nightlyWorklog() { compileWorklog(1); }
 
 /* run once from the editor: approve Gmail + triggers, start the 30-minute mail check and the 23:00 work log */
 function setupDesk() {
+  getDesk(); // creates every tab (品牌／待辦／信件建議／工作日誌) and seeds to-dos + work log right away
   ScriptApp.getProjectTriggers().forEach(function (t) { if (['scanMail', 'nightlyWorklog'].indexOf(t.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger('scanMail').timeBased().everyMinutes(30).create();
   ScriptApp.newTrigger('nightlyWorklog').timeBased().atHour(23).everyDays(1).inTimezone(TZ).create();
