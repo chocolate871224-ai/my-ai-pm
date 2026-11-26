@@ -2785,7 +2785,7 @@ printReceipt=function(rows,o,status,opt){
   var fname=isoD(TODAY)+'_'+(seller||(rows[0]&&rows[0].brand)||src||'進貨單').replace(/[\\/:*?"<>| ]+/g,'')+(o&&o.id?'_'+o.id:'')+'.png';
   fxOpen('<div class="fx-scrim"></div><div class="printer"><div class="printer-slot"></div><div class="paper-clip"><div class="paper">'+RC_TAPE_HTML+'<div class="rbrand">'+RC_BAGEL_SVG+'Wen\'s Bagel</div><div class="c">bagel shop · No. '+no+'</div><div class="c">'+tm+'</div>'+(who?'<div class="c">'+who+'</div>':'')+'<hr>'+
     body+'<hr><div class="bye">好好吃，下次再來 =^.^=</div>'+rcBarsHTML(no)+'<div class="c">wens.desk</div></div></div>'+
-    (rows.length?'<div class="rc-save" role="status"><span class="rc-st">☁️ 正在存圖片…</span><button type="button" class="mini" data-fx="phone">📲 存到手機</button></div>':'')+
+    (rows.length?'<div class="rc-save" role="status"><span class="rc-st">☁️ 正在存圖片…</span>'+(document.documentElement.classList.contains('phone')?'<button type="button" class="mini" data-fx="phone">📲 存到手機</button>':'<button type="button" class="mini" data-fx="phone">💾 下載圖片</button>')+'</div>':'')+
     '<button type="button" class="btn primary" data-fx="filed">收進'+stage(st).label+'</button></div>');
   if(rows.length){var cv=rcptPNG(['bagel shop · No. '+no,tm].concat(whoT?[whoT]:[]),R,['好好吃，下次再來 =^.^=','wens.desk']);
     /* mockup: the live page sends this PNG to the Drive folder through Apps Script */
@@ -2793,8 +2793,10 @@ printReceipt=function(rows,o,status,opt){
     if(window.google&&google.script&&google.script.run)google.script.run.withSuccessHandler(function(){rcSt('☁️ 已存到雲端硬碟「Wen\'s 工作台 · 進貨單」<small>'+esc(fname)+'</small>')}).withFailureHandler(function(e){rcSt('⚠️ 雲端沒存成功，先按右邊存到手機<small>'+esc(String(e&&e.message||e))+'</small>')}).saveReceipt(cv.toDataURL('image/png'),fname);
     else rcSt('本機預覽不會存到雲端硬碟');
     fx.querySelector('[data-fx="phone"]').addEventListener('click',function(){cv.toBlob(function(bl){var file=new File([bl],fname,{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:fname}).catch(function(){})}
-      else{var ov=document.createElement('div');ov.className='rc-ov';ov.innerHTML='<div class="rc-ov-b"><img src="'+cv.toDataURL('image/png')+'" alt="進貨單圖片"><p>長按（手機）或按右鍵（電腦）把圖片存起來</p><button type="button" class="btn">關閉</button></div>';ov.addEventListener('click',function(ev){if(ev.target===ov||ev.target.closest('button'))ov.remove()});document.body.appendChild(ov)}},'image/png')})}
+      var ph=document.documentElement.classList.contains('phone');
+      if(ph&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:fname}).catch(function(){})}
+      else{if(!ph){try{var u=URL.createObjectURL(bl),a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)}catch(e){}}
+      var ov=document.createElement('div');ov.className='rc-ov';ov.innerHTML='<div class="rc-ov-b"><img src="'+cv.toDataURL('image/png')+'" alt="進貨單圖片" draggable="true"><p>'+(ph?'長按圖片把它存起來':'已下載到「下載」資料夾<br>沒看到的話：在圖片上按右鍵 →「另存圖片」，或直接把圖片拖到桌面')+'</p><button type="button" class="btn">關閉</button></div>';ov.addEventListener('click',function(ev){if(ev.target===ov||ev.target.closest('button'))ov.remove()});document.body.appendChild(ov)}},'image/png')})}
   fx.querySelector('[data-fx="filed"]').addEventListener('click',function(){
     rcFile(this,fx.querySelector('.printer'),st,function(){fxClose();mTab=st;render();rcLand(st);toast(opt.msg||'進貨單收好了',true);if(opt.after)opt.after()});
   });
