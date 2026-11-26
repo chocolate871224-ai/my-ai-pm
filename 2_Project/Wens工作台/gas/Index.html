@@ -1342,7 +1342,7 @@ html.phone .wrap:has(.btabs) .toolbar{display:none!important}
 .pctl .dwrap input{height:36px;width:100%}
 .psec .prow{grid-template-columns:auto 72px minmax(0,1fr) auto 64px}
 .prow .pprice{height:30px}
-@media (max-width:420px){.psec .prow{grid-template-columns:auto minmax(0,1fr) auto 56px}.psec .prow input[data-pk="brand"]{display:none}}
+@media (max-width:420px){.psec .prow{grid-template-columns:auto minmax(0,1fr) auto 56px;row-gap:4px}.psec .prow .pcat{grid-column:1;grid-row:1/3;align-self:center}.psec .prow .pname{grid-column:2;grid-row:1}.psec .prow .pq{grid-column:3;grid-row:1}.psec .prow .pprice{grid-column:4;grid-row:1}.psec .prow input[data-pk="brand"]{grid-column:2/5;grid-row:2;height:28px;font-size:12px}}
 /* receipt v2 (11/26): bagel mark + fold creases */
 /* receipt v3: tape + barcode */
 /* v4: narrower receipt + cute file-away */
@@ -1890,28 +1890,37 @@ function applyTitle(sec,l){
 }
 function parseList(txt){
   var known={};items.forEach(function(it){known[it.brand]=1});
-  var secs=[],cur=null;
+  var secs=[],cur=null,curBrand='';
+  var SEC=/台北|高雄|冰箱|冷凍庫|已取|面交|取貨|已抵達|待取|到店|出貨|寄出|運送|配送|寄貨便|交貨便|宅配|超商|7-?11|全家|\d{1,2}\s*\/\s*\d{1,2}/;
+  var BAGEL=/貝果|貝體|乳酪|夾心|麵包|酸種|吐司|奶酥|奶蓋|優格|肉鬆|口味|鹼水|迷你|球|司康|可頌|堡/;
+  function newSec(label,untitled){var s={label:label,status:pasteSrc.source==='shop'?'fridge':'making',home:pasteSrc.source==='shop'?here:null,date:null,rows:[],untitled:!!untitled};secs.push(s);cur=s;return s}
+  function cutPrice(s){var m=s.match(/\s*(?:[@＠$＄]|NT\$?|NTD\s*)\s*(\d+)\s*元?\s*$/i)||s.match(/\s*(\d+)\s*元\s*$/);return m?{v:m[1],s:s.slice(0,m.index).trim()}:null}
+  function cutQty(s){var m=s.match(/\s*[\*×xX＊]\s*([\d.]+)\s*(片|顆|根|個|入)?\s*$/)||s.match(/\s+([\d.]+)\s*(片|顆|根|個|入)\s*$/)||s.match(/(?:^|[^\d])([\d.]+)\s*(片|顆|根|個)\s*$/);
+    if(!m)return null;var at=m.index+(m[0].length-m[0].replace(/^[^\d\*×xX＊\s]/,'').length);return {q:+m[1],u:m[2]||'',s:s.slice(0,at).trim()}}
   txt.split(/\r?\n/).forEach(function(line){
-    var l=line.trim();if(!l)return;
-    if(!/^[\*\-•・·]/.test(l)){
-      if(cur&&cur.rows.length&&cur.untitled){cur.untitled=false;cur.label=l;applyTitle(cur,l);return}
-      if(cur&&!cur.rows.length&&!cur.untitled){cur.label+=' '+l;applyTitle(cur,l);return}
-      var sec={label:l,status:'making',home:null,date:null,rows:[]};applyTitle(sec,l);cur=sec;secs.push(sec);return;
-      var _old={label:l,status:'making',home:null,date:null,rows:[]};
-      if(/台北/.test(l)){sec.status='fridge';sec.home='台北'}
-      else if(/高雄/.test(l)){sec.status='fridge';sec.home='高雄'}
-      else if(/冰箱|冷凍|已取/.test(l)){sec.status='fridge';sec.home=here}
-      else if(/等取貨|待取貨|已抵達|待取|面交/.test(l)){sec.status='shipping';sec.arrived=true}
-      else if(/出貨中|運送|配送中/.test(l))sec.status='shipping';
-      var m=l.match(/(\d{1,2})\s*\/\s*(\d{1,2})/);
-      if(m&&sec.status==='making'){var y=TODAY.getFullYear(),mo=+m[1];if(mo<TODAY.getMonth()+1-5)y++;sec.date=y+'-'+pad(mo)+'-'+pad(+m[2])}
-      cur=sec;secs.push(sec);return;
+    var raw=line.trim();if(!raw)return;
+    var bullet=/^[\*\-•・·▪︎▫️◦]/.test(raw);
+    var numbered=/^(?:\d️?⃣|[①-⑳❶-❿]|\(\d+\)|（\d+）|\d+\s*[.、)）]\s*(?!\d))/.test(raw);
+    var l=raw.replace(/^(?:[\*\-•・·▪︎▫️◦]|\d️?⃣|[①-⑳❶-❿]|\(\d+\)|（\d+）|\d+\s*[.、)）](?!\d))\s*/,'').replace(/[:：]\s*$/,'').trim();
+    if(!l)return;
+    var s=l,q=1,unit='',price='',x;
+    var gotQ=false;x=cutQty(s);if(x){q=x.q;unit=x.u;s=x.s;gotQ=true}
+    x=cutPrice(s);if(x){price=x.v;s=x.s}
+    if(!gotQ){x=cutQty(s);if(x){q=x.q;unit=x.u;s=x.s}}
+    var hasNum=!!price||s!==l;
+    if(!bullet&&!hasNum){
+      if(SEC.test(l)){
+        if(cur&&cur.rows.length&&cur.untitled){cur.untitled=false;cur.label=l;applyTitle(cur,l);return}
+        if(cur&&!cur.rows.length){cur.label=(cur.untitled?'':cur.label+' ')+l;cur.untitled=false;applyTitle(cur,l);return}
+        var sec=newSec(l);sec.status='making';sec.home=null;applyTitle(sec,l);curBrand='';return;
+      }
+      if(numbered||known[l]||(l.length<=8&&!BAGEL.test(l))){curBrand=l;return}
     }
-    if(!cur){cur={label:'沒有標題',status:pasteSrc.source==='shop'?'fridge':'making',home:pasteSrc.source==='shop'?here:null,date:null,rows:[],untitled:true};secs.push(cur)}
-    var s=l.replace(/^[\*\-•・·]\s*/,''),q=1,unit='',price='';var pm=s.match(/\s*(?:[@＠$＄]|NT\$?)\s*(\d+)\s*元?\s*$/)||s.match(/\s+(\d+)\s*元\s*$/);if(pm){price=pm[1];s=s.slice(0,pm.index).trim()}
-    var qm=s.match(/[\*×xX＊]\s*([\d.]+)\s*(片|顆|根|個)?\s*$/);if(qm){q=+qm[1];unit=qm[2]||'';s=s.slice(0,qm.index).trim()}
+    if(!s)return;
+    if(!cur)newSec('沒有標題',true);
     var brand='',name=s,bm=s.match(/^([^\-－–—:：]{1,12}?)\s*[\-－–—:：]\s*(.+)$/);
-    if(bm){var p=bm[1].trim();if(known[p]||/^[A-Za-z0-9 &.']+$/.test(p)||(p.length<=4&&!/貝|麵包|酸種|迷你/.test(p))){brand=p;name=bm[2].trim()}}
+    if(bm){var p=bm[1].trim();if(known[p]||/^[A-Za-z0-9 &.']+$/.test(p)||(p.length<=4&&!BAGEL.test(p))){brand=p;name=bm[2].trim()}}
+    if(!brand)brand=curBrand;
     var prev=null;items.forEach(function(it){if(!prev&&(norm(it.name)===norm(name)||norm(it.name).indexOf(norm(name))===0||norm(name).indexOf(norm(it.name))===0))prev=it});
     if(!brand&&prev)brand=prev.brand;
     var g=guessCat(name,unit,prev);
@@ -1930,8 +1939,8 @@ function psecCtl(sec,si){var meet=sec.pickup==='面交';
 function pasteHTML(){
   var h='<div class="panel"><div class="drawer-h"><h2><span class="e" aria-hidden="true">📋</span> 進貨單 · 簡易版</h2><button type="button" class="icon-x" data-act="paste" aria-label="關閉">✕</button></div>';
   h+='<span class="flabel">怎麼買的</span><div class="seg2" role="group" aria-label="來源">'+srcButtons('data-psrc',pasteSrc.source)+'</div>'+ADDSRC+(pasteSrc.source!=='shop'?'<div><span class="flabel">平台來源</span>'+platPicker('paste',pasteSrc.platform)+'</div><label><span class="flabel">'+(pasteSrc.source==='group'?'團主名稱':'對方名稱')+'</span><input data-pseller value="'+esc(pasteSrc.seller)+'" placeholder="帳號或暱稱"></label>'+platList():'<label><span class="flabel">店家名稱</span><input data-pseller value="'+esc(pasteSrc.seller)+'" placeholder="哪一家店"></label>');
-  h+='<p class="note">照你平常傳的格式貼進來就好：品項一行一個，用 * 開頭：「* 品牌-品名*0.5」；另寫一行說在哪一站：「12/1面交」「12/2出貨 寄貨便」「待取貨」「台北冷凍」，寫在品項前面或後面都可以。</p>';
-  h+='<textarea class="paste-ta" data-paste aria-label="清單" placeholder="例如：\n* 瓜瓜-桂花乳酪*1\n* 瓜瓜-伯爵藍莓*0.5\n12/1面交">'+esc(pasteText)+'</textarea>';
+  h+='<p class="note">怎麼打都可以，一行一個品項：有價錢（$80、80元）或數量（x2、2顆）的就是品項；短短一行像「3️⃣瓜瓜」當作下面品項的品牌；寫「12/1面交」「12/2出貨 寄貨便」「待取貨」「台北冷凍」就知道在哪一站。讀錯的話下面可以直接改。</p>';
+  h+='<textarea class="paste-ta" data-paste aria-label="清單" placeholder="例如：\n12/1面交\n3️⃣瓜瓜\n桂花貝體/藍莓乳酪$135\n4️⃣詹胖\n黑莓球夾心貝果（檸檬乳酪）$80 x2">'+esc(pasteText)+'</textarea>';
   h+='<button type="button" class="btn" data-act="parse">看看會怎麼放</button>';
   if(parsed){
     if(!parsed.length)h+='<div class="card note">沒讀到品項。品項那行要用 * 或 - 開頭。</div>';
